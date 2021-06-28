@@ -23,6 +23,9 @@ public class Constants {
         public static final String URL_API_ADD_ACCOUNT = "account/add";
         public static final String URL_API_UPDATE_ACCOUNT = "account/update";
         public static final String URL_API_GET_ACCOUNT = "account";
+        public static final String URL_API_INSERT_FEEDBACK = "add";
+        public static final String URL_API_SEARCH_FEEDBACK = "search";
+        public static final String URL_API_List_FEEDBACK = "list";
     }
 
     public class FileProperties {
