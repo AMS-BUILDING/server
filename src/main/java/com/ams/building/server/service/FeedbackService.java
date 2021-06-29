@@ -10,4 +10,5 @@ public interface FeedbackService {
     void addFeedback(FeedbackRequest feedbackRequest);
 
     ApiResponse searchFeedbackByNameAndCreateDate(Integer page, Integer size, String name, Date cratedDate);
+
 }
