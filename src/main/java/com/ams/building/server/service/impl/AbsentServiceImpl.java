@@ -14,8 +14,7 @@ import com.ams.building.server.dao.ApartmentDAO;
 import com.ams.building.server.exception.RestApiException;
 import com.ams.building.server.request.AbsentRequest;
 import com.ams.building.server.response.AbsentResponse;
-import com.ams.building.server.response.AccountResponse;
-import com.ams.building.server.response.ListAbsentResponse;
+import com.ams.building.server.response.ApiResponse;
 import com.ams.building.server.service.AbsentService;
 import com.ams.building.server.utils.DateTimeUtils;
 import org.apache.log4j.Logger;
@@ -40,7 +39,6 @@ import java.util.Objects;
 import static com.ams.building.server.utils.DateTimeUtils.convertDateToStringWithTimezone;
 import static com.ams.building.server.utils.ValidateUtil.isIdentifyCard;
 
-
 @Transactional
 @Service
 public class AbsentServiceImpl implements AbsentService {
@@ -57,7 +55,7 @@ public class AbsentServiceImpl implements AbsentService {
     private ApartmentDAO apartmentDAO;
 
     @Override
-    public ListAbsentResponse absentList(String name, String identifyCard, Long absentType, Integer page, Integer size) {
+    public ApiResponse absentList(String name, String identifyCard, Long absentType, Integer page, Integer size) {
         List<AbsentResponse> absentDTOS = new ArrayList<>();
         Pageable pageable = PageRequest.of(page, size);
         Page<AbsentDetail> absentDetails;
@@ -71,7 +69,7 @@ public class AbsentServiceImpl implements AbsentService {
             absentDTOS.add(absentResponse);
         }
         Integer totalPage = absentDetails.getTotalPages();
-        ListAbsentResponse response = ListAbsentResponse.builder().absentResponses(absentDTOS).totalPage(totalPage).build();
+        ApiResponse response = ApiResponse.builder().data(absentDTOS).totalPage(totalPage).build();
         return response;
     }
 

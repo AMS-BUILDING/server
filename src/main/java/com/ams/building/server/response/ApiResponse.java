@@ -4,14 +4,10 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.List;
-
 @Builder
 @Getter
 @Setter
-public class ListAbsentResponse {
-
+public class ApiResponse {
     private Integer totalPage;
-    private List<AbsentResponse> absentResponses;
-
+    private Object data;
 }

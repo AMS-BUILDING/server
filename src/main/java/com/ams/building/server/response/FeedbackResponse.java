@@ -1,15 +1,13 @@
-package com.ams.building.server.dto;
+package com.ams.building.server.response;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import java.util.Date;
-
-@Data
-@AllArgsConstructor
+@Getter
+@Setter
 @NoArgsConstructor
-public class FeedbackDTO {
+public class FeedbackResponse {
     private Long feedbackId;
     private String description;
     private String name;

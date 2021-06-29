@@ -17,6 +17,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import java.io.Serializable;
+import java.util.Date;
 
 @Builder
 @Getter
@@ -37,34 +38,49 @@ public class Account implements Serializable {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "password")
-    private String password;
+    @Column(name = "email", unique = true)
+    private String email;
 
     @Column(name = "phone")
     private String phone;
 
-    @Column(name = "email")
-    private String email;
+    @Column(name = "gender", columnDefinition = "false")
+    private Boolean gender;
 
-    @Column(name = "enabled")
-    private Boolean enabled;
+    @Column(name = "password")
+    private String password;
 
+    @Column(name = "identity_card", unique = true)
+    private String identityCard;
 
-    @Column(name = "image")
+    @Column(name = "image_link")
     private String image;
 
     @Column(name = "dob")
     private String dob;
 
-    @Column(name = "identity_card")
-    private String identityCard;
+    @Column(name = "enabled")
+    private Boolean enabled;
 
     @Column(name = "home_town")
     private String homeTown;
 
+    @Column(name = "current_address")
+    private String currentAddress;
+
+    @Column(name = "start_time")
+    private Date startDate;
+
+    @Column(name = "end_time")
+    private Date endDate;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "role_id", referencedColumnName = "id")
     private Role role;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "position_id", referencedColumnName = "id")
+    private Position position;
 
     public Account(@NonNull Long id) {
         this.id = id;

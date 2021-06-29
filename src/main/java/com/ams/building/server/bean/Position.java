@@ -19,8 +19,8 @@ import javax.persistence.Table;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "role")
-public class Role {
+@Table(name = "position")
+public class Position {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,7 +29,6 @@ public class Role {
     @Column(name = "name")
     private String name;
 
-    public Role(Long id) {
-        this.id = id;
-    }
+    @Column(name = "show")
+    private Boolean show;
 }

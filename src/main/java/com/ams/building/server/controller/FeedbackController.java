@@ -2,15 +2,20 @@ package com.ams.building.server.controller;
 
 import com.ams.building.server.constant.Constants;
 import com.ams.building.server.request.FeedbackRequest;
-import com.ams.building.server.response.ListFeedbackResponse;
+import com.ams.building.server.response.ApiResponse;
 import com.ams.building.server.service.FeedbackService;
 import com.google.gson.Gson;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Date;
 
@@ -29,21 +34,10 @@ public class FeedbackController {
                                                                @RequestParam(value = "createDate", required = false) Date crateDate) {
 
         logger.debug("searchFeedback request : " + name + " - " + crateDate);
-
         Integer pageSize = 5;
-        ListFeedbackResponse apiResponse = feedbackService.searchFeedbackByNameAndCreateDate(pageNo,pageSize,name,crateDate);
-        ResponseEntity<ListFeedbackResponse> response = new ResponseEntity<>(apiResponse, HttpStatus.OK);
+        ApiResponse apiResponse = feedbackService.searchFeedbackByNameAndCreateDate(pageNo, pageSize, name, crateDate);
+        ResponseEntity<ApiResponse> response = new ResponseEntity<>(apiResponse, HttpStatus.OK);
         logger.debug("searchFeedback  response : " + new Gson().toJson(response));
-        return response;
-    }
-
-    @GetMapping(value = Constants.UrlPath.URL_API_List_FEEDBACK)
-    public ResponseEntity<?> listAllFeedbacks() {
-
-        Integer pageSize = 5;
-        ListFeedbackResponse apiResponse = feedbackService.listAllFeedback(pageSize);
-        ResponseEntity<ListFeedbackResponse> response = new ResponseEntity<>(apiResponse, HttpStatus.OK);
-        logger.debug("findFeedback response : " + new Gson().toJson(response));
         return response;
     }
 

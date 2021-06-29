@@ -26,7 +26,6 @@ public class ServerApplication {
         protected void configure(HttpSecurity http) throws Exception {
             http.csrf().disable().antMatcher("/api/**").authorizeRequests()
                     .antMatchers("/api/member/**").authenticated().anyRequest().permitAll().and().httpBasic();
-
         }
     }
 
