@@ -14,5 +14,7 @@ public class PropertyKeys {
     public static final String DATA_EMPTY = "data.empty";
     public static final String IDENTIFY_CARD_DUILCATE = "identify.card.duilcate";
     public static final String IDENTIFY_CARD_NOT_RIGHT = "identify.card.not.right";
+    public static final String ACCOUNT_NOT_EXIST = "account.not.exist";
+    public static final String FEEDBACK_EMPTY = "feedback.empty";
 
 }

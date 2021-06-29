@@ -27,7 +27,7 @@ public class AccountController {
     @Autowired
     private AccountService accountService;
 
-    @PostMapping(value = Constants.UrlPath.URL_API_LIST_ACCOUNT)
+    @GetMapping(value = Constants.UrlPath.URL_API_LIST_ACCOUNT)
     public ResponseDTO<AccountResponse> find() {
         ResponseDTO<AccountResponse> responseDTO = new ResponseDTO<>();
         responseDTO.setData(accountService.find());
@@ -37,7 +37,7 @@ public class AccountController {
         return responseDTO;
     }
 
-    @PostMapping(value = Constants.UrlPath.URL_API_LIST_ACCOUNT)
+    @PostMapping(value = Constants.UrlPath.URL_API_ADD_ACCOUNT)
     public ResponseEntity<?> add(@ModelAttribute AccountResponse accountDTO) {
         logger.debug("add: request " + new Gson().toJson(accountDTO));
         accountDTO.setImage(FileStore.getFilePath(accountDTO.getMultipartFile(), "-user"));
