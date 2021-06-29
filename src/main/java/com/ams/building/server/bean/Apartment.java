@@ -34,7 +34,6 @@ public class Apartment implements Serializable {
     @NonNull
     private Long id;
 
-
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "account_id", referencedColumnName = "id")
     private Account account;

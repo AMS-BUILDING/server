@@ -1,4 +1,5 @@
-CREATE DATABASE amsbuilding CHARACTER SET utf8;
+CREATE
+    DATABASE amsbuilding CHARACTER SET utf8;
 
 CREATE TABLE `amsbuilding`.`role`
 (
@@ -166,7 +167,8 @@ ALTER TABLE `amsbuilding`.`temporarily_absent_detail`
 
 ALTER TABLE `amsbuilding`.`temporarily_absent_detail`
     ADD UNIQUE INDEX `unique` (`identity_card` ASC, `absent_type_id` ASC) VISIBLE,
-    DROP INDEX `identity_card_UNIQUE`;
+    DROP
+        INDEX `identity_card_UNIQUE`;
 
 INSERT INTO `amsbuilding`.`temporarily_absent_type` (`absent_type`)
 VALUES ('tạm trú');
