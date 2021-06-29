@@ -8,6 +8,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class EmployeeRequest {
+
     private String name;
     private Boolean gender;
     private String dob;
@@ -17,4 +18,5 @@ public class EmployeeRequest {
     private String currentAddress;
     private String homeTown;
     private Long position;
+
 }

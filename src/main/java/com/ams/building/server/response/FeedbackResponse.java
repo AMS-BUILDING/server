@@ -8,8 +8,10 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class FeedbackResponse {
+
     private Long feedbackId;
     private String description;
     private String name;
     private String createdDate;
+
 }

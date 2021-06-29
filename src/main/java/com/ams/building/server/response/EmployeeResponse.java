@@ -8,6 +8,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class EmployeeResponse {
+
     private Long id;
     private String name;
     private String phone;
@@ -18,4 +19,5 @@ public class EmployeeResponse {
     private String currentAddress;
     private String gender;
     private String positionName;
+
 }

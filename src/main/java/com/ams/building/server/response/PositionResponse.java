@@ -8,6 +8,8 @@ import lombok.Setter;
 @Getter
 @Setter
 public class PositionResponse {
+
     private Long id;
     private String name;
+
 }

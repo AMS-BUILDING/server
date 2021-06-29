@@ -88,7 +88,7 @@ public class AbsentServiceImpl implements AbsentService {
             OutputStream os = response.getOutputStream();
             os.write(bom);
             final PrintWriter w = new PrintWriter(new OutputStreamWriter(os, "UTF-8"));
-            w.println("Name,Identify Card,Absent Type,Reasob,Home Town, Block, RoomNumber, Start Date, End Date");
+            w.println("Name,Identify Card,Absent Type,Reason,Home Town, Block, RoomNumber, Start Date, End Date");
             if (!CollectionUtils.isEmpty((Collection<?>) absentDetails)) {
                 for (AbsentDetail absentDetail : absentDetails) {
                     w.println(writeAbsentDetail(absentDetail));

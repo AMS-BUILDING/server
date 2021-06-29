@@ -13,9 +13,10 @@ import java.util.Date;
 @Repository
 public interface FeedbackDAO extends JpaRepository<Feedback, Long> {
 
-    @Query("SELECT fb FROM Feedback fb WHERE fb.account.name LIKE CONCAT('%',:name,'%') AND fb.createdDate LIKE CONCAT('%',:createdDate,'%') ORDER BY fb.id")
+    @Query("SELECT fb FROM Feedback fb WHERE fb.account.name LIKE CONCAT('%',:name,'%') AND fb.createdDate =:createdDate ORDER BY fb.id")
     Page<Feedback> findFeedbacksByNameAndCreateDate(@Param("name") String name, @Param("createdDate") Date createdDate, Pageable pageable);
 
     @Query("SELECT fb FROM Feedback fb WHERE fb.account.name LIKE CONCAT('%',:name,'%') ORDER BY fb.id")
     Page<Feedback> findFeedbacksByName(@Param("name") String name, Pageable pageable);
+
 }

@@ -8,6 +8,8 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ApiResponse {
+
     private Integer totalPage;
     private Object data;
+
 }

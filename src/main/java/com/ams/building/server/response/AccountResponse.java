@@ -15,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AccountResponse {
+
     private Long id;
     private String name;
     private String password;
@@ -30,4 +31,5 @@ public class AccountResponse {
 
     @JsonIgnore
     private MultipartFile multipartFile;
+
 }

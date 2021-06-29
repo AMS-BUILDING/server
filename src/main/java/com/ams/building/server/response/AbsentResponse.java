@@ -8,6 +8,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class AbsentResponse {
+
     private Long absentDetailId;
     private String name;
     private String identifyCard;
@@ -18,4 +19,5 @@ public class AbsentResponse {
     private String endDate;
     private String absentType;
     private String reason;
+
 }
