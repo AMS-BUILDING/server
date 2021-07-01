@@ -9,6 +9,7 @@ public class ValidateUtil {
     private static final String EMAIL_PATTERN = "^(.+)@(\\S+)$";
     private static final String IDENTIFY_CARD_PATTERN = "[0-9]{9}|[0-9]{12}";
 
+
     public static boolean isPhoneNumber(String phoneNumber) {
         Pattern pattern = Pattern.compile(PHONE_NUMBER_PATTERN);
         Matcher matcher = pattern.matcher(phoneNumber);

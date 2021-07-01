@@ -34,8 +34,7 @@ public class Apartment implements Serializable {
     @NonNull
     private Long id;
 
-
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "account_id", referencedColumnName = "id")
     private Account account;
 
@@ -46,4 +45,5 @@ public class Apartment implements Serializable {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "room_number_id", referencedColumnName = "id")
     private RoomNumber roomNumber;
+
 }

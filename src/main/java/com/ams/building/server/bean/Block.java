@@ -33,4 +33,5 @@ public class Block implements Serializable {
 
     @Column(name = "block_name")
     private String blockName;
+
 }

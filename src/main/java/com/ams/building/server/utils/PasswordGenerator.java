@@ -36,8 +36,4 @@ public class PasswordGenerator {
 
 		return output.toString();
 	}
-
-	public static void main(String[] args) {
-		System.out.println(getHashString("123456"));
-	}
 }

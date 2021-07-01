@@ -2,7 +2,9 @@ package com.ams.building.server.service.impl;
 
 import com.ams.building.server.bean.Account;
 import com.ams.building.server.bean.Role;
+import com.ams.building.server.constant.StatusCode;
 import com.ams.building.server.dao.AccountDAO;
+import com.ams.building.server.exception.RestApiException;
 import com.ams.building.server.response.AccountResponse;
 import com.ams.building.server.response.UserPrincipal;
 import com.ams.building.server.service.AccountService;
@@ -13,10 +15,14 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+
+import static com.ams.building.server.utils.ValidateUtil.isEmail;
 
 @Transactional
 @Service
@@ -26,88 +32,111 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
     private AccountDAO accountDao;
 
     @Override
-    public void add(AccountResponse accountDTO) {
+    public void add(AccountResponse accountResponse) {
         Account account = new Account();
-        account.setEmail(accountDTO.getEmail());
-        account.setPassword(accountDTO.getPassword());
-        account.setEnabled(accountDTO.getEnabled());
-        account.setPhone(accountDTO.getPhone());
-        account.setName(accountDTO.getName());
-        account.setRole(new Role(accountDTO.getRoleId()));
-        account.setDob(accountDTO.getDob());
-        account.setHomeTown(accountDTO.getHomeTown());
-        account.setImage(accountDTO.getImage());
+        account.setEmail(accountResponse.getEmail());
+        account.setPassword(accountResponse.getPassword());
+        account.setEnabled(accountResponse.getEnabled());
+        account.setPhone(accountResponse.getPhone());
+        account.setCurrentAddress(accountResponse.getCurrentAddress());
+        account.setName(accountResponse.getName());
+        Role role = Role.builder().id(accountResponse.getId()).build();
+        account.setRole(role);
+        account.setDob(accountResponse.getDob());
+        account.setHomeTown(accountResponse.getHomeTown());
+        account.setImage(accountResponse.getImage());
         accountDao.save(account);
-        accountDTO.setId(account.getId());
+        accountResponse.setId(account.getId());
     }
 
     @Override
-    public void update(AccountResponse accountDTO) {
-        Account account = accountDao.getAccountById(accountDTO.getId());
-        if (account != null) {
-            account.setEmail(accountDTO.getEmail());
-            account.setPassword(accountDTO.getPassword());
-            account.setEnabled(accountDTO.getEnabled());
-            account.setPhone(accountDTO.getPhone());
-            account.setName(accountDTO.getName());
-            account.setRole(new Role(accountDTO.getRoleId()));
-            account.setDob(accountDTO.getDob());
-            account.setHomeTown(accountDTO.getHomeTown());
-            account.setIdentityCard(accountDTO.getIdentityCard());
-
-            if (account.getImage() != null) {
-                String image = account.getImage();
-                FileStore.deleteFile(image);
-                account.setImage(accountDTO.getImage());
-            }
-            accountDao.save(account);
+    public void update(AccountResponse accountResponse) {
+        Account account = accountDao.getAccountById(accountResponse.getId());
+        if (Objects.isNull(account)) {
+            throw new RestApiException(StatusCode.ACCOUNT_NOT_EXIST);
         }
+        account.setEmail(accountResponse.getEmail());
+        account.setPassword(accountResponse.getPassword());
+        account.setEnabled(accountResponse.getEnabled());
+        account.setPhone(accountResponse.getPhone());
+        account.setCurrentAddress(accountResponse.getCurrentAddress());
+        account.setName(accountResponse.getName());
+        Role role = Role.builder().id(accountResponse.getId()).build();
+        account.setRole(role);
+        account.setDob(accountResponse.getDob());
+        account.setHomeTown(accountResponse.getHomeTown());
+        account.setIdentifyCard(accountResponse.getIdentifyCard());
+        if (account.getImage() != null) {
+            String image = account.getImage();
+            FileStore.deleteFile(image);
+            account.setImage(accountResponse.getImage());
+        }
+        accountDao.save(account);
     }
 
     @Override
-    public void updateProfile(AccountResponse accountDTO) {
-        Account account = accountDao.getAccountById(accountDTO.getId());
-        if (account != null) {
-            account.setName(accountDTO.getName());
-            account.setPhone(accountDTO.getPhone());
+    public void updateProfile(AccountResponse accountResponse) {
+        if (StringUtils.isEmpty(accountResponse.getId())) {
+            throw new RestApiException(StatusCode.DATA_EMPTY);
         }
+        Account account = accountDao.getAccountById(accountResponse.getId());
+        if (Objects.isNull(account)) {
+            throw new RestApiException(StatusCode.ACCOUNT_NOT_EXIST);
+        }
+        account.setName(accountResponse.getName());
+        account.setPhone(accountResponse.getPhone());
     }
 
     @Override
     public void delete(Long id) {
-        Account account = accountDao.getAccountById(id);
-        if (account != null) {
-            accountDao.deleteById(id);
+        if (StringUtils.isEmpty(id)) {
+            throw new RestApiException(StatusCode.DATA_EMPTY);
         }
+        Account account = accountDao.getAccountById(id);
+        if (Objects.isNull(account)) {
+            throw new RestApiException(StatusCode.ACCOUNT_NOT_EXIST);
+        }
+        accountDao.deleteById(id);
     }
 
     @Override
     public List<AccountResponse> find() {
         List<Account> accountList = accountDao.findAll();
-        List<AccountResponse> accountDTOList = new ArrayList<>();
+        List<AccountResponse> accountResponses = new ArrayList<>();
         accountList.forEach(account -> {
-            accountDTOList.add(convert(account));
+            accountResponses.add(convertToAccountResponse(account));
         });
-        return accountDTOList;
+        return accountResponses;
     }
 
     @Override
     public AccountResponse getById(Long id) {
-        Account account = accountDao.getAccountById(id);
-        if (account != null) {
-            return convert(account);
+        if (StringUtils.isEmpty(id)) {
+            throw new RestApiException(StatusCode.DATA_EMPTY);
         }
-        return null;
+        Account account = accountDao.getAccountById(id);
+        if (Objects.isNull(account)) {
+            throw new RestApiException(StatusCode.ACCOUNT_NOT_EXIST);
+        }
+        AccountResponse response = convertToAccountResponse(account);
+        return response;
     }
 
     @Override
     public AccountResponse getByEmail(String email) {
-        Account account = accountDao.getAccountByEmail(email);
-
-        if (account != null) {
-            return convert(account);
+        if (StringUtils.isEmpty(email)) {
+            throw new RestApiException(StatusCode.DATA_EMPTY);
         }
-        return null;
+        boolean isEmail = isEmail(email);
+        if (!isEmail) {
+            throw new RestApiException(StatusCode.EMAIL_NOT_RIGHT_FORMAT);
+        }
+        Account account = accountDao.getAccountByEmail(email);
+        if (Objects.isNull(account)) {
+            throw new RestApiException(StatusCode.ACCOUNT_NOT_EXIST);
+        }
+        AccountResponse response = convertToAccountResponse(account);
+        return response;
     }
 
     @Override
@@ -116,43 +145,30 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
     }
 
     @Override
-    public Long counTotal() {
-        return accountDao.count();
+    public Integer countTotal() {
+        return Math.toIntExact(accountDao.count());
     }
 
     @Override
     public void changeAccountLock(long id) {
-        Account account = accountDao.getAccountById(id);
-        if (account != null) {
-            account.setEnabled(!account.getEnabled());
-            accountDao.save(account);
+        if (StringUtils.isEmpty(id)) {
+            throw new RestApiException(StatusCode.DATA_EMPTY);
         }
+        Account account = accountDao.getAccountById(id);
+        if (Objects.isNull(account)) {
+            throw new RestApiException(StatusCode.ACCOUNT_NOT_EXIST);
+        }
+        account.setEnabled(!account.getEnabled());
+        accountDao.save(account);
     }
-
-    private AccountResponse convert(Account account) {
-        AccountResponse accountDTO = new AccountResponse();
-        accountDTO.setId(account.getId());
-        accountDTO.setEnabled(account.getEnabled());
-        accountDTO.setEmail(account.getEmail());
-        accountDTO.setPassword(account.getPassword());
-        accountDTO.setRoleId(account.getRole().getId());
-        accountDTO.setPhone(account.getPhone());
-        accountDTO.setImage(account.getImage());
-        accountDTO.setDob(account.getDob());
-        accountDTO.setHomeTown(account.getHomeTown());
-        accountDTO.setIdentityCard(account.getIdentityCard());
-        return accountDTO;
-
-    }
-
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         Account account = accountDao.getAccountByEmail(email);
-        if (account == null) {
-            throw new UsernameNotFoundException("not found");
+        if (Objects.isNull(account)) {
+            throw new UsernameNotFoundException(StatusCode.ACCOUNT_NOT_EXIST.getMessage());
         }
-        List<SimpleGrantedAuthority> authorities = new ArrayList<SimpleGrantedAuthority>();
+        List<SimpleGrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new SimpleGrantedAuthority(account.getRole().getName()));
         UserPrincipal accountDTO = new UserPrincipal(account.getEmail(), account.getPassword(), account.getEnabled(), true, true,
                 true, authorities);
@@ -162,5 +178,19 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
         return accountDTO;
     }
 
-
+    private AccountResponse convertToAccountResponse(Account account) {
+        AccountResponse response = AccountResponse.builder().build();
+        response.setId(account.getId());
+        response.setEnabled(account.getEnabled());
+        response.setEmail(account.getEmail());
+        response.setPassword(account.getPassword());
+        response.setRoleId(account.getRole().getId());
+        response.setPhone(account.getPhone());
+        response.setCurrentAddress(account.getCurrentAddress());
+        response.setImage(account.getImage());
+        response.setDob(account.getDob());
+        response.setHomeTown(account.getHomeTown());
+        response.setIdentifyCard(account.getIdentifyCard());
+        return response;
+    }
 }

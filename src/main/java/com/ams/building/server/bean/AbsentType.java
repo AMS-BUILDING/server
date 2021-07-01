@@ -33,4 +33,5 @@ public class AbsentType implements Serializable {
 
     @Column(name = "absent_type")
     private String absentType;
+
 }

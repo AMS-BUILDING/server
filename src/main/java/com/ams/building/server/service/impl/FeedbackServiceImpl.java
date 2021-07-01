@@ -5,10 +5,10 @@ import com.ams.building.server.bean.Feedback;
 import com.ams.building.server.constant.StatusCode;
 import com.ams.building.server.dao.AccountDAO;
 import com.ams.building.server.dao.FeedbackDAO;
-import com.ams.building.server.dto.FeedbackDTO;
 import com.ams.building.server.exception.RestApiException;
 import com.ams.building.server.request.FeedbackRequest;
-import com.ams.building.server.response.ListFeedbackResponse;
+import com.ams.building.server.response.ApiResponse;
+import com.ams.building.server.response.FeedbackResponse;
 import com.ams.building.server.service.FeedbackService;
 import com.ams.building.server.utils.DateTimeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +18,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -45,48 +44,29 @@ public class FeedbackServiceImpl implements FeedbackService {
         }
         Feedback feedback = new Feedback();
         feedback.setDescription(feedbackRequest.getDescription());
-        feedback.setCreatedDate(new Date());
         feedback.setAccount(account);
         feedbackDAO.save(feedback);
     }
 
     @Override
-    public ListFeedbackResponse listAllFeedback(Integer size) {
-        List<Feedback> feedbacks = feedbackDAO.findAll();
-        List<FeedbackDTO> feedbackDTOList = new ArrayList<>();
-        feedbacks.forEach(feedback -> {
-            feedbackDTOList.add(convertFeedbackToFeedbackDTO(feedback));
-        });
-
-        Integer totalPage = feedbacks.size() % size == 0 ? feedbacks.size() / size : feedbacks.size() / size + 1;
-        ListFeedbackResponse response = ListFeedbackResponse.builder().feedbackResponses(feedbackDTOList).totalPage(totalPage).build();
-        return response;
-    }
-
-    @Override
-    public ListFeedbackResponse searchFeedbackByNameAndCreateDate(Integer page, Integer size, String name, Date crateDate) {
-        Page<Feedback> feedbacks;
+    public ApiResponse searchFeedbackByNameAndCreateDate(Integer page, Integer size, String name) {
         Pageable pageable = PageRequest.of(page, size);
-        List<FeedbackDTO> feedbackDTOList = new ArrayList<>();
-        if (Objects.isNull(crateDate)) {
-            feedbacks = feedbackDAO.findFeedbacksByName(name, pageable);
-        } else {
-            feedbacks = feedbackDAO.findFeedbacksByNameAndCreateDate(name, crateDate, pageable);
-        }
+        Page<Feedback> feedbacks = feedbackDAO.findFeedbacksByName(name, pageable);
+        List<FeedbackResponse> feedbackResponseList = new ArrayList<>();
         feedbacks.forEach(feedback -> {
-            feedbackDTOList.add(convertFeedbackToFeedbackDTO(feedback));
+            feedbackResponseList.add(convertFeedbackToFeedbackDTO(feedback));
         });
         Integer totalPage = feedbacks.getTotalPages();
-        ListFeedbackResponse response = ListFeedbackResponse.builder().feedbackResponses(feedbackDTOList).totalPage(totalPage).build();
+        ApiResponse response = ApiResponse.builder().data(feedbackResponseList).totalPage(totalPage).build();
         return response;
     }
 
-    private FeedbackDTO convertFeedbackToFeedbackDTO(Feedback feedback) {
-        FeedbackDTO feedbackDTO = new FeedbackDTO();
-        feedbackDTO.setFeedbackId(feedback.getId());
-        feedbackDTO.setName(feedback.getAccount().getName());
-        feedbackDTO.setDescription(feedback.getDescription());
-        feedbackDTO.setCreatedDate(DateTimeUtils.convertDateToStringWithTimezone(feedback.getCreatedDate(),DateTimeUtils.DD_MM_YYYY,null));
-        return feedbackDTO;
+    private FeedbackResponse convertFeedbackToFeedbackDTO(Feedback feedback) {
+        FeedbackResponse feedbackResponse = FeedbackResponse.builder().build();
+        feedbackResponse.setFeedbackId(feedback.getId());
+        feedbackResponse.setName(feedback.getAccount().getName());
+        feedbackResponse.setDescription(feedback.getDescription());
+        feedbackResponse.setCreatedDate(DateTimeUtils.convertDateToStringWithTimezone(feedback.getCreatedDate(), DateTimeUtils.DD_MM_YYYY, null));
+        return feedbackResponse;
     }
 }

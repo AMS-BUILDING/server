@@ -1,6 +1,5 @@
 package com.ams.building.server.bean;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -13,6 +12,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.io.Serializable;
 
 @Builder
 @Getter
@@ -21,7 +21,10 @@ import javax.persistence.Table;
 @AllArgsConstructor
 @Entity
 @Table(name = "role")
-public class Role {
+public class Role implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,7 +33,4 @@ public class Role {
     @Column(name = "name")
     private String name;
 
-    public Role(Long id) {
-        this.id = id;
-    }
 }

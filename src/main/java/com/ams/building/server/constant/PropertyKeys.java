@@ -16,5 +16,7 @@ public class PropertyKeys {
     public static final String IDENTIFY_CARD_NOT_RIGHT = "identify.card.not.right";
     public static final String ACCOUNT_NOT_EXIST = "account.not.exist";
     public static final String FEEDBACK_EMPTY = "feedback.empty";
+    public static final String EMAIL_NOT_RIGHT_FORMAT = "email.not.right.format";
+    public static final String POSITION_NOT_EXIST = "position.not.exist";
 
 }

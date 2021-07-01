@@ -1,44 +1,64 @@
-CREATE DATABASE amsbuilding CHARACTER SET utf8;
+CREATE
+DATABASE amsbuilding CHARACTER SET utf8;
 
 CREATE TABLE `amsbuilding`.`role`
 (
-    `id`   BIGINT      NOT NULL AUTO_INCREMENT,
+    `id`   BIGINT NOT NULL AUTO_INCREMENT,
     `name` VARCHAR(45) NULL,
+    PRIMARY KEY (`id`)
+);
+CREATE TABLE `amsbuilding`.`position`
+(
+    `id`   BIGINT NOT NULL AUTO_INCREMENT,
+    `name` VARCHAR(45) NULL,
+    `show` TINYINT NULL DEFAULT 0,
     PRIMARY KEY (`id`)
 );
 
 CREATE TABLE `amsbuilding`.`account`
 (
-    `id`           BIGINT      NOT NULL AUTO_INCREMENT,
-    `role_id`      BIGINT      NULL,
-    `name`         VARCHAR(45) NULL,
-    `password`     VARCHAR(45) NULL,
-    `phone`        VARCHAR(45) NULL,
-    `email`        VARCHAR(45) NULL,
-    `enabled`      VARCHAR(45) NULL,
-    `image`        VARCHAR(45) NULL,
-    `identityCard` VARCHAR(45) NULL,
-    `homeTown`     VARCHAR(45) NULL,
-    `created_date` TIMESTAMP   NULL DEFAULT CURRENT_TIMESTAMP,
+    `id`              BIGINT NOT NULL AUTO_INCREMENT,
+    `role_id`         BIGINT NULL,
+    `position_id`     BIGINT NULL,
+    `name`            VARCHAR(50) NULL,
+    `email`           VARCHAR(60) NULL,
+    `phone`           VARCHAR(11) NULL,
+    `gender`          TINYINT NULL DEFAULT 0,
+    `password`        VARCHAR(65) NULL,
+    `identify_card`   VARCHAR(20) NULL,
+    `image_link`      VARCHAR(100) NULL,
+    `dob`             VARCHAR(45) NULL,
+    `enabled`         TINYINT NULL,
+    `home_town`       VARCHAR(200) NULL,
+    `current_address` VARCHAR(200) NULL,
+    `created_date`    TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`),
-    INDEX `account_ibfk_1_idx` (`role_id` ASC) VISIBLE,
+    UNIQUE INDEX `email_UNIQUE` (`email` ASC) VISIBLE,
+    UNIQUE INDEX `identify_card_UNIQUE` (`identify_card` ASC) VISIBLE,
+    INDEX             `account_ibfk_1_idx` (`role_id` ASC) VISIBLE,
+    INDEX             `account_ibfk_2_idx` (`position_id` ASC) VISIBLE,
     CONSTRAINT `account_ibfk_1`
         FOREIGN KEY (`role_id`)
             REFERENCES `amsbuilding`.`role` (`id`)
+            ON DELETE NO ACTION
+            ON UPDATE NO ACTION,
+    CONSTRAINT `account_ibfk_2`
+        FOREIGN KEY (`position_id`)
+            REFERENCES `amsbuilding`.`position` (`id`)
             ON DELETE NO ACTION
             ON UPDATE NO ACTION
 );
 
 CREATE TABLE `amsbuilding`.`floor`
 (
-    `id`         BIGINT      NOT NULL AUTO_INCREMENT,
+    `id`         BIGINT NOT NULL AUTO_INCREMENT,
     `floor_name` VARCHAR(20) NULL,
     PRIMARY KEY (`id`)
 );
 
 CREATE TABLE `amsbuilding`.`block`
 (
-    `id`         BIGINT      NOT NULL AUTO_INCREMENT,
+    `id`         BIGINT NOT NULL AUTO_INCREMENT,
     `block_name` VARCHAR(45) NULL,
     PRIMARY KEY (`id`)
 );
@@ -49,8 +69,8 @@ CREATE TABLE `amsbuilding`.`floor_block`
     `block_id` BIGINT NULL,
     `floor_id` BIGINT NULL,
     PRIMARY KEY (`id`),
-    INDEX `floor_block_ibfk_1_idx` (`block_id` ASC) VISIBLE,
-    INDEX `floor_block_ibfk_2_idx` (`floor_id` ASC) VISIBLE,
+    INDEX      `floor_block_ibfk_1_idx` (`block_id` ASC) VISIBLE,
+    INDEX      `floor_block_ibfk_2_idx` (`floor_id` ASC) VISIBLE,
     CONSTRAINT `floor_block_ibfk_1`
         FOREIGN KEY (`block_id`)
             REFERENCES `amsbuilding`.`block` (`id`)
@@ -65,20 +85,20 @@ CREATE TABLE `amsbuilding`.`floor_block`
 
 CREATE TABLE `amsbuilding`.`type_apartment`
 (
-    `id`        BIGINT      NOT NULL AUTO_INCREMENT,
+    `id`        BIGINT NOT NULL AUTO_INCREMENT,
     `type_name` VARCHAR(50) NULL,
     PRIMARY KEY (`id`)
 );
 
 CREATE TABLE `amsbuilding`.`room_number`
 (
-    `id`                BIGINT      NOT NULL AUTO_INCREMENT,
-    `floor_block_id`    BIGINT      NULL,
-    `type_apartment_id` BIGINT      NULL,
+    `id`                BIGINT NOT NULL AUTO_INCREMENT,
+    `floor_block_id`    BIGINT NULL,
+    `type_apartment_id` BIGINT NULL,
     `room_name`         VARCHAR(45) NULL,
     PRIMARY KEY (`id`),
-    INDEX `room_number_ibfk_1_idx` (`floor_block_id` ASC) VISIBLE,
-    INDEX `room_number_ibfk_2_idx` (`type_apartment_id` ASC) VISIBLE,
+    INDEX               `room_number_ibfk_1_idx` (`floor_block_id` ASC) VISIBLE,
+    INDEX               `room_number_ibfk_2_idx` (`type_apartment_id` ASC) VISIBLE,
     CONSTRAINT `room_number_ibfk_1`
         FOREIGN KEY (`floor_block_id`)
             REFERENCES `amsbuilding`.`floor_block` (`id`)
@@ -93,9 +113,9 @@ CREATE TABLE `amsbuilding`.`room_number`
 
 CREATE TABLE `amsbuilding`.`building`
 (
-    `id`            BIGINT        NOT NULL AUTO_INCREMENT,
-    `building_name` VARCHAR(100)  NULL,
-    `address`       VARCHAR(200)  NULL,
+    `id`            BIGINT NOT NULL AUTO_INCREMENT,
+    `building_name` VARCHAR(100) NULL,
+    `address`       VARCHAR(200) NULL,
     `description`   VARCHAR(4000) NULL,
     PRIMARY KEY (`id`)
 );
@@ -107,9 +127,9 @@ CREATE TABLE `amsbuilding`.`apartment`
     `building_id`    BIGINT NULL,
     `room_number_id` BIGINT NULL,
     PRIMARY KEY (`id`),
-    INDEX `apartment_ibfk_2_idx` (`building_id` ASC) VISIBLE,
-    INDEX `apartment_ibfk_1_idx` (`account_id` ASC) VISIBLE,
-    INDEX `apartment_ibfk_3_idx` (`room_number_id` ASC) VISIBLE,
+    INDEX            `apartment_ibfk_2_idx` (`building_id` ASC) VISIBLE,
+    INDEX            `apartment_ibfk_1_idx` (`account_id` ASC) VISIBLE,
+    INDEX            `apartment_ibfk_3_idx` (`room_number_id` ASC) VISIBLE,
     CONSTRAINT `apartment_ibfk_1`
         FOREIGN KEY (`account_id`)
             REFERENCES `amsbuilding`.`account` (`id`)
@@ -129,26 +149,26 @@ CREATE TABLE `amsbuilding`.`apartment`
 
 CREATE TABLE `amsbuilding`.`temporarily_absent_type`
 (
-    `id`          BIGINT      NOT NULL AUTO_INCREMENT,
+    `id`          BIGINT NOT NULL AUTO_INCREMENT,
     `absent_type` VARCHAR(45) NULL,
     PRIMARY KEY (`id`)
 );
 
 CREATE TABLE `amsbuilding`.`temporarily_absent_detail`
 (
-    `id`             BIGINT      NOT NULL AUTO_INCREMENT,
-    `absent_type_id` BIGINT      NULL,
-    `apartment_id`   BIGINT      NULL,
+    `id`             BIGINT NOT NULL AUTO_INCREMENT,
+    `absent_type_id` BIGINT NULL,
+    `apartment_id`   BIGINT NULL,
     `name`           VARCHAR(45) NULL,
     `identity_card`  VARCHAR(20) NULL,
     `home_town`      VARCHAR(45) NULL,
     `dob`            VARCHAR(45) NULL,
-    `start_date`     TIMESTAMP   NULL DEFAULT CURRENT_TIMESTAMP,
-    `end_date`       TIMESTAMP   NULL DEFAULT CURRENT_TIMESTAMP,
+    `start_date`     TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
+    `end_date`       TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`),
     UNIQUE INDEX `identity_card_UNIQUE` (`identity_card` ASC) VISIBLE,
-    INDEX `temporarily_absent_detail_ibfk_1_idx` (`apartment_id` ASC) VISIBLE,
-    INDEX `temporarily_absent_detail_ibfk_2_idx` (`absent_type_id` ASC) VISIBLE,
+    INDEX            `temporarily_absent_detail_ibfk_1_idx` (`apartment_id` ASC) VISIBLE,
+    INDEX            `temporarily_absent_detail_ibfk_2_idx` (`absent_type_id` ASC) VISIBLE,
     CONSTRAINT `temporarily_absent_detail_ibfk_1`
         FOREIGN KEY (`apartment_id`)
             REFERENCES `amsbuilding`.`apartment` (`id`)
@@ -160,13 +180,28 @@ CREATE TABLE `amsbuilding`.`temporarily_absent_detail`
             ON DELETE NO ACTION
             ON UPDATE NO ACTION
 );
+CREATE TABLE `amsbuilding`.`feedback`
+(
+    `id`           BIGINT NOT NULL AUTO_INCREMENT,
+    `account_id`   BIGINT NULL,
+    `description`  VARCHAR(1000) NULL,
+    `created_date` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`),
+    INDEX          `feedback_ibfk_1_idx` (`account_id` ASC) VISIBLE,
+    CONSTRAINT `feedback_ibfk_1`
+        FOREIGN KEY (`account_id`)
+            REFERENCES `amsbuilding`.`account` (`id`)
+            ON DELETE NO ACTION
+            ON UPDATE NO ACTION
+);
 
 ALTER TABLE `amsbuilding`.`temporarily_absent_detail`
     ADD COLUMN `reason` VARCHAR(45) NULL AFTER `identity_card`;
 
 ALTER TABLE `amsbuilding`.`temporarily_absent_detail`
     ADD UNIQUE INDEX `unique` (`identity_card` ASC, `absent_type_id` ASC) VISIBLE,
-    DROP INDEX `identity_card_UNIQUE`;
+DROP
+INDEX `identity_card_UNIQUE`;
 
 INSERT INTO `amsbuilding`.`temporarily_absent_type` (`absent_type`)
 VALUES ('tạm trú');

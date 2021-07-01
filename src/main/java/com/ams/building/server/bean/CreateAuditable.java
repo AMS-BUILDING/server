@@ -21,14 +21,14 @@ import java.util.Date;
 // abstract k tạo đc đối tượng mà phải kế thừa
 public abstract class CreateAuditable {
 
-	@CreatedDate
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "created_date")
-	private Date createdDate;
+    @CreatedDate
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "created_date")
+    private Date createdDate;
 
-	@CreatedBy
-	@JoinColumn(name = "created_by")
-	@ManyToOne(fetch = FetchType.LAZY)
-	private Account createdBy;
+    @CreatedBy
+    @JoinColumn(name = "created_by")
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Account createdBy;
 
 }

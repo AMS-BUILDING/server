@@ -16,7 +16,9 @@ public enum StatusCode {
     IDENTIFY_CARD_DUILCATE(408, PropertiesReader.getProperty(PropertyKeys.IDENTIFY_CARD_DUILCATE)),
     IDENTIFY_CARD_NOT_RIGHT(409, PropertiesReader.getProperty(PropertyKeys.IDENTIFY_CARD_NOT_RIGHT)),
     FEEDBACK_EMPTY(410, PropertiesReader.getProperty(PropertyKeys.FEEDBACK_EMPTY)),
-    ACCOUNT_NOT_EXIST(411, PropertiesReader.getProperty(PropertyKeys.ACCOUNT_NOT_EXIST));
+    ACCOUNT_NOT_EXIST(411, PropertiesReader.getProperty(PropertyKeys.ACCOUNT_NOT_EXIST)),
+    EMAIL_NOT_RIGHT_FORMAT(412, PropertiesReader.getProperty(PropertyKeys.EMAIL_NOT_RIGHT_FORMAT)),
+    POSITION_NOT_EXIST(413, PropertiesReader.getProperty(PropertyKeys.POSITION_NOT_EXIST));
 
     private Integer status;
 

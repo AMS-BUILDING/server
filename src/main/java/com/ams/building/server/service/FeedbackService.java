@@ -1,14 +1,12 @@
 package com.ams.building.server.service;
 
 import com.ams.building.server.request.FeedbackRequest;
-import com.ams.building.server.response.ListFeedbackResponse;
-
-import java.util.Date;
+import com.ams.building.server.response.ApiResponse;
 
 public interface FeedbackService {
+
     void addFeedback(FeedbackRequest feedbackRequest);
 
-    ListFeedbackResponse listAllFeedback(Integer size);
+    ApiResponse searchFeedbackByNameAndCreateDate(Integer page, Integer size, String name);
 
-    ListFeedbackResponse searchFeedbackByNameAndCreateDate(Integer page, Integer size, String name, Date cratedDate);
 }

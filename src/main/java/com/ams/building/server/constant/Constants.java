@@ -19,13 +19,18 @@ public class Constants {
         public static final String URL_API_SEARCH_ABSENT = "search";
         public static final String URL_API_EXPORT_SEARCH_ABSENT = "export";
         public static final String URL_API_INSERT_ABSENT = "add";
-        public static final String URL_API_LIST_ACCOUNT = "list/account";
-        public static final String URL_API_ADD_ACCOUNT = "account/add";
-        public static final String URL_API_UPDATE_ACCOUNT = "account/update";
-        public static final String URL_API_GET_ACCOUNT = "account";
+        public static final String URL_API_ADD_ACCOUNT = "add";
+        public static final String URL_API_UPDATE_ACCOUNT = "update";
+        public static final String URL_API_GET_ACCOUNT = "get-one";
+        public static final String URL_API_FIND_ACCOUNT = "find";
         public static final String URL_API_INSERT_FEEDBACK = "add";
         public static final String URL_API_SEARCH_FEEDBACK = "search";
         public static final String URL_API_List_FEEDBACK = "list";
+        public static final String URL_API_SEARCH_POSITION = "search";
+        public static final String URL_API_SEARCH_EMPLOYEE = "search";
+        public static final String URL_API_GET_ONE_EMPLOYEE = "get-one";
+        public static final String URL_API_REMOVE_EMPLOYEE = "remove";
+        public static final String URL_API_UPDATE_EMPLOYEE = "update";
     }
 
     public class FileProperties {
@@ -34,5 +39,14 @@ public class Constants {
 
         public static final String PROPERTIES_APPLICATION = "application.properties";
         public static final String PROPERTIES_VALIDATION = "validation.properties";
+    }
+
+    public class AccountGender {
+        private AccountGender() {
+
+        }
+
+        public static final String GENDER_MALE = "nam";
+        public static final String GENDER_FEMALE = "nữ";
     }
 }

@@ -6,11 +6,11 @@ import java.util.List;
 
 public interface AccountService {
 
-    void add(AccountResponse accountDTO);
+    void add(AccountResponse accountResponse);
 
-    void update(AccountResponse accountDTO);
+    void update(AccountResponse accountResponse);
 
-    void updateProfile(AccountResponse accountDTO);
+    void updateProfile(AccountResponse accountResponse);
 
     void delete(Long id);
 
@@ -18,11 +18,11 @@ public interface AccountService {
 
     AccountResponse getById(Long id);
 
-    AccountResponse getByEmail(String email);
+    AccountResponse getByEmail(String  email);
 
     Long count();
 
-    Long counTotal();
+    Integer countTotal();
 
     void changeAccountLock(long id);
 

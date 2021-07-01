@@ -14,8 +14,7 @@ import com.ams.building.server.dao.ApartmentDAO;
 import com.ams.building.server.exception.RestApiException;
 import com.ams.building.server.request.AbsentRequest;
 import com.ams.building.server.response.AbsentResponse;
-import com.ams.building.server.response.AccountResponse;
-import com.ams.building.server.response.ListAbsentResponse;
+import com.ams.building.server.response.ApiResponse;
 import com.ams.building.server.service.AbsentService;
 import com.ams.building.server.utils.DateTimeUtils;
 import org.apache.log4j.Logger;
@@ -40,7 +39,6 @@ import java.util.Objects;
 import static com.ams.building.server.utils.DateTimeUtils.convertDateToStringWithTimezone;
 import static com.ams.building.server.utils.ValidateUtil.isIdentifyCard;
 
-
 @Transactional
 @Service
 public class AbsentServiceImpl implements AbsentService {
@@ -57,8 +55,8 @@ public class AbsentServiceImpl implements AbsentService {
     private ApartmentDAO apartmentDAO;
 
     @Override
-    public ListAbsentResponse absentList(String name, String identifyCard, Long absentType, Integer page, Integer size) {
-        List<AbsentResponse> absentDTOS = new ArrayList<>();
+    public ApiResponse absentList(String name, String identifyCard, Long absentType, Integer page, Integer size) {
+        List<AbsentResponse> absentResponses = new ArrayList<>();
         Pageable pageable = PageRequest.of(page, size);
         Page<AbsentDetail> absentDetails;
         if (absentType == -1) {
@@ -67,11 +65,11 @@ public class AbsentServiceImpl implements AbsentService {
             absentDetails = absentDao.absentList(name, identifyCard, absentType, pageable);
         }
         for (AbsentDetail ad : absentDetails) {
-            AbsentResponse absentResponse = covertAbsentDetailToResponse(ad);
-            absentDTOS.add(absentResponse);
+            AbsentResponse response = covertAbsentDetailToDTO(ad);
+            absentResponses.add(response);
         }
         Integer totalPage = absentDetails.getTotalPages();
-        ListAbsentResponse response = ListAbsentResponse.builder().absentResponses(absentDTOS).totalPage(totalPage).build();
+        ApiResponse response = ApiResponse.builder().data(absentResponses).totalPage(totalPage).build();
         return response;
     }
 
@@ -90,7 +88,7 @@ public class AbsentServiceImpl implements AbsentService {
             OutputStream os = response.getOutputStream();
             os.write(bom);
             final PrintWriter w = new PrintWriter(new OutputStreamWriter(os, "UTF-8"));
-            w.println("Name,Identify Card,Absent Type,Reasob,Home Town, Block, RoomNumber, Start Date, End Date");
+            w.println("Name,Identify Card,Absent Type,Reason,Home Town, Block, RoomNumber, Start Date, End Date");
             if (!CollectionUtils.isEmpty((Collection<?>) absentDetails)) {
                 for (AbsentDetail absentDetail : absentDetails) {
                     w.println(writeAbsentDetail(absentDetail));
@@ -132,7 +130,7 @@ public class AbsentServiceImpl implements AbsentService {
         absentDetail.setName(request.getName());
         absentDetail.setReason(request.getReason());
         absentDetail.setHomeTown(request.getHomeTown());
-        absentDetail.setIdentityCard(request.getIdentifyCard());
+        absentDetail.setIdentifyCard(request.getIdentifyCard());
         absentDetail.setDob(convertDateToStringWithTimezone(request.getDob(), DateTimeUtils.DD_MM_YYYY, null));
         absentDetail.setEndDate(request.getEndDate());
         absentDetail.setStartDate(request.getStartDate());
@@ -140,7 +138,7 @@ public class AbsentServiceImpl implements AbsentService {
         absentDao.save(absentDetail);
     }
 
-    private AbsentResponse covertAbsentDetailToResponse(AbsentDetail absentDetail) {
+    private AbsentResponse covertAbsentDetailToDTO(AbsentDetail absentDetail) {
         Apartment apartment = absentDetail.getApartment();
         RoomNumber roomNumber = apartment.getRoomNumber();
         FloorBlock floorBlock = roomNumber.getFloorBlock();
@@ -149,10 +147,10 @@ public class AbsentServiceImpl implements AbsentService {
         String startDate = convertDateToStringWithTimezone(absentDetail.getStartDate(), DateTimeUtils.DD_MM_YYYY, null);
         String endDate = convertDateToStringWithTimezone(absentDetail.getEndDate(), DateTimeUtils.DD_MM_YYYY, null);
 
-        AbsentResponse absentDTO = AbsentResponse.builder()
+        AbsentResponse response = AbsentResponse.builder()
                 .absentDetailId(absentDetail.getId())
                 .name(absentDetail.getName())
-                .identifyCard(absentDetail.getIdentityCard())
+                .identifyCard(absentDetail.getIdentifyCard())
                 .homeTown(absentDetail.getHomeTown())
                 .block(block.getBlockName())
                 .roomNumber(roomNumber.getRoomName())
@@ -161,7 +159,7 @@ public class AbsentServiceImpl implements AbsentService {
                 .absentType(absentType.getAbsentType())
                 .reason(absentDetail.getReason())
                 .build();
-        return absentDTO;
+        return response;
     }
 
     private String writeAbsentDetail(AbsentDetail absentDetail) {
@@ -179,7 +177,7 @@ public class AbsentServiceImpl implements AbsentService {
 
             if (Objects.nonNull(absentDetail)) {
                 name = absentDetail.getName();
-                identifyCard = absentDetail.getIdentityCard();
+                identifyCard = absentDetail.getIdentifyCard();
                 homeTown = absentDetail.getHomeTown();
                 reason = absentDetail.getReason();
             }
@@ -202,5 +200,4 @@ public class AbsentServiceImpl implements AbsentService {
         }
         return content;
     }
-
 }

@@ -1,19 +1,14 @@
 package com.ams.building.server.response;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
 
 @Builder
 @Getter
 @Setter
-@AllArgsConstructor
-@NoArgsConstructor
 public class AccountResponse {
 
     private Long id;
@@ -25,9 +20,10 @@ public class AccountResponse {
     private String role;
     private String image;
     private String dob;
-    private String identityCard;
+    private String identifyCard;
     private String homeTown;
     private Long roleId;
+    private String currentAddress;
 
     @JsonIgnore
     private MultipartFile multipartFile;
