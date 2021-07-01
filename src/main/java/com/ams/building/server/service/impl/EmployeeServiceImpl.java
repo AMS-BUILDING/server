@@ -2,10 +2,12 @@ package com.ams.building.server.service.impl;
 
 import com.ams.building.server.bean.Account;
 import com.ams.building.server.bean.Position;
+import com.ams.building.server.bean.Role;
 import com.ams.building.server.constant.Constants;
 import com.ams.building.server.constant.StatusCode;
 import com.ams.building.server.dao.AccountDAO;
 import com.ams.building.server.dao.PositionDAO;
+import com.ams.building.server.dao.RoleDAO;
 import com.ams.building.server.exception.RestApiException;
 import com.ams.building.server.request.EmployeeRequest;
 import com.ams.building.server.response.ApiResponse;
@@ -30,6 +32,9 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Autowired
     private PositionDAO positionDAO;
+
+    @Autowired
+    private RoleDAO roleDAO;
 
     @Override
     public ApiResponse searchAccountByNamePhoneIdentifyCardAndRoleAndPosition(Integer page, Integer size, String name, String phoneNumber, String identifyCard, Long position, String roles) {
@@ -71,7 +76,21 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public void addEmployee(EmployeeRequest request) {
-
+        if (Objects.isNull(request) || StringUtils.isEmpty(request.getEmail()) || StringUtils.isEmpty(request.getDob()) || StringUtils.isEmpty(request.getCurrentAddress())) {
+            throw new RestApiException(StatusCode.DATA_EMPTY);
+        }
+        Account account = new Account();
+        account.setIdentifyCard(request.getIdentifyCard());
+        account.setEmail(request.getEmail());
+        account.setDob(request.getDob());
+        account.setGender(request.getGender());
+        account.setHomeTown(request.getHomeTown());
+        account.setPhone(request.getPhoneNumber());
+        Position position = positionDAO.getById(request.getPosition());
+        account.setPosition(position);
+        Role role = roleDAO.getById(5L);
+        account.setRole(role);
+        accountDao.save(account);
     }
 
     @Override
