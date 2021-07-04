@@ -74,10 +74,15 @@ public class AbsentServiceImpl implements AbsentService {
     }
 
     @Override
-    public void exportAbsentDetailList(HttpServletResponse response, String name, String identifyCard, Long absentType, Integer page, Integer size) {
+    public void exportAbsentDetailList(HttpServletResponse response, String name, String identifyCard, Long absentType) {
         try {
-            Pageable pageable = PageRequest.of(page, size);
-            Page<AbsentDetail> absentDetails = absentDao.absentList(name, identifyCard, absentType, pageable);
+            Pageable pageable = PageRequest.of(0, 50000);
+            Page<AbsentDetail> absentDetails;
+            if (absentType != -1) {
+                absentDetails = absentDao.absentList(name, identifyCard, absentType, pageable);
+            } else {
+                absentDetails = absentDao.absentListNotByAbsentType(name, identifyCard, pageable);
+            }
             String csvFileName = "Absent Detail.csv";
             response.setContentType(Constants.TEXT_CSV);
             // creates mock data
@@ -88,7 +93,7 @@ public class AbsentServiceImpl implements AbsentService {
             OutputStream os = response.getOutputStream();
             os.write(bom);
             final PrintWriter w = new PrintWriter(new OutputStreamWriter(os, "UTF-8"));
-            w.println("Name,Identify Card,Absent Type,Reason,Home Town, Block, RoomNumber, Start Date, End Date");
+            w.println("Tên ,Chứng minh thư,Loại đăng kí,Lí do,Quê quán, Số block, Số phòng, Ngày bắt đầu,Ngày kết thúc");
             if (!CollectionUtils.isEmpty((Collection<?>) absentDetails)) {
                 for (AbsentDetail absentDetail : absentDetails) {
                     w.println(writeAbsentDetail(absentDetail));
@@ -201,3 +206,4 @@ public class AbsentServiceImpl implements AbsentService {
         return content;
     }
 }
+

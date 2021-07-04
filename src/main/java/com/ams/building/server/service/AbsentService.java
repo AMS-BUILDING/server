@@ -9,7 +9,7 @@ public interface AbsentService {
 
     ApiResponse absentList(String name, String identifyCard, Long absentType, Integer page, Integer size);
 
-    void exportAbsentDetailList(HttpServletResponse response, String name, String identifyCard, Long absentType, Integer page, Integer size);
+    void exportAbsentDetailList(HttpServletResponse response, String name, String identifyCard, Long absentType);
 
     void addAbsentDetail(AbsentRequest request);
 

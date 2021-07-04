@@ -14,14 +14,21 @@ import com.ams.building.server.request.EmployeeRequest;
 import com.ams.building.server.response.ApiResponse;
 import com.ams.building.server.response.EmployeeResponse;
 import com.ams.building.server.service.EmployeeService;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
@@ -31,6 +38,8 @@ import static com.ams.building.server.utils.ValidateUtil.isPhoneNumber;
 
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
+
+    private static final Logger logger = Logger.getLogger(EmployeeServiceImpl.class);
 
     @Autowired
     private AccountDAO accountDao;
@@ -147,6 +156,40 @@ public class EmployeeServiceImpl implements EmployeeService {
         return response;
     }
 
+    @Override
+    public void downloadSearchEmployee(HttpServletResponse response, String name, String phoneNumber, String identifyCard, Long position, String roles) {
+        try {
+            Pageable pageable = PageRequest.of(0, 5000);
+            Page<Account> accounts;
+            if (position != -1) {
+                accounts = accountDao.searchAccountByNamePhoneIdentifyCardAndRole(name, identifyCard, phoneNumber, identifyCard, pageable);
+            } else {
+                accounts = accountDao.searchAccountByNamePhoneIdentifyCardAndRoleAndPosition(name, identifyCard, phoneNumber, position, roles, pageable);
+            }
+            String csvFileName = "Employee.csv";
+            response.setContentType(Constants.TEXT_CSV);
+            // creates mock data
+            String headerValue = String.format("attachment; filename=\"%s\"", csvFileName);
+            response.setHeader(Constants.HEADER_KEY, headerValue);
+            // uses the Super CSV API to generate CSV data from the model data
+            final byte[] bom = new byte[]{(byte) 239, (byte) 187, (byte) 191};
+            OutputStream os = response.getOutputStream();
+            os.write(bom);
+            final PrintWriter w = new PrintWriter(new OutputStreamWriter(os, "UTF-8"));
+            w.println("Tên,Giới tính,Số điện thoại,Email,Ngày tháng năm sinh,Chứng minh thư, Địa chỉ hiện tại, Quê quán, Vị trí ");
+            if (!CollectionUtils.isEmpty((Collection<?>) accounts)) {
+                for (Account account : accounts) {
+                    w.println(writeEmployee(account));
+                }
+            }
+            w.flush();
+            w.close();
+        } catch (Exception e) {
+            logger.error("exportAbsentDetailList error: " + e);
+            throw new RestApiException(StatusCode.ERROR_UNKNOWN);
+        }
+    }
+
     private EmployeeResponse convertEmployee(Account account) {
         EmployeeResponse response = EmployeeResponse.builder().build();
         response.setId(account.getId());
@@ -169,5 +212,38 @@ public class EmployeeServiceImpl implements EmployeeService {
         }
         response.setPositionName(account.getPosition().getName());
         return response;
+    }
+
+    private String writeEmployee(Account account) {
+        String content = "";
+        try {
+            String name = "";
+            String gender = "";
+            String phoneNumber = "";
+            String email = "";
+            String dob = "";
+            String identifyCard = "";
+            String currentAddress = "";
+            String homeTown = "";
+            String position = "";
+            if (Objects.nonNull(account)) {
+                name = account.getName();
+                phoneNumber = account.getPhone();
+                email = account.getEmail();
+                dob = account.getDob();
+                identifyCard = account.getIdentifyCard();
+                currentAddress = account.getCurrentAddress();
+                homeTown = account.getHomeTown();
+                gender = account.getGender() == true ? "Male" : "Female";
+                if (Objects.nonNull(account.getPosition())) {
+                    position = account.getPosition().getName();
+                }
+            }
+            content = name + "," + gender + "," + phoneNumber + "," + email + "," + dob + "," + identifyCard + "," + currentAddress + "," + homeTown + "," + position;
+
+        } catch (Exception e) {
+            logger.error("writeAbsentDetail error", e);
+        }
+        return content;
     }
 }

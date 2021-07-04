@@ -32,6 +32,7 @@ public class Constants {
         public static final String URL_API_REMOVE_EMPLOYEE = "remove";
         public static final String URL_API_UPDATE_EMPLOYEE = "update";
         public static final String URL_API_ADD_EMPLOYEE = "add";
+        public static final String URL_API_EXPORT_SEARCH_EMPLOYEE = "export";
     }
 
     public class FileProperties {

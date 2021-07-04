@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletResponse;
+
 @RestController
 @RequestMapping("api/employee/")
 @CrossOrigin(origins = "*", maxAge = -1)
@@ -79,5 +81,15 @@ public class EmployeeController {
         ResponseEntity<String> response = new ResponseEntity<>("Add Success", HttpStatus.CREATED);
         logger.debug("addEmployee response: " + new Gson().toJson(response));
         return response;
+    }
+
+    @GetMapping(value = Constants.UrlPath.URL_API_EXPORT_SEARCH_EMPLOYEE)
+    public void exportEmployeeSearch(HttpServletResponse httpServletResponse,
+                                     @RequestParam(value = "name", required = false, defaultValue = "") String name,
+                                     @RequestParam(value = "phoneNumber", required = false, defaultValue = "") String phoneNumber,
+                                     @RequestParam(value = "identifyCard", required = false, defaultValue = "") String identifyCard,
+                                     @RequestParam(value = "positionId", required = false, defaultValue = "-1") Long positionId) {
+        String roles = String.valueOf(RoleEnum.ROLE_EMPLOYEE);
+        employeeService.downloadSearchEmployee(httpServletResponse, name, phoneNumber, identifyCard, positionId, roles);
     }
 }
