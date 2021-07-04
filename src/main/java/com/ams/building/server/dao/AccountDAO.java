@@ -4,9 +4,12 @@ import com.ams.building.server.bean.Account;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+
+import javax.transaction.Transactional;
 
 @Repository
 public interface AccountDAO extends JpaRepository<Account, Long> {
@@ -23,6 +26,8 @@ public interface AccountDAO extends JpaRepository<Account, Long> {
     Page<Account> searchAccountByNamePhoneIdentifyCardAndRole(@Param("name") String name, @Param("phoneNumber")
             String phoneNumber, @Param("identityCard") String identityCard, @Param("roles") String roles, Pageable pageable);
 
+    @Transactional
+    @Modifying
     @Query("DELETE FROM Account a WHERE a.id=?1")
     void removeAccount(Long id);
 
@@ -31,5 +36,8 @@ public interface AccountDAO extends JpaRepository<Account, Long> {
 
     @Query("SELECT a FROM Account  a WHERE a.id =?1 AND a.role.name = ?2")
     Account getAccountByIdAndRole(Long accountId, String role);
+
+    @Query("SELECT a FROM Account  a WHERE a.identifyCard =?1 AND a.role.name = ?2")
+    Account getAccountByIdentifyAndRole(String identifyCard, String role);
 
 }

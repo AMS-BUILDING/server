@@ -58,7 +58,7 @@ public class AbsentController {
     public ResponseEntity<?> addAbsent(@RequestBody AbsentRequest request) {
         logger.debug("insertAbsent request : " + new Gson().toJson(request));
         absentService.addAbsentDetail(request);
-        ResponseEntity response = new ResponseEntity(HttpStatus.CREATED);
+        ResponseEntity<String> response = new ResponseEntity("Add absent success", HttpStatus.CREATED);
         logger.debug("insertAbsent response : " + new Gson().toJson(response));
         return response;
     }

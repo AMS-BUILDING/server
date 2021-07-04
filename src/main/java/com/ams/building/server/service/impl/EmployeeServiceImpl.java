@@ -4,6 +4,7 @@ import com.ams.building.server.bean.Account;
 import com.ams.building.server.bean.Position;
 import com.ams.building.server.bean.Role;
 import com.ams.building.server.constant.Constants;
+import com.ams.building.server.constant.RoleEnum;
 import com.ams.building.server.constant.StatusCode;
 import com.ams.building.server.dao.AccountDAO;
 import com.ams.building.server.dao.PositionDAO;
@@ -23,6 +24,10 @@ import org.springframework.util.StringUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+
+import static com.ams.building.server.utils.ValidateUtil.isEmail;
+import static com.ams.building.server.utils.ValidateUtil.isIdentifyCard;
+import static com.ams.building.server.utils.ValidateUtil.isPhoneNumber;
 
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
@@ -53,8 +58,8 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public void removeEmployee(Long id) {
-        Account account = accountDao.getAccountById(id);
+    public void removeEmployee(Long id, String role) {
+        Account account = accountDao.getAccountByIdAndRole(id, role);
         if (Objects.isNull(account)) {
             throw new RestApiException(StatusCode.ACCOUNT_NOT_EXIST);
         }
@@ -62,22 +67,38 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public void uppdateEmployee(Long accountId, Long positionId) {
-        Account curentAccount = accountDao.getAccountById(accountId);
-        if (Objects.isNull(curentAccount)) {
+    public void updateEmployee(Long accountId, Long positionId) {
+        Account currentAccount = accountDao.getAccountById(accountId);
+        if (Objects.isNull(currentAccount)) {
             throw new RestApiException(StatusCode.ACCOUNT_NOT_EXIST);
         }
         Position position = positionDAO.getOne(positionId);
         if (Objects.isNull(position)) {
             throw new RestApiException(StatusCode.POSITION_NOT_EXIST);
         }
-        curentAccount.setPosition(position);
+        currentAccount.setPosition(position);
     }
 
     @Override
     public void addEmployee(EmployeeRequest request) {
-        if (Objects.isNull(request) || StringUtils.isEmpty(request.getEmail()) || StringUtils.isEmpty(request.getDob()) || StringUtils.isEmpty(request.getCurrentAddress())) {
+        if (Objects.isNull(request) || StringUtils.isEmpty(request.getEmail()) ||
+                StringUtils.isEmpty(request.getDob()) || StringUtils.isEmpty(request.getCurrentAddress()) ||
+                StringUtils.isEmpty(request.getPhoneNumber()) || StringUtils.isEmpty(request.getIdentifyCard()) ||
+                StringUtils.isEmpty(request.getHomeTown())) {
             throw new RestApiException(StatusCode.DATA_EMPTY);
+        }
+        if (!isEmail(request.getEmail())) {
+            throw new RestApiException(StatusCode.EMAIL_NOT_RIGHT_FORMAT);
+        }
+        if (!isPhoneNumber(request.getPhoneNumber())) {
+            throw new RestApiException(StatusCode.PHONE_NUMBER_NOT_RIGHT_FORMAT);
+        }
+        if (!isIdentifyCard(request.getIdentifyCard())) {
+            throw new RestApiException(StatusCode.IDENTIFY_CARD_NOT_RIGHT);
+        }
+        Account searchAccountByIdentify = accountDao.getAccountByIdentifyAndRole(request.getIdentifyCard(), String.valueOf(RoleEnum.ROLE_EMPLOYEE));
+        if (Objects.nonNull(searchAccountByIdentify)) {
+            throw new RestApiException(StatusCode.IDENTIFY_CARD_DUILCATE);
         }
         Account account = new Account();
         account.setIdentifyCard(request.getIdentifyCard());
@@ -86,6 +107,8 @@ public class EmployeeServiceImpl implements EmployeeService {
         account.setGender(request.getGender());
         account.setHomeTown(request.getHomeTown());
         account.setPhone(request.getPhoneNumber());
+        account.setCurrentAddress(request.getCurrentAddress());
+        account.setName(request.getName());
         Position position = positionDAO.getById(request.getPosition());
         account.setPosition(position);
         Role role = roleDAO.getById(5L);

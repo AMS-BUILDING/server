@@ -18,5 +18,6 @@ public class PropertyKeys {
     public static final String FEEDBACK_EMPTY = "feedback.empty";
     public static final String EMAIL_NOT_RIGHT_FORMAT = "email.not.right.format";
     public static final String POSITION_NOT_EXIST = "position.not.exist";
+    public static final String PHONE_NUMBER_NOT_RIGHT_FORMAT = "phone.number.not.right.format";
 
 }

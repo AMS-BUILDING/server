@@ -8,9 +8,9 @@ public interface EmployeeService {
 
     ApiResponse searchAccountByNamePhoneIdentifyCardAndRoleAndPosition(Integer page, Integer size, String name, String phoneNumber, String identifyCard, Long position, String roles);
 
-    void removeEmployee(Long id);
+    void removeEmployee(Long id,String role);
 
-    void uppdateEmployee(Long accountId, Long positionId);
+    void updateEmployee(Long accountId, Long positionId);
 
     void addEmployee(EmployeeRequest request);
 

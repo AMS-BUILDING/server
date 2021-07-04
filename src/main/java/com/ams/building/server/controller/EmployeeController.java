@@ -2,6 +2,7 @@ package com.ams.building.server.controller;
 
 import com.ams.building.server.constant.Constants;
 import com.ams.building.server.constant.RoleEnum;
+import com.ams.building.server.request.EmployeeRequest;
 import com.ams.building.server.response.ApiResponse;
 import com.ams.building.server.response.EmployeeResponse;
 import com.ams.building.server.service.EmployeeService;
@@ -11,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -54,21 +54,30 @@ public class EmployeeController {
         return response;
     }
 
-    @DeleteMapping(Constants.UrlPath.URL_API_REMOVE_EMPLOYEE + "/{id}")
+    @PostMapping(Constants.UrlPath.URL_API_REMOVE_EMPLOYEE + "/{id}")
     public ResponseEntity<?> removeEmployee(@PathVariable("id") Long accountId) {
         logger.debug("removeEmployee: request " + accountId);
-        employeeService.removeEmployee(accountId);
+        employeeService.removeEmployee(accountId,String.valueOf(RoleEnum.ROLE_EMPLOYEE));
         ResponseEntity<String> response = new ResponseEntity<>("Remove success", HttpStatus.OK);
         logger.debug("removeEmployee response: " + new Gson().toJson(response));
         return response;
     }
 
-    @PostMapping(Constants.UrlPath.URL_API_UPDATE_EMPLOYEE + "{id}")
+    @PostMapping(Constants.UrlPath.URL_API_UPDATE_EMPLOYEE + "/{id}")
     public ResponseEntity<?> updateEmployee(@PathVariable("id") Long accountId, @RequestBody Long position) {
         logger.debug("updateEmployee: request " + accountId + position);
-        employeeService.uppdateEmployee(accountId, position);
+        employeeService.updateEmployee(accountId, position);
         ResponseEntity<String> response = new ResponseEntity<>("Update Success", HttpStatus.OK);
         logger.debug("updateEmployee response: " + new Gson().toJson(response));
+        return response;
+    }
+
+    @PostMapping(Constants.UrlPath.URL_API_ADD_EMPLOYEE)
+    public ResponseEntity<?> addEmployee(@RequestBody EmployeeRequest request) {
+        logger.debug("addEmployee: request " + new Gson().toJson(request));
+        employeeService.addEmployee(request);
+        ResponseEntity<String> response = new ResponseEntity<>("Add Success", HttpStatus.CREATED);
+        logger.debug("addEmployee response: " + new Gson().toJson(response));
         return response;
     }
 }

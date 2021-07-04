@@ -42,7 +42,7 @@ public class FeedbackController {
     public ResponseEntity<?> addFeedback(@RequestBody FeedbackRequest request) {
         logger.debug("addFeedback request : " + new Gson().toJson(request));
         feedbackService.addFeedback(request);
-        ResponseEntity response = new ResponseEntity(HttpStatus.CREATED);
+        ResponseEntity<String> response = new ResponseEntity("Add feedback success", HttpStatus.CREATED);
         logger.debug("addFeedback response : " + new Gson().toJson(response));
         return response;
     }
