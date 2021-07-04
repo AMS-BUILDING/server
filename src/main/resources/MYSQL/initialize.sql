@@ -196,10 +196,10 @@ CREATE TABLE `amsbuilding`.`feedback`
 );
 
 ALTER TABLE `amsbuilding`.`temporarily_absent_detail`
-    ADD COLUMN `reason` VARCHAR(45) NULL AFTER `identity_card`;
+    ADD COLUMN `reason` VARCHAR(45) NULL AFTER `identify_card`;
 
 ALTER TABLE `amsbuilding`.`temporarily_absent_detail`
-    ADD UNIQUE INDEX `unique` (`identity_card` ASC, `absent_type_id` ASC) VISIBLE,
+    ADD UNIQUE INDEX `unique` (`identify_card` ASC, `absent_type_id` ASC) VISIBLE,
     DROP
         INDEX `identity_card_UNIQUE`;
 
