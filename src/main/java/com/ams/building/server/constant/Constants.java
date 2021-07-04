@@ -35,6 +35,8 @@ public class Constants {
         public static final String URL_API_LIST_SERVICE = "list";
         public static final String URL_API_SEARCH_SERVICE = "search";
         public static final String URL_API_DETAIL_SERVICE = "get-one";
+        public static final String URL_API_SEARCH_NOTIFICATION = "search";
+        public static final String URL_API_ADD_NOTIFICATION = "add";
     }
 
     public class FileProperties {
