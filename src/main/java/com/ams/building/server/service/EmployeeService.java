@@ -10,7 +10,7 @@ public interface EmployeeService {
 
     void removeEmployee(Long id,String role);
 
-    void updateEmployee(Long accountId, Long positionId);
+    void updateEmployee(Long accountId, EmployeeRequest request);
 
     void addEmployee(EmployeeRequest request);
 

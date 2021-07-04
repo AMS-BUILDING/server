@@ -57,16 +57,16 @@ public class EmployeeController {
     @PostMapping(Constants.UrlPath.URL_API_REMOVE_EMPLOYEE + "/{id}")
     public ResponseEntity<?> removeEmployee(@PathVariable("id") Long accountId) {
         logger.debug("removeEmployee: request " + accountId);
-        employeeService.removeEmployee(accountId,String.valueOf(RoleEnum.ROLE_EMPLOYEE));
+        employeeService.removeEmployee(accountId, String.valueOf(RoleEnum.ROLE_EMPLOYEE));
         ResponseEntity<String> response = new ResponseEntity<>("Remove success", HttpStatus.OK);
         logger.debug("removeEmployee response: " + new Gson().toJson(response));
         return response;
     }
 
     @PostMapping(Constants.UrlPath.URL_API_UPDATE_EMPLOYEE + "/{id}")
-    public ResponseEntity<?> updateEmployee(@PathVariable("id") Long accountId, @RequestBody Long position) {
-        logger.debug("updateEmployee: request " + accountId + position);
-        employeeService.updateEmployee(accountId, position);
+    public ResponseEntity<?> updateEmployee(@PathVariable("id") Long accountId, @RequestBody EmployeeRequest request) {
+        logger.debug("updateEmployee: request " + new Gson().toJson(request));
+        employeeService.updateEmployee(accountId, request);
         ResponseEntity<String> response = new ResponseEntity<>("Update Success", HttpStatus.OK);
         logger.debug("updateEmployee response: " + new Gson().toJson(response));
         return response;

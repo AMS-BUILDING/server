@@ -67,16 +67,34 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public void updateEmployee(Long accountId, Long positionId) {
-        Account currentAccount = accountDao.getAccountById(accountId);
+    public void updateEmployee(Long accountId, EmployeeRequest request) {
+        if (Objects.isNull(request) || StringUtils.isEmpty(request.getIdentifyCard()) ||
+                StringUtils.isEmpty(request.getDob()) || StringUtils.isEmpty(request.getCurrentAddress()) ||
+                StringUtils.isEmpty(request.getPhoneNumber()) || StringUtils.isEmpty(request.getHomeTown())) {
+            throw new RestApiException(StatusCode.DATA_EMPTY);
+        }
+        if (!isPhoneNumber(request.getPhoneNumber())) {
+            throw new RestApiException(StatusCode.PHONE_NUMBER_NOT_RIGHT_FORMAT);
+        }
+        if (!isIdentifyCard(request.getIdentifyCard())) {
+            throw new RestApiException(StatusCode.IDENTIFY_CARD_NOT_RIGHT);
+        }
+        Account currentAccount = accountDao.getAccountByIdAndRole(accountId, String.valueOf(RoleEnum.ROLE_EMPLOYEE));
         if (Objects.isNull(currentAccount)) {
             throw new RestApiException(StatusCode.ACCOUNT_NOT_EXIST);
         }
-        Position position = positionDAO.getOne(positionId);
-        if (Objects.isNull(position)) {
-            throw new RestApiException(StatusCode.POSITION_NOT_EXIST);
-        }
+        currentAccount.setDob(request.getDob());
+        currentAccount.setGender(request.getGender());
+        currentAccount.setHomeTown(request.getHomeTown());
+        currentAccount.setPhone(request.getPhoneNumber());
+        currentAccount.setCurrentAddress(request.getCurrentAddress());
+        currentAccount.setName(request.getName());
+        currentAccount.setIdentifyCard(request.getIdentifyCard());
+        Position position = positionDAO.getById(request.getPosition());
         currentAccount.setPosition(position);
+        Role role = roleDAO.getById(4L);
+        currentAccount.setRole(role);
+        accountDao.save(currentAccount);
     }
 
     @Override
@@ -111,7 +129,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         account.setName(request.getName());
         Position position = positionDAO.getById(request.getPosition());
         account.setPosition(position);
-        Role role = roleDAO.getById(5L);
+        Role role = roleDAO.getById(4L);
         account.setRole(role);
         accountDao.save(account);
     }

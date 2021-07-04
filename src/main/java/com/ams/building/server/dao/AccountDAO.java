@@ -31,9 +31,6 @@ public interface AccountDAO extends JpaRepository<Account, Long> {
     @Query("DELETE FROM Account a WHERE a.id=?1")
     void removeAccount(Long id);
 
-    @Query("UPDATE Account a SET a.position.id = ?1")
-    void updateAccount(Long positionId);
-
     @Query("SELECT a FROM Account  a WHERE a.id =?1 AND a.role.name = ?2")
     Account getAccountByIdAndRole(Long accountId, String role);
 
