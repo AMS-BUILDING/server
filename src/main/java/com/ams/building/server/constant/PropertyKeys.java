@@ -19,5 +19,5 @@ public class PropertyKeys {
     public static final String EMAIL_NOT_RIGHT_FORMAT = "email.not.right.format";
     public static final String POSITION_NOT_EXIST = "position.not.exist";
     public static final String PHONE_NUMBER_NOT_RIGHT_FORMAT = "phone.number.not.right.format";
-
+    public static final String SUB_SERVICE_NOT_EXIST = "sub.service.not.exist";
 }
