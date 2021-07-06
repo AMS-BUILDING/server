@@ -41,8 +41,8 @@ public class NotificationServiceImpl implements NotificationService {
         Pageable pageable = PageRequest.of(page, size);
         Page<NotificationBuilding> notificationBuildingPage = notificationDAO.searchNotificationByTitle(name, pageable);
         notificationBuildingPage.forEach(s -> notificationResponses.add(covertToNotificationResponse(s)));
-        Integer totalPage = notificationBuildingPage.getTotalPages();
-        ApiResponse response = ApiResponse.builder().data(notificationResponses).totalPage(totalPage).build();
+        Long totalElement = notificationBuildingPage.getTotalElements();
+        ApiResponse response = ApiResponse.builder().data(notificationResponses).totalElement(totalElement).build();
         return response;
     }
 

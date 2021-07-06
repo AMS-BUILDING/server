@@ -63,8 +63,8 @@ public class SubServiceServiceImpl implements SubServiceService {
             SubServiceResponse response = covertSubServiceResponse(ad);
             subServices.add(response);
         }
-        Integer totalPage = subServicesPage.getTotalPages();
-        ApiResponse response = ApiResponse.builder().data(subServices).totalPage(totalPage).build();
+        Long totalElement = subServicesPage.getTotalElements();
+        ApiResponse response = ApiResponse.builder().data(subServices).totalElement(totalElement).build();
         return response;
     }
 

@@ -68,8 +68,8 @@ public class AbsentServiceImpl implements AbsentService {
             AbsentResponse response = covertAbsentDetailToDTO(ad);
             absentResponses.add(response);
         }
-        Integer totalPage = absentDetails.getTotalPages();
-        ApiResponse response = ApiResponse.builder().data(absentResponses).totalPage(totalPage).build();
+        Long totalElement = absentDetails.getTotalElements();
+        ApiResponse response = ApiResponse.builder().data(absentResponses).totalElement(totalElement).build();
         return response;
     }
 

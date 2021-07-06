@@ -145,11 +145,6 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
     }
 
     @Override
-    public Integer countTotal() {
-        return Math.toIntExact(accountDao.count());
-    }
-
-    @Override
     public void changeAccountLock(long id) {
         if (StringUtils.isEmpty(id)) {
             throw new RestApiException(StatusCode.DATA_EMPTY);

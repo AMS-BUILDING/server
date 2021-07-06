@@ -30,7 +30,7 @@ public class AccountController {
 
     @PostMapping(value = Constants.UrlPath.URL_API_FIND_ACCOUNT)
     public ResponseEntity<?> find() {
-        ApiResponse apiResponse = ApiResponse.builder().data(accountService.find()).totalPage(accountService.countTotal()).build();
+        ApiResponse apiResponse = ApiResponse.builder().data(accountService.find()).totalElement(accountService.count()).build();
         ResponseEntity<ApiResponse> response = new ResponseEntity<>(apiResponse, HttpStatus.OK);
         logger.debug("find Account: response " + new Gson().toJson(response));
         return response;

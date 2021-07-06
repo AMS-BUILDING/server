@@ -56,8 +56,8 @@ public class FeedbackServiceImpl implements FeedbackService {
         feedbacks.forEach(feedback -> {
             feedbackResponseList.add(convertFeedbackToFeedbackDTO(feedback));
         });
-        Integer totalPage = feedbacks.getTotalPages();
-        ApiResponse response = ApiResponse.builder().data(feedbackResponseList).totalPage(totalPage).build();
+        Long totalElement = feedbacks.getTotalElements();
+        ApiResponse response = ApiResponse.builder().data(feedbackResponseList).totalElement(totalElement).build();
         return response;
     }
 

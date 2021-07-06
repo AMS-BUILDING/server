@@ -22,8 +22,6 @@ public interface AccountService {
 
     Long count();
 
-    Integer countTotal();
-
     void changeAccountLock(long id);
 
 }

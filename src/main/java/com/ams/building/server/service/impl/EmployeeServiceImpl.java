@@ -61,8 +61,8 @@ public class EmployeeServiceImpl implements EmployeeService {
         }
         List<EmployeeResponse> accountDTOS = new ArrayList<>();
         accounts.forEach(a -> accountDTOS.add(convertEmployee(a)));
-        Integer totalPage = accounts.getTotalPages();
-        ApiResponse response = ApiResponse.builder().data(accountDTOS).totalPage(totalPage).build();
+        Long totalElement = accounts.getTotalElements();
+        ApiResponse response = ApiResponse.builder().data(accountDTOS).totalElement(totalElement).build();
         return response;
     }
 

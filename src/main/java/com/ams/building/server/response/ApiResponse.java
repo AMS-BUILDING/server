@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 public class ApiResponse {
 
-    private Integer totalPage;
+    private Long totalElement;
     private Object data;
 
 }
