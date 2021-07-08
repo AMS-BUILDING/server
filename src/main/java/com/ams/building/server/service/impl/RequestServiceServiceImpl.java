@@ -29,7 +29,7 @@ import java.util.Objects;
 @Service
 public class RequestServiceServiceImpl implements RequestServiceService {
 
-    private static final Logger logger = Logger.getLogger(AbsentServiceImpl.class);
+    private static final Logger logger = Logger.getLogger(RequestServiceServiceImpl.class);
 
     @Autowired
     private StatusRequestServiceDAO statusRequestServiceDAO;
