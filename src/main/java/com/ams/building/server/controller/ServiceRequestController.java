@@ -3,6 +3,7 @@ package com.ams.building.server.controller;
 import com.ams.building.server.constant.Constants;
 import com.ams.building.server.response.ApiResponse;
 import com.ams.building.server.response.RequestServiceResponse;
+import com.ams.building.server.response.StatusServiceResponse;
 import com.ams.building.server.service.RequestServiceService;
 import com.google.gson.Gson;
 import org.apache.log4j.Logger;
@@ -17,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("api/request-service/")
@@ -36,9 +39,17 @@ public class ServiceRequestController {
 
         logger.debug("searchRequestService request : " + name + " - " + serviceName + " - " + statusId);
         Integer pageSize = 5;
-        ApiResponse apiResponse = requestServiceService.searchServiceRequest(name, serviceName, statusId, pageNo, pageSize);
+        ApiResponse apiResponse = requestServiceService.searchServiceRequest(pageNo, pageSize, name, serviceName, statusId);
         ResponseEntity<ApiResponse> response = new ResponseEntity<>(apiResponse, HttpStatus.OK);
         logger.debug("searchRequestService response : " + new Gson().toJson(response));
+        return response;
+    }
+
+    @GetMapping(value = Constants.UrlPath.URL_API_LIST_STATUS_REQUEST_SERVICE)
+    public ResponseEntity<?> listStatusRequestService() {
+        List<StatusServiceResponse> listResponse = requestServiceService.statusResponses();
+        ResponseEntity<List<StatusServiceResponse>> response = new ResponseEntity<>(listResponse, HttpStatus.OK);
+        logger.debug("listStatusRequestService response : " + new Gson().toJson(response));
         return response;
     }
 

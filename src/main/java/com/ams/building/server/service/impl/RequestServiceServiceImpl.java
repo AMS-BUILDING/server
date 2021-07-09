@@ -49,9 +49,9 @@ public class RequestServiceServiceImpl implements RequestServiceService {
     }
 
     @Override
-    public ApiResponse searchServiceRequest(String name, String serviceName, Long statusId, Integer size, Integer pageNo) {
+    public ApiResponse searchServiceRequest(Integer page, Integer size, String name, String serviceName, Long statusId) {
+        Pageable pageable = PageRequest.of(page, size);
         List<RequestServiceResponse> requestServiceResponses = new ArrayList<>();
-        Pageable pageable = PageRequest.of(pageNo, size);
         Page<RequestService> requestServices;
         if (statusId == -1) {
             requestServices = requestServiceDAO.requestServicesNotStatus(name, serviceName, pageable);
@@ -86,8 +86,8 @@ public class RequestServiceServiceImpl implements RequestServiceService {
 
     private StatusServiceResponse covertToStatusRequestResponse(StatusServiceRequest request) {
         StatusServiceResponse response = StatusServiceResponse.builder().build();
-        response.setId(response.getId());
-        response.setName(response.getName());
+        response.setId(request.getId());
+        response.setName(request.getRequestName());
         return response;
     }
 

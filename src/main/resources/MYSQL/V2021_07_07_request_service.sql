@@ -33,3 +33,12 @@ CREATE TABLE `amsbuilding`.`service_request`
             ON DELETE NO ACTION
             ON UPDATE NO ACTION
 );
+
+INSERT INTO `amsbuilding`.`status_service_request` (`status_service_request_name`)
+VALUES ('Chờ xử lí');
+INSERT INTO `amsbuilding`.`status_service_request` (`status_service_request_name`)
+VALUES ('Đang xử lí');
+INSERT INTO `amsbuilding`.`status_service_request` (`status_service_request_name`)
+VALUES ('Thành công');
+INSERT INTO `amsbuilding`.`status_service_request` (`status_service_request_name`)
+VALUES ('Hủy');
