@@ -17,7 +17,7 @@ public interface RequestServiceDAO extends JpaRepository<RequestService, Long> {
     @Query("SELECT r FROM RequestService r WHERE r.account.name LIKE CONCAT('%',:accountName,'%') AND r.reasonDetailSubService.reasonName LIKE CONCAT('%',:serviceName,'%') AND r.statusServiceRequest.id =:statusId ORDER BY r.id")
     Page<RequestService> requestServicesWithStatus(@Param("accountName") String accountName, @Param("serviceName") String serviceName, @Param("statusId") Long status, Pageable pageable);
 
-    @Query("UPDATE RequestService r SET r.statusServiceRequest.id=?1 WHERE r.id=?")
+    @Query("UPDATE RequestService r SET r.statusServiceRequest.id=?1 WHERE r.id=?2")
     void updateStatus(Long statusId, Long requestId);
 
 }
