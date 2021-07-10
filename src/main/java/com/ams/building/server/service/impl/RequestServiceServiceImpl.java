@@ -86,8 +86,8 @@ public class RequestServiceServiceImpl implements RequestServiceService {
 
     private StatusServiceResponse covertToStatusRequestResponse(StatusServiceRequest request) {
         StatusServiceResponse response = StatusServiceResponse.builder().build();
-        response.setId(response.getId());
-        response.setName(response.getName());
+        response.setId(request.getId());
+        response.setName(request.getRequestName());
         return response;
     }
 
