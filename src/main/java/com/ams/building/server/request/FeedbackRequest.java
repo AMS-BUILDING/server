@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 public class FeedbackRequest {
 
-    private Long accountDetailId;
+    private Long accountId;
     private String description;
 
 }

@@ -79,7 +79,7 @@ public class SubServiceServiceImpl implements SubServiceService {
         }
         List<ReasonDetailSubService> detailSubServices = reasonDetailSubServiceDAO.getListReasonBySubServiceId(subServiceId);
         if (detailSubServices.isEmpty()) {
-            throw new RestApiException(StatusCode.DATA_EMPTY);
+            throw new RestApiException(StatusCode.DETAIL_SUB_SERVICE_NOT_EXIST);
         }
         List<DetailSubServiceResponse> listResponse = new ArrayList<>();
         detailSubServices.forEach(s -> listResponse.add(covertDetailServiceResponse(s)));

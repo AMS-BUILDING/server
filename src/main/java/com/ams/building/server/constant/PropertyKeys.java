@@ -21,4 +21,5 @@ public class PropertyKeys {
     public static final String PHONE_NUMBER_NOT_RIGHT_FORMAT = "phone.number.not.right.format";
     public static final String SUB_SERVICE_NOT_EXIST = "sub.service.not.exist";
     public static final String REQUEST_SERVICE_NOT_EXIST = "request.service.not.exist";
+    public static final String DETAIL_SUB_SERVICE_NOT_EXIST = "detail.sub.service.not.exist";
 }

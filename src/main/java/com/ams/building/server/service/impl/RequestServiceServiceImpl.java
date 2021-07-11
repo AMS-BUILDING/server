@@ -49,9 +49,9 @@ public class RequestServiceServiceImpl implements RequestServiceService {
     }
 
     @Override
-    public ApiResponse searchServiceRequest(String name, String serviceName, Long statusId, Integer size, Integer pageNo) {
+    public ApiResponse searchServiceRequest(Integer size, Integer page, String name, String serviceName, Long statusId) {
         List<RequestServiceResponse> requestServiceResponses = new ArrayList<>();
-        Pageable pageable = PageRequest.of(pageNo, size);
+        Pageable pageable = PageRequest.of(page, size);
         Page<RequestService> requestServices;
         if (statusId == -1) {
             requestServices = requestServiceDAO.requestServicesNotStatus(name, serviceName, pageable);
@@ -67,7 +67,7 @@ public class RequestServiceServiceImpl implements RequestServiceService {
     @Override
     public RequestServiceResponse getRequestServiceById(Long id) {
         if (StringUtils.isEmpty(id)) throw new RestApiException(StatusCode.DATA_EMPTY);
-        RequestService service = requestServiceDAO.getById(id);
+        RequestService service = requestServiceDAO.findRequestServiceById(id);
         if (Objects.isNull(service)) {
             throw new RestApiException(StatusCode.REQUEST_SERVICE_NOT_EXIST);
         }
@@ -79,7 +79,7 @@ public class RequestServiceServiceImpl implements RequestServiceService {
     public void updateStatusRequest(Long statusId, Long requestId) {
         if (StringUtils.isEmpty(requestId) || StringUtils.isEmpty(statusId))
             throw new RestApiException(StatusCode.DATA_EMPTY);
-        RequestService service = requestServiceDAO.getById(requestId);
+        RequestService service = requestServiceDAO.findRequestServiceById(requestId);
         if (Objects.isNull(service)) throw new RestApiException(StatusCode.REQUEST_SERVICE_NOT_EXIST);
         requestServiceDAO.updateStatus(statusId, requestId);
     }

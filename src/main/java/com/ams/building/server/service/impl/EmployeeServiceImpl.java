@@ -79,7 +79,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     public void updateEmployee(Long accountId, EmployeeRequest request) {
         if (Objects.isNull(request) || StringUtils.isEmpty(request.getIdentifyCard()) ||
                 StringUtils.isEmpty(request.getDob()) || StringUtils.isEmpty(request.getCurrentAddress()) ||
-                StringUtils.isEmpty(request.getPhoneNumber()) || StringUtils.isEmpty(request.getHomeTown())) {
+                StringUtils.isEmpty(request.getPhoneNumber()) || StringUtils.isEmpty(request.getHomeTown()) || StringUtils.isEmpty(request.getName())) {
             throw new RestApiException(StatusCode.DATA_EMPTY);
         }
         if (!isPhoneNumber(request.getPhoneNumber())) {

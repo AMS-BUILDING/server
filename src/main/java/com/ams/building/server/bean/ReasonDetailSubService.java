@@ -33,7 +33,7 @@ public class ReasonDetailSubService implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "detail_sub_service_id", referencedColumnName = "id")
     private DetailSubService detailSubService;
 

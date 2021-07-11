@@ -38,7 +38,7 @@ public class Constants {
         public static final String URL_API_SEARCH_NOTIFICATION = "search";
         public static final String URL_API_ADD_NOTIFICATION = "add";
         public static final String URL_API_SEARCH_REQUEST_SERVICE = "search";
-        public static final String URL_API_ADD_REQUEST_SERVICE = "add";
+        public static final String URL_API_UPDATE_REQUEST_SERVICE = "update";
         public static final String URL_API_GET_ONE_REQUEST_SERVICE = "get-one";
         public static final String URL_API_LIST_STATUS_REQUEST_SERVICE = "list";
     }

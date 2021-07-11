@@ -20,4 +20,7 @@ public interface RequestServiceDAO extends JpaRepository<RequestService, Long> {
     @Query("UPDATE RequestService r SET r.statusServiceRequest.id=?1 WHERE r.id=?2")
     void updateStatus(Long statusId, Long requestId);
 
+    @Query("SELECT r FROM RequestService  r WHERE r.id=?1")
+    RequestService findRequestServiceById(Long id);
+
 }
