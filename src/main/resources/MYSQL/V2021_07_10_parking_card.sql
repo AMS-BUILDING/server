@@ -53,11 +53,11 @@ INSERT INTO `amsbuilding`.`status_vehicle_card` (`status_name`)
 VALUES ('Đang xử lí');
 INSERT INTO `amsbuilding`.`status_vehicle_card` (`status_name`)
 VALUES ('Thành công');
-INSERT INTO `amsbuilding`.`vehicle` (`vechicle_name`, `price`)
+INSERT INTO `amsbuilding`.`vehicle` (`vehicle_name`, `price`)
 VALUES ('Xe điện', '90000');
-INSERT INTO `amsbuilding`.`vehicle` (`vechicle_name`, `price`)
+INSERT INTO `amsbuilding`.`vehicle` (`vehicle_name`, `price`)
 VALUES ('Xe máy', '140000');
-INSERT INTO `amsbuilding`.`vehicle` (`vechicle_name`, `price`)
+INSERT INTO `amsbuilding`.`vehicle` (`vehicle_name`, `price`)
 VALUES ('Xe ô tô 5 chỗ', '1000000');
-INSERT INTO `amsbuilding`.`vehicle` (`vechicle_name`, `price`)
+INSERT INTO `amsbuilding`.`vehicle` (`vehicle_name`, `price`)
 VALUES ('Xe ô tô 7 chỗ', '1400000');
