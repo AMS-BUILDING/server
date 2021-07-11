@@ -38,7 +38,7 @@ public class FeedbackServiceImpl implements FeedbackService {
         if (feedbackRequest.getDescription().isEmpty()) {
             throw new RestApiException(StatusCode.DATA_EMPTY);
         }
-        Account account = accountDAO.getAccountById(feedbackRequest.getAccountDetailId());
+        Account account = accountDAO.getAccountById(feedbackRequest.getAccountId());
         if (Objects.isNull(account)) {
             throw new RestApiException(StatusCode.ACCOUNT_NOT_EXIST);
         }

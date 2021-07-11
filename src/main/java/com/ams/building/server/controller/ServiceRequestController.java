@@ -39,7 +39,7 @@ public class ServiceRequestController {
 
         logger.debug("searchRequestService request : " + name + " - " + serviceName + " - " + statusId);
         Integer pageSize = 5;
-        ApiResponse apiResponse = requestServiceService.searchServiceRequest(name, serviceName, statusId, pageNo, pageSize);
+        ApiResponse apiResponse = requestServiceService.searchServiceRequest(pageSize,pageNo, name, serviceName, statusId);
         ResponseEntity<ApiResponse> response = new ResponseEntity<>(apiResponse, HttpStatus.OK);
         logger.debug("searchRequestService response : " + new Gson().toJson(response));
         return response;
@@ -62,8 +62,8 @@ public class ServiceRequestController {
         return response;
     }
 
-    @PostMapping(Constants.UrlPath.URL_API_ADD_REQUEST_SERVICE + "/{id}")
-    public ResponseEntity<?> updateStatusRequestService(@PathVariable("id") Long requestId, @RequestBody Long statusId) {
+    @PostMapping(Constants.UrlPath.URL_API_UPDATE_REQUEST_SERVICE + "/{id}")
+    public ResponseEntity<?> updateStatusRequestService(@PathVariable("id") Long requestId, @RequestParam Long statusId) {
         logger.debug("updateStatusRequestService: request " + requestId + "-" + statusId);
         requestServiceService.updateStatusRequest(statusId, requestId);
         ResponseEntity<String> response = new ResponseEntity<>("Update Success", HttpStatus.OK);
