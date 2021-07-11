@@ -24,8 +24,8 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "service_request")
-public class RequestService implements Serializable {
+@Table(name = "vehicle_card")
+public class VehicleCard implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -35,24 +35,32 @@ public class RequestService implements Serializable {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "reason_detail_sub_service_id", referencedColumnName = "id")
-    private ReasonDetailSubService reasonDetailSubService;
+    @JoinColumn(name = "vehicle_id", columnDefinition = "id")
+    private Vehicle vehicle;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "status_service_request_id", referencedColumnName = "id")
-    private StatusServiceRequest statusServiceRequest;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "account_id", referencedColumnName = "id")
+    @JoinColumn(name = "account_id", columnDefinition = "id")
     private Account account;
 
-    @Column(name = "description")
-    private String description;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "status_vehicle_card_id", columnDefinition = "id")
+    private StatusVehicleCard statusVehicleCard;
+
+    @Column(name = "vehicle_name")
+    private String vehicleName;
+
+    @Column(name = "vehicle_branch")
+    private String vehicleBranch;
+
+    @Column(name = "license_plate", unique = true)
+    private String licensePlate;
+
+    @Column(name = "vehicle_color")
+    private String vehicleColor;
 
     @Column(name = "start_date")
     private Date startDate;
 
     @Column(name = "end_date")
     private Date endDate;
-    
 }

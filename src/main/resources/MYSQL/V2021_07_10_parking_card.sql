@@ -44,6 +44,9 @@ CREATE TABLE `amsbuilding`.`vehicle_card`
             ON UPDATE NO ACTION
 );
 
+ALTER TABLE `amsbuilding`.`vehicle`
+    CHANGE COLUMN `vechicle_name` `vehicle_name` VARCHAR(50) NULL DEFAULT NULL;
+
 INSERT INTO `amsbuilding`.`status_vehicle_card` (`status_name`)
 VALUES ('Chờ xử lí');
 INSERT INTO `amsbuilding`.`status_vehicle_card` (`status_name`)

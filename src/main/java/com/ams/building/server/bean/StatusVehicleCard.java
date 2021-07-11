@@ -21,7 +21,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @Entity
 @Table(name = "status_vehicle_card")
-public class StatusParkingCard implements Serializable {
+public class StatusVehicleCard implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
