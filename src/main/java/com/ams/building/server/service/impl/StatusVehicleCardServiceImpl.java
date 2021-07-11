@@ -32,7 +32,7 @@ public class StatusVehicleCardServiceImpl implements StatusVehicleCardService {
     private StatusVehicleCardResponse convertToStatusResponse(StatusVehicleCard card) {
         StatusVehicleCardResponse response = StatusVehicleCardResponse.builder().build();
         response.setId(card.getId());
-        response.setStatusName(card.getRequestName());
+        response.setStatusName(card.getStatusName());
         return response;
     }
 }

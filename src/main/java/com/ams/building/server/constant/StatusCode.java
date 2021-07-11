@@ -22,7 +22,8 @@ public enum StatusCode {
     PHONE_NUMBER_NOT_RIGHT_FORMAT(414, PropertiesReader.getProperty(PropertyKeys.PHONE_NUMBER_NOT_RIGHT_FORMAT)),
     SUB_SERVICE_NOT_EXIST(415, PropertiesReader.getProperty(PropertyKeys.SUB_SERVICE_NOT_EXIST)),
     REQUEST_SERVICE_NOT_EXIST(416, PropertiesReader.getProperty(PropertyKeys.REQUEST_SERVICE_NOT_EXIST)),
-    DETAIL_SUB_SERVICE_NOT_EXIST(417, PropertiesReader.getProperty(PropertyKeys.DETAIL_SUB_SERVICE_NOT_EXIST));
+    DETAIL_SUB_SERVICE_NOT_EXIST(417, PropertiesReader.getProperty(PropertyKeys.DETAIL_SUB_SERVICE_NOT_EXIST)),
+    VEHICLE_CARD_NOT_EXIST(418, PropertiesReader.getProperty(PropertyKeys.VEHICLE_CARD_NOT_EXIST));
 
     private Integer status;
 

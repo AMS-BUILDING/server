@@ -46,7 +46,7 @@ public class VehicleCard implements Serializable {
     @JoinColumn(name = "status_vehicle_card_id", columnDefinition = "id")
     private StatusVehicleCard statusVehicleCard;
 
-    @Column(name = "vehicle_name")
+    @Column(name = "vehicle_type_name")
     private String vehicleName;
 
     @Column(name = "vehicle_branch")

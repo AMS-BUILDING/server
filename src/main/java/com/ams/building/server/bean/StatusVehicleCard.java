@@ -31,5 +31,5 @@ public class StatusVehicleCard implements Serializable {
     private Long id;
 
     @Column(name = "status_name")
-    private String requestName;
+    private String statusName;
 }

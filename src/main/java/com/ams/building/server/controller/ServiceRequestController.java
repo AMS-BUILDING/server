@@ -63,7 +63,7 @@ public class ServiceRequestController {
     }
 
     @PostMapping(Constants.UrlPath.URL_API_UPDATE_REQUEST_SERVICE + "/{id}")
-    public ResponseEntity<?> updateStatusRequestService(@PathVariable("id") Long requestId, @RequestBody Long statusId) {
+    public ResponseEntity<?> updateStatusRequestService(@PathVariable("id") Long requestId, @RequestParam Long statusId) {
         logger.debug("updateStatusRequestService: request " + requestId + "-" + statusId);
         requestServiceService.updateStatusRequest(statusId, requestId);
         ResponseEntity<String> response = new ResponseEntity<>("Update Success", HttpStatus.OK);
