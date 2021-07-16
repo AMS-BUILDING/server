@@ -73,7 +73,7 @@ public class SubServiceServiceImpl implements SubServiceService {
         if (StringUtils.isEmpty(subServiceId)) {
             throw new RestApiException(StatusCode.DATA_EMPTY);
         }
-        SubService subService = subServiceDAO.getById(subServiceId);
+        SubService subService = subServiceDAO.getOne(subServiceId);
         if (Objects.isNull(subService)) {
             throw new RestApiException(StatusCode.SUB_SERVICE_NOT_EXIST);
         }
@@ -92,7 +92,10 @@ public class SubServiceServiceImpl implements SubServiceService {
     }
 
     private SubServiceResponse covertSubServiceResponse(SubService service) {
-        SubServiceResponse response = SubServiceResponse.builder().subSerivceId(service.getId()).serviceName(service.getService().getName()).subServiceName(service.getSubServiceName()).build();
+        SubServiceResponse response = SubServiceResponse.builder()
+                .subSerivceId(service.getId())
+                .serviceName(service.getService().getName())
+                .subServiceName(service.getSubServiceName()).build();
         return response;
     }
 

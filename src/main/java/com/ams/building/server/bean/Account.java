@@ -37,7 +37,7 @@ public class Account implements Serializable {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "email", unique = true)
+    @Column(name = "email")
     private String email;
 
     @Column(name = "phone")
@@ -49,7 +49,7 @@ public class Account implements Serializable {
     @Column(name = "password")
     private String password;
 
-    @Column(name = "identify_card", unique = true)
+    @Column(name = "identify_card")
     private String identifyCard;
 
     @Column(name = "image_link")
@@ -78,4 +78,5 @@ public class Account implements Serializable {
     public Account(@NonNull Long id) {
         this.id = id;
     }
+
 }

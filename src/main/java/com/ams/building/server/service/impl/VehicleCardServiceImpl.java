@@ -60,7 +60,7 @@ public class VehicleCardServiceImpl implements VehicleCardService {
         if (StringUtils.isEmpty(id)) throw new RestApiException(StatusCode.DATA_EMPTY);
         VehicleCard card = vehicleCardDAO.getVehicleCardById(id);
         if (Objects.isNull(card)) throw new RestApiException(StatusCode.VEHICLE_CARD_NOT_EXIST);
-        vehicleCardDAO.updateStatus(id,statusId);
+        vehicleCardDAO.updateStatus(statusId, id);
     }
 
     @Override

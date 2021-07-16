@@ -4,9 +4,12 @@ import com.ams.building.server.bean.VehicleCard;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+
+import javax.transaction.Transactional;
 
 @Repository
 public interface VehicleCardDAO extends JpaRepository<VehicleCard, Long> {
@@ -20,7 +23,9 @@ public interface VehicleCardDAO extends JpaRepository<VehicleCard, Long> {
     @Query("SELECT v FROM VehicleCard v WHERE v.id=?1")
     VehicleCard getVehicleCardById(Long id);
 
-    @Query("UPDATE VehicleCard r SET r.statusVehicleCard.id=?1 WHERE r.id=?2")
-    void updateStatus(Long id, Long statusId);
+    @Transactional
+    @Modifying
+    @Query(" UPDATE VehicleCard r SET r.statusVehicleCard.id =:statusId WHERE r.id =:id ")
+    void updateStatus(@Param("statusId") Long statusId, @Param("id") Long id);
 
 }

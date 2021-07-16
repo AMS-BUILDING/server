@@ -32,4 +32,5 @@ public class StatusVehicleCard implements Serializable {
 
     @Column(name = "status_name")
     private String statusName;
+
 }

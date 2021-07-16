@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/position/")
+@RequestMapping("/api")
 @CrossOrigin(origins = "*", maxAge = -1)
 public class PositionController {
 
@@ -27,7 +27,7 @@ public class PositionController {
     private PositionService positionService;
 
     @GetMapping(value = Constants.UrlPath.URL_API_SEARCH_POSITION)
-    public ResponseEntity<?> positionList(@RequestParam(value = "show",required = false,defaultValue = "false") Boolean show) {
+    public ResponseEntity<?> positionList(@RequestParam(value = "show", required = false, defaultValue = "false") Boolean show) {
         logger.debug("positionList request : " + show);
         List<PositionResponse> apiResponse = positionService.positionByShow(show);
         ResponseEntity<List<PositionResponse>> response = new ResponseEntity<>(apiResponse, HttpStatus.OK);

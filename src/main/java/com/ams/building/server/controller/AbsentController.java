@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletResponse;
 
 @RestController
-@RequestMapping("api/absent/")
+@RequestMapping("/api")
 @CrossOrigin(origins = "*", maxAge = -1)
 public class AbsentController {
 
@@ -34,7 +34,6 @@ public class AbsentController {
                                                 @RequestParam(value = "name", required = false, defaultValue = "") String name,
                                                 @RequestParam(value = "identifyCard", required = false, defaultValue = "") String identifyCard,
                                                 @RequestParam(value = "absentType", required = false, defaultValue = "-1") Long absentType) {
-
         logger.debug("searchAbsentDetail request : " + name + " - " + identifyCard + " - " + absentType);
         Integer pageSize = 5;
         ApiResponse apiResponse = absentService.absentList(name, identifyCard, absentType, pageNo, pageSize);
@@ -54,10 +53,10 @@ public class AbsentController {
 
     @PostMapping(value = Constants.UrlPath.URL_API_INSERT_ABSENT)
     public ResponseEntity<?> addAbsent(@RequestBody AbsentRequest request) {
-        logger.debug("insertAbsent request : " + new Gson().toJson(request));
+        logger.debug("addAbsent request : " + new Gson().toJson(request));
         absentService.addAbsentDetail(request);
         ResponseEntity<String> response = new ResponseEntity("Add absent success", HttpStatus.CREATED);
-        logger.debug("insertAbsent response : " + new Gson().toJson(response));
+        logger.debug("addAbsent response : " + new Gson().toJson(response));
         return response;
     }
 }

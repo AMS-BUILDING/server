@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/service/")
+@RequestMapping("/api")
 @CrossOrigin(origins = "*", maxAge = -1)
 public class ServiceController {
 

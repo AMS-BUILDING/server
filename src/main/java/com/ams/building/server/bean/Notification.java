@@ -2,18 +2,16 @@ package com.ams.building.server.bean;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import java.io.Serializable;
 
@@ -23,24 +21,21 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "notification_building")
-public class NotificationBuilding implements Serializable {
+@Data
+@Table(name = "notification")
+public class Notification implements Serializable {
 
-    private static final long serialVersionUID = -6839439476213656621L;
+    private static final long serialVersionUID = 1L;
 
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "building_id", referencedColumnName = "id")
-    private Building building;
+    @Column(name = "title")
+    private String title;
 
-    @Column(name = "title_notification")
-    private String titleNotification;
-
-    @Column(name = "description")
+    @Column(name = "description ")
     private String description;
 
 }

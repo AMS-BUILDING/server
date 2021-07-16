@@ -37,4 +37,7 @@ public interface AccountDAO extends JpaRepository<Account, Long> {
     @Query("SELECT a FROM Account  a WHERE a.identifyCard =?1 AND a.role.name = ?2")
     Account getAccountByIdentifyAndRole(String identifyCard, String role);
 
+    @Query("SELECT a FROM Account  a WHERE a.email =?1 AND a.role.name = ?2")
+    Account getAccountByEmailAndRole(String email, String role);
+
 }

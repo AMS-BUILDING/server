@@ -16,7 +16,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import java.io.Serializable;
-import java.util.Date;
 
 @Builder
 @Getter
@@ -24,8 +23,8 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "service_request")
-public class RequestService implements Serializable {
+@Table(name = "resident_card")
+public class ResidentCard implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -35,24 +34,17 @@ public class RequestService implements Serializable {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "reason_detail_sub_service_id", referencedColumnName = "id")
-    private ReasonDetailSubService reasonDetailSubService;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "status_service_request_id", referencedColumnName = "id")
-    private StatusServiceRequest statusServiceRequest;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "account_id", referencedColumnName = "id")
+    @JoinColumn(name = "account_id", columnDefinition = "id")
     private Account account;
 
-    @Column(name = "description")
-    private String description;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "status_resident_card_id", columnDefinition = "id")
+    private StatusResidentCard statusResidentCard;
 
-    @Column(name = "start_date")
-    private Date startDate;
+    @Column(name = "resident_card_code", unique = true)
+    private String cardCode;
 
-    @Column(name = "end_date")
-    private Date endDate;
+    @Column(name = "price")
+    private Double price;
 
 }

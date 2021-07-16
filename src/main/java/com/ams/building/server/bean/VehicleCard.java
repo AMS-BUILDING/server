@@ -63,4 +63,5 @@ public class VehicleCard implements Serializable {
 
     @Column(name = "end_date")
     private Date endDate;
+
 }

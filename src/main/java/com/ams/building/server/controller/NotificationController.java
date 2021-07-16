@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("api/notification/")
+@RequestMapping("/api")
 @CrossOrigin(origins = "*", maxAge = -1)
 public class NotificationController {
 
@@ -28,22 +28,23 @@ public class NotificationController {
     private NotificationService notificationService;
 
     @GetMapping(value = Constants.UrlPath.URL_API_SEARCH_NOTIFICATION)
-    public ResponseEntity<?> searchNotificationByTitle(@RequestParam(name = "pageNo", required = false, defaultValue = "0") Integer pageNo,
-                                                       @RequestParam(value = "title", required = false, defaultValue = "") String title) {
-        logger.debug("searchNotificationByTitle request : " + title);
+    public ResponseEntity<?> searchNotification(@RequestParam(name = "pageNo", required = false, defaultValue = "0") Integer pageNo,
+                                                @RequestParam(name = "title", required = false, defaultValue = "") String title) {
+
+        logger.debug("searchNotification request: " + title);
         Integer pageSize = 5;
-        ApiResponse apiResponse = notificationService.searchNotification(pageNo, pageSize, title);
+        ApiResponse apiResponse = notificationService.searchNotification(title, pageNo, pageSize);
         ResponseEntity<ApiResponse> response = new ResponseEntity<>(apiResponse, HttpStatus.OK);
-        logger.debug("searchNotificationByTitle  response : " + new Gson().toJson(response));
+        logger.debug("searchNotification response: " + new Gson().toJson(response));
         return response;
     }
 
     @PostMapping(value = Constants.UrlPath.URL_API_ADD_NOTIFICATION)
     public ResponseEntity<?> addNotification(@RequestBody NotificationRequest request) {
-        logger.debug("addNotification request : " + new Gson().toJson(request));
+        logger.debug("addNotification response: " + new Gson().toJson(request));
         notificationService.addNotification(request);
-        ResponseEntity<String> response = new ResponseEntity<>("Add Notification Success", HttpStatus.CREATED);
-        logger.debug("addNotification  response : " + new Gson().toJson(response));
+        ResponseEntity<String> response = new ResponseEntity<>("Add success", HttpStatus.OK);
+        logger.debug("addNotification response: " + new Gson().toJson(response));
         return response;
     }
 }

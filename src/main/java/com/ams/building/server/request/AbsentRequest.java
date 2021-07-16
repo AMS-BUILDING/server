@@ -19,6 +19,6 @@ public class AbsentRequest {
     private Date startDate;
     private Date endDate;
     private Long absentType;
-    private Long accountDetailId;
+    private Long accountId;
 
 }

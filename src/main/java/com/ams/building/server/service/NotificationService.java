@@ -5,7 +5,7 @@ import com.ams.building.server.response.ApiResponse;
 
 public interface NotificationService {
 
-    ApiResponse searchNotification(Integer page, Integer size, String name);
+    ApiResponse searchNotification(String title, Integer page, Integer size);
 
     void addNotification(NotificationRequest request);
 

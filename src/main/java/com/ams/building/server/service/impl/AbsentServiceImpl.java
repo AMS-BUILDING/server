@@ -7,6 +7,7 @@ import com.ams.building.server.bean.Block;
 import com.ams.building.server.bean.FloorBlock;
 import com.ams.building.server.bean.RoomNumber;
 import com.ams.building.server.constant.Constants;
+import com.ams.building.server.constant.RoleEnum;
 import com.ams.building.server.constant.StatusCode;
 import com.ams.building.server.dao.AbsentDetailDAO;
 import com.ams.building.server.dao.AbsentTypeDAO;
@@ -39,7 +40,6 @@ import java.util.Objects;
 import static com.ams.building.server.utils.DateTimeUtils.convertDateToStringWithTimezone;
 import static com.ams.building.server.utils.ValidateUtil.isIdentifyCard;
 
-@Transactional
 @Service
 public class AbsentServiceImpl implements AbsentService {
 
@@ -68,8 +68,8 @@ public class AbsentServiceImpl implements AbsentService {
             AbsentResponse response = covertAbsentDetailToDTO(ad);
             absentResponses.add(response);
         }
-        Long totalElement = absentDetails.getTotalElements();
-        ApiResponse response = ApiResponse.builder().data(absentResponses).totalElement(totalElement).build();
+        Long totalPage = absentDetails.getTotalElements();
+        ApiResponse response = ApiResponse.builder().data(absentResponses).totalElement(totalPage).build();
         return response;
     }
 
@@ -112,14 +112,16 @@ public class AbsentServiceImpl implements AbsentService {
         if (Objects.isNull(request)) {
             throw new RestApiException(StatusCode.ABSENT_DETAIL_NOT_EXIST);
         }
-        if (StringUtils.isEmpty(request.getName()) || StringUtils.isEmpty(request.getIdentifyCard()) || StringUtils.isEmpty(request.getDob()) || StringUtils.isEmpty(request.getAbsentType()) || StringUtils.isEmpty(request.getHomeTown())) {
+        if (StringUtils.isEmpty(request.getName()) || StringUtils.isEmpty(request.getIdentifyCard())
+                || StringUtils.isEmpty(request.getDob()) || StringUtils.isEmpty(request.getAbsentType())
+                || StringUtils.isEmpty(request.getHomeTown())) {
             throw new RestApiException(StatusCode.DATA_EMPTY);
         }
         AbsentType absentType = absentTypeDAO.findAbsentTypeById(request.getAbsentType());
         if (Objects.isNull(absentType)) {
             throw new RestApiException(StatusCode.ABSENT_TYPE_NOT_EXIST);
         }
-        Apartment apartment = apartmentDAO.getApartmentByAccountId(request.getAccountDetailId());
+        Apartment apartment = apartmentDAO.getApartmentByAccountId(request.getAccountId(), String.valueOf(RoleEnum.ROLE_LANDLORD));
         if (Objects.isNull(apartment)) {
             throw new RestApiException(StatusCode.APARTMENT_NOT_EXIST);
         }
@@ -206,4 +208,3 @@ public class AbsentServiceImpl implements AbsentService {
         return content;
     }
 }
-

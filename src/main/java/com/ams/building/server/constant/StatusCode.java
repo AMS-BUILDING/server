@@ -1,5 +1,6 @@
 package com.ams.building.server.constant;
 
+
 import com.ams.building.server.utils.PropertiesReader;
 
 public enum StatusCode {
@@ -23,7 +24,8 @@ public enum StatusCode {
     SUB_SERVICE_NOT_EXIST(415, PropertiesReader.getProperty(PropertyKeys.SUB_SERVICE_NOT_EXIST)),
     REQUEST_SERVICE_NOT_EXIST(416, PropertiesReader.getProperty(PropertyKeys.REQUEST_SERVICE_NOT_EXIST)),
     DETAIL_SUB_SERVICE_NOT_EXIST(417, PropertiesReader.getProperty(PropertyKeys.DETAIL_SUB_SERVICE_NOT_EXIST)),
-    VEHICLE_CARD_NOT_EXIST(418, PropertiesReader.getProperty(PropertyKeys.VEHICLE_CARD_NOT_EXIST));
+    VEHICLE_CARD_NOT_EXIST(418, PropertiesReader.getProperty(PropertyKeys.VEHICLE_CARD_NOT_EXIST)),
+    RESIDENT_CARD_NOT_EXIST(419, PropertiesReader.getProperty(PropertyKeys.RESIDENT_CARD_NOT_EXIST));
 
     private Integer status;
 

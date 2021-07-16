@@ -23,4 +23,5 @@ public class PropertyKeys {
     public static final String REQUEST_SERVICE_NOT_EXIST = "request.service.not.exist";
     public static final String DETAIL_SUB_SERVICE_NOT_EXIST = "detail.sub.service.not.exist";
     public static final String VEHICLE_CARD_NOT_EXIST = "vehicle.card.not.exist";
+    public static final String RESIDENT_CARD_NOT_EXIST = "resident.card.not.exist";
 }

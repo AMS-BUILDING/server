@@ -32,8 +32,8 @@ public class AbsentDetail implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @NonNull
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)

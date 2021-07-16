@@ -61,8 +61,8 @@ public class EmployeeServiceImpl implements EmployeeService {
         }
         List<EmployeeResponse> accountDTOS = new ArrayList<>();
         accounts.forEach(a -> accountDTOS.add(convertEmployee(a)));
-        Long totalElement = accounts.getTotalElements();
-        ApiResponse response = ApiResponse.builder().data(accountDTOS).totalElement(totalElement).build();
+        Long totalPage = accounts.getTotalElements();
+        ApiResponse response = ApiResponse.builder().data(accountDTOS).totalElement(totalPage).build();
         return response;
     }
 
@@ -79,7 +79,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     public void updateEmployee(Long accountId, EmployeeRequest request) {
         if (Objects.isNull(request) || StringUtils.isEmpty(request.getIdentifyCard()) ||
                 StringUtils.isEmpty(request.getDob()) || StringUtils.isEmpty(request.getCurrentAddress()) ||
-                StringUtils.isEmpty(request.getPhoneNumber()) || StringUtils.isEmpty(request.getHomeTown()) || StringUtils.isEmpty(request.getName())) {
+                StringUtils.isEmpty(request.getPhoneNumber()) || StringUtils.isEmpty(request.getHomeTown())) {
             throw new RestApiException(StatusCode.DATA_EMPTY);
         }
         if (!isPhoneNumber(request.getPhoneNumber())) {
@@ -99,9 +99,9 @@ public class EmployeeServiceImpl implements EmployeeService {
         currentAccount.setCurrentAddress(request.getCurrentAddress());
         currentAccount.setName(request.getName());
         currentAccount.setIdentifyCard(request.getIdentifyCard());
-        Position position = positionDAO.getById(request.getPosition());
+        Position position = positionDAO.getOne(request.getPosition());
         currentAccount.setPosition(position);
-        Role role = roleDAO.getById(4L);
+        Role role = roleDAO.getOne(4L);
         currentAccount.setRole(role);
         accountDao.save(currentAccount);
     }
@@ -136,9 +136,10 @@ public class EmployeeServiceImpl implements EmployeeService {
         account.setPhone(request.getPhoneNumber());
         account.setCurrentAddress(request.getCurrentAddress());
         account.setName(request.getName());
-        Position position = positionDAO.getById(request.getPosition());
+        account.setEnabled(true);
+        Position position = positionDAO.getOne(request.getPosition());
         account.setPosition(position);
-        Role role = roleDAO.getById(4L);
+        Role role = roleDAO.getOne(4L);
         account.setRole(role);
         accountDao.save(account);
     }
@@ -200,7 +201,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         response.setDob(account.getDob());
         response.setHomeTown(account.getHomeTown());
         response.setIdentityCard(account.getIdentifyCard());
-        String gender = "";
+        String gender;
         if (account.getGender() == true) {
             gender = Constants.AccountGender.GENDER_MALE;
         } else {
@@ -242,7 +243,7 @@ public class EmployeeServiceImpl implements EmployeeService {
             content = name + "," + gender + "," + phoneNumber + "," + email + "," + dob + "," + identifyCard + "," + currentAddress + "," + homeTown + "," + position;
 
         } catch (Exception e) {
-            logger.error("writeAbsentDetail error", e);
+            logger.error("writeEmployee error", e);
         }
         return content;
     }

@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletResponse;
 
 @RestController
-@RequestMapping("api/employee/")
+@RequestMapping("/api")
 @CrossOrigin(origins = "*", maxAge = -1)
 public class EmployeeController {
 

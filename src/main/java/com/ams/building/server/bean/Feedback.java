@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
 import lombok.Setter;
 
 import javax.persistence.Column;
@@ -32,8 +31,8 @@ public class Feedback implements Serializable {
     private static final Long serialVersionUID = 1L;
 
     @Id
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @NonNull
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -52,4 +51,5 @@ public class Feedback implements Serializable {
             createdDate = new Date(System.currentTimeMillis());
         }
     }
+
 }

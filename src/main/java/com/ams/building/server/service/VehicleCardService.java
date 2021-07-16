@@ -9,7 +9,7 @@ public interface VehicleCardService {
 
     VehicleCardResponse detailVehicleCard(Long id);
 
-    void updateStatusVehicleCard(Long id,Long statusId);
+    void updateStatusVehicleCard(Long id, Long statusId);
 
     void removeVehicleCard(Long id);
 

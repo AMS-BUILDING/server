@@ -10,7 +10,7 @@ public interface RequestServiceService {
 
     List<StatusServiceResponse> statusResponses();
 
-    ApiResponse searchServiceRequest(Integer size, Integer pageNo,String name, String serviceName, Long statusId);
+    ApiResponse searchServiceRequest(Integer size, Integer pageNo, String name, String serviceName, Long statusId);
 
     RequestServiceResponse getRequestServiceById(Long id);
 

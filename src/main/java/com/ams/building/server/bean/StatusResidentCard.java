@@ -8,13 +8,9 @@ import lombok.Setter;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import java.io.Serializable;
 
@@ -24,8 +20,8 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "apartment")
-public class Apartment implements Serializable {
+@Table(name = "status_resident_card")
+public class StatusResidentCard implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -34,16 +30,7 @@ public class Apartment implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "account_id", referencedColumnName = "id")
-    private Account account;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "building_id", referencedColumnName = "id")
-    private Building building;
-
-    @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "room_number_id", referencedColumnName = "id")
-    private RoomNumber roomNumber;
+    @Column(name = "status_name")
+    private String statusName;
 
 }

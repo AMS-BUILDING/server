@@ -3,6 +3,7 @@ package com.ams.building.server.service.impl;
 import com.ams.building.server.bean.Apartment;
 import com.ams.building.server.bean.RequestService;
 import com.ams.building.server.bean.StatusServiceRequest;
+import com.ams.building.server.constant.RoleEnum;
 import com.ams.building.server.constant.StatusCode;
 import com.ams.building.server.dao.ApartmentDAO;
 import com.ams.building.server.dao.RequestServiceDAO;
@@ -29,7 +30,7 @@ import java.util.Objects;
 @Service
 public class RequestServiceServiceImpl implements RequestServiceService {
 
-    private static final Logger logger = Logger.getLogger(AbsentServiceImpl.class);
+    private static final Logger logger = Logger.getLogger(RequestServiceServiceImpl.class);
 
     @Autowired
     private StatusRequestServiceDAO statusRequestServiceDAO;
@@ -93,7 +94,7 @@ public class RequestServiceServiceImpl implements RequestServiceService {
 
     private RequestServiceResponse covertToRequestResponse(RequestService requestService) {
         RequestServiceResponse response = RequestServiceResponse.builder().build();
-        Apartment apartment = apartmentDAO.getApartmentByAccountId(requestService.getId());
+        Apartment apartment = apartmentDAO.getApartmentByAccountId(requestService.getId(), String.valueOf(RoleEnum.ROLE_LANDLORD));
         if (Objects.isNull(apartment)) throw new RestApiException(StatusCode.ACCOUNT_NOT_EXIST);
         response.setBlock(apartment.getRoomNumber().getFloorBlock().getBlock().getBlockName());
         response.setServiceName(requestService.getReasonDetailSubService().getReasonName());
