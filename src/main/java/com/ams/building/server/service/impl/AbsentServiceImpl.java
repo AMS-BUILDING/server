@@ -28,7 +28,6 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletResponse;
-import javax.transaction.Transactional;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
@@ -130,7 +129,7 @@ public class AbsentServiceImpl implements AbsentService {
         }
         AbsentDetail findAbsent = absentDao.getAbsentDetailByIdentityCardAndAbsentType(request.getIdentifyCard(), request.getAbsentType());
         if (Objects.nonNull(findAbsent)) {
-            throw new RestApiException(StatusCode.IDENTIFY_CARD_DUILCATE);
+            throw new RestApiException(StatusCode.IDENTIFY_CARD_DUPLICATE);
         }
         AbsentDetail absentDetail = new AbsentDetail();
         absentDetail.setAbsentType(absentType);

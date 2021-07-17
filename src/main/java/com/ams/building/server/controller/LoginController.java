@@ -1,9 +1,11 @@
 package com.ams.building.server.controller;
 
 import com.ams.building.server.constant.Constants;
+import com.ams.building.server.constant.StatusCode;
 import com.ams.building.server.exception.JwtCustomException;
+import com.ams.building.server.exception.RestApiException;
 import com.ams.building.server.request.LoginRequest;
-import com.ams.building.server.response.AccountResponse;
+import com.ams.building.server.response.LoginResponse;
 import com.ams.building.server.response.TokenResponse;
 import com.ams.building.server.response.UserPrincipal;
 import com.ams.building.server.sercurity.JwtTokenProvider;
@@ -45,7 +47,7 @@ public class LoginController {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
             return jwtTokenProvider.createToken(request.getUsername());
         } catch (AuthenticationException e) {
-            throw new JwtCustomException("Invalid username/password supplied", HttpStatus.UNPROCESSABLE_ENTITY);
+            throw new RestApiException(StatusCode.LOGIN_FAIL);
         }
     }
 
@@ -53,8 +55,9 @@ public class LoginController {
     public ResponseEntity<?> getAccount() {
         UserPrincipal currentUser = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication()
                 .getPrincipal();
-        AccountResponse accountResponse = accountService.getById(currentUser.getId());
-        ResponseEntity<AccountResponse> response = new ResponseEntity<>(accountResponse, HttpStatus.OK);
+        LoginResponse loginResponse = accountService.getById(currentUser.getId());
+        ResponseEntity<LoginResponse> response = new ResponseEntity<>(loginResponse, HttpStatus.OK);
         return response;
     }
+
 }

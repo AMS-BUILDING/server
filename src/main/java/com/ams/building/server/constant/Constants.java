@@ -11,6 +11,8 @@ public class Constants {
 
     public static final String HEADER_KEY = "Content-Disposition";
 
+    public static final String DEFAULT_PASSWORD = "$2a$12$vh2FQgxSpUARxQiQK1bjXeILadCSYzT.w04Up6IcG6Dg5InXiRQc.";
+
     public class UrlPath {
 
         private UrlPath() {
@@ -52,6 +54,17 @@ public class Constants {
         public static final String URL_API_ADD_RESIDENT_CARD = "/admin/resident-card/add";
         public static final String URL_API_LOGIN = "/login";
         public static final String URL_API_PROFILE = "/member/account/profile";
+        public static final String URL_API_SEARCH_APARTMENT = "/admin/apartment/search";
+        public static final String URL_API_ADD_APARTMENT_OWNER = "/admin/apartment/add/owner";
+        public static final String URL_API_ADD_APARTMENT_RESIDENT = "/admin/apartment/add/resident";
+        public static final String URL_API_DISABLE_APARTMENT_OWNER = "/admin/apartment/disable/owner";
+        public static final String URL_API_SEARCH_APARTMENT_RESIDENT = "/admin/apartment/search/resident";
+        public static final String URL_API_ACCOUNT_DETAIL = "/admin/account/detail";
+        public static final String URL_API_EXPORT_APARTMENT = "/admin/apartment/export";
+        public static final String URL_API_FLOOR_LIST = "/admin/floor/list";
+        public static final String URL_API_BLOCK_LIST = "/admin/block/list";
+        public static final String URL_API_ROOM_NUMBER_SEARCH = "/admin/room-number/search";
+        public static final String URL_API_UPDATE_RESIDENT = "/admin/resident/update";
     }
 
     public class FileProperties {

@@ -83,4 +83,5 @@ public class VehicleCardController {
         logger.debug("listStatusVehicleCard response : " + new Gson().toJson(response));
         return response;
     }
+
 }

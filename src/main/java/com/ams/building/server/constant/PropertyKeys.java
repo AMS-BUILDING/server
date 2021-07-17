@@ -12,7 +12,7 @@ public class PropertyKeys {
     public static final String BLOCK_NOT_EXIST = "block.not.exist";
     public static final String ABSENT_TYPE_NOT_EXIST = "absent.type.not.exist";
     public static final String DATA_EMPTY = "data.empty";
-    public static final String IDENTIFY_CARD_DUILCATE = "identify.card.duilcate";
+    public static final String IDENTIFY_CARD_DUPLICATE = "identify.card.duplicate";
     public static final String IDENTIFY_CARD_NOT_RIGHT = "identify.card.not.right";
     public static final String ACCOUNT_NOT_EXIST = "account.not.exist";
     public static final String FEEDBACK_EMPTY = "feedback.empty";
@@ -24,4 +24,6 @@ public class PropertyKeys {
     public static final String DETAIL_SUB_SERVICE_NOT_EXIST = "detail.sub.service.not.exist";
     public static final String VEHICLE_CARD_NOT_EXIST = "vehicle.card.not.exist";
     public static final String RESIDENT_CARD_NOT_EXIST = "resident.card.not.exist";
+    public static final String LOGIN_FAIL = "login.fail";
+    public static final String PAGE_FORBIDDEN = "page.forbidden";
 }

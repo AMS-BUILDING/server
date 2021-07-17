@@ -2,6 +2,7 @@ package com.ams.building.server;
 
 import com.ams.building.server.bean.Account;
 import com.ams.building.server.constant.RoleEnum;
+import com.ams.building.server.exception.CustomAccessDeniedHandler;
 import com.ams.building.server.sercurity.JwtTokenFilter;
 import com.ams.building.server.sercurity.JwtTokenProvider;
 import com.ams.building.server.service.impl.AuditorAwareImpl;
@@ -19,6 +20,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -34,13 +36,12 @@ public class ServerApplication {
         SpringApplication.run(ServerApplication.class, args);
     }
 
-    @Qualifier("accountServiceImpl")
     @Autowired
+    @Qualifier("accountServiceImpl")
     private UserDetailsService userDetailsService;
 
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
-
 
     @Autowired
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -68,22 +69,20 @@ public class ServerApplication {
             http.antMatcher("/api/**").
                     authorizeRequests().antMatchers("/api/admin/**")
                     .hasAnyAuthority(RoleEnum.ROLE_ADMIN.name())
-
                     .antMatchers("/api/manager-service/**")
                     .hasAnyAuthority(RoleEnum.ROLE_ADMIN.name(), RoleEnum.ROLE_MANAGER_SERVICE.name())
-
                     .antMatchers("/api/landlord/**")
                     .hasAnyAuthority(RoleEnum.ROLE_ADMIN.name(), RoleEnum.ROLE_MANAGER_SERVICE.name(), RoleEnum.ROLE_LANDLORD.name())
-
                     .antMatchers("/api/employee/**")
                     .hasAnyAuthority(RoleEnum.ROLE_ADMIN.name(), RoleEnum.ROLE_MANAGER_SERVICE.name(), RoleEnum.ROLE_EMPLOYEE.name())
-
                     .antMatchers("/api/tenant/**")
                     .hasAnyAuthority(RoleEnum.ROLE_ADMIN.name(), RoleEnum.ROLE_MANAGER_SERVICE.name(), RoleEnum.ROLE_EMPLOYEE.name(),
                             RoleEnum.ROLE_LANDLORD.name(), RoleEnum.ROLE_TENANT.name())
-
                     .antMatchers("/api/member/**").authenticated().anyRequest().permitAll();
 
+//            http.exceptionHandling().accessDeniedHandler(accessDeniedHandler());
+//            http.logout().logoutSuccessUrl("/api/**");
+//            http.rememberMe();
             http.addFilterBefore(new JwtTokenFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
         }
     }
@@ -104,4 +103,10 @@ public class ServerApplication {
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
+
+    @Bean
+    public AccessDeniedHandler accessDeniedHandler() {
+        return new CustomAccessDeniedHandler();
+    }
+
 }
