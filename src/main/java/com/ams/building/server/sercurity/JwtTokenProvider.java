@@ -43,11 +43,11 @@ public class JwtTokenProvider {
         Claims claims = Jwts.claims().setSubject(username);
         Date now = new Date();
         Date validity = new Date(now.getTime() + validityInMilliseconds);
-        String accessToken = Jwts.builder()//
-                .setClaims(claims)//
-                .setIssuedAt(now)//
-                .setExpiration(validity)//
-                .signWith(SignatureAlgorithm.HS256, secretKey)//
+        String accessToken = Jwts.builder()
+                .setClaims(claims)
+                .setIssuedAt(now)
+                .setExpiration(validity)
+                .signWith(SignatureAlgorithm.HS512, secretKey)
                 .compact();
         TokenResponse authenDTO = TokenResponse.builder().build();
         authenDTO.setExpirationTime(validityInMilliseconds);
