@@ -50,4 +50,5 @@ public class SubServiceController {
         logger.debug("detailReasonSubService response : " + new Gson().toJson(response));
         return response;
     }
+
 }

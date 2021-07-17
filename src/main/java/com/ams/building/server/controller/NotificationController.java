@@ -30,7 +30,6 @@ public class NotificationController {
     @GetMapping(value = Constants.UrlPath.URL_API_SEARCH_NOTIFICATION)
     public ResponseEntity<?> searchNotification(@RequestParam(name = "pageNo", required = false, defaultValue = "0") Integer pageNo,
                                                 @RequestParam(name = "title", required = false, defaultValue = "") String title) {
-
         logger.debug("searchNotification request: " + title);
         Integer pageSize = 5;
         ApiResponse apiResponse = notificationService.searchNotification(title, pageNo, pageSize);
@@ -47,4 +46,5 @@ public class NotificationController {
         logger.debug("addNotification response: " + new Gson().toJson(response));
         return response;
     }
+
 }

@@ -7,13 +7,11 @@ import lombok.Setter;
 @Builder
 @Getter
 @Setter
-public class AccountResponse {
+public class ApartmentResponse {
 
     private Long accountId;
-    private Long apartmentId;
-    private String name;
-    private String phone;
     private String blockName;
-    private String roomNumber;
+    private String roomName;
+    private String ownerName;
 
 }

@@ -7,13 +7,17 @@ import lombok.Setter;
 @Builder
 @Getter
 @Setter
-public class AccountResponse {
+public class AccountDetailResponse {
 
-    private Long accountId;
-    private Long apartmentId;
     private String name;
+    private Boolean gender;
+    private String dob;
     private String phone;
+    private String email;
+    private String identityCard;
     private String blockName;
     private String roomNumber;
+    private String currentAddress;
+    private String homeTown;
 
 }

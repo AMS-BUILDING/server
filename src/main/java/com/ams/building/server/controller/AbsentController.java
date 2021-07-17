@@ -59,4 +59,5 @@ public class AbsentController {
         logger.debug("addAbsent response : " + new Gson().toJson(response));
         return response;
     }
+
 }

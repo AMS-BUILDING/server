@@ -34,4 +34,5 @@ public class PositionController {
         logger.debug("positionList response : " + new Gson().toJson(response));
         return response;
     }
+
 }
