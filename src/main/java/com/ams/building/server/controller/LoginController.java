@@ -3,7 +3,7 @@ package com.ams.building.server.controller;
 import com.ams.building.server.constant.Constants;
 import com.ams.building.server.exception.JwtCustomException;
 import com.ams.building.server.request.LoginRequest;
-import com.ams.building.server.response.AccountResponse;
+import com.ams.building.server.response.LoginResponse;
 import com.ams.building.server.response.TokenResponse;
 import com.ams.building.server.response.UserPrincipal;
 import com.ams.building.server.sercurity.JwtTokenProvider;
@@ -53,8 +53,9 @@ public class LoginController {
     public ResponseEntity<?> getAccount() {
         UserPrincipal currentUser = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication()
                 .getPrincipal();
-        AccountResponse accountResponse = accountService.getById(currentUser.getId());
-        ResponseEntity<AccountResponse> response = new ResponseEntity<>(accountResponse, HttpStatus.OK);
+        LoginResponse loginResponse = accountService.getById(currentUser.getId());
+        ResponseEntity<LoginResponse> response = new ResponseEntity<>(loginResponse, HttpStatus.OK);
         return response;
     }
+
 }
