@@ -1,7 +1,9 @@
 package com.ams.building.server.controller;
 
 import com.ams.building.server.constant.Constants;
+import com.ams.building.server.constant.StatusCode;
 import com.ams.building.server.exception.JwtCustomException;
+import com.ams.building.server.exception.RestApiException;
 import com.ams.building.server.request.LoginRequest;
 import com.ams.building.server.response.LoginResponse;
 import com.ams.building.server.response.TokenResponse;
@@ -45,7 +47,7 @@ public class LoginController {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
             return jwtTokenProvider.createToken(request.getUsername());
         } catch (AuthenticationException e) {
-            throw new JwtCustomException("Invalid username/password supplied", HttpStatus.UNPROCESSABLE_ENTITY);
+            throw new RestApiException(StatusCode.LOGIN_FAIL);
         }
     }
 

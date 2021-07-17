@@ -227,13 +227,13 @@ public class ApartmentServiceImpl implements ApartmentService {
         Account account = accountDAO.getAccountById(id);
         Apartment apartment = apartmentDAO.getApartmentById(apartmentId);
 
-        Apartment apartment1 = Apartment.builder()
+        Apartment newApartment = Apartment.builder()
                 .account(account)
                 .building(apartment.getBuilding())
                 .roomNumber(apartment.getRoomNumber())
                 .build();
 
-        apartmentDAO.save(apartment1);
+        apartmentDAO.save(newApartment);
     }
 
     private AccountResponse convertApartmentToAccountResponse(Apartment apartment) {

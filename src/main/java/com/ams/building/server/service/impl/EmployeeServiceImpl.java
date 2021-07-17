@@ -125,7 +125,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         }
         Account searchAccountByIdentify = accountDao.getAccountByIdentifyAndRole(request.getIdentifyCard(), String.valueOf(RoleEnum.ROLE_EMPLOYEE));
         if (Objects.nonNull(searchAccountByIdentify)) {
-            throw new RestApiException(StatusCode.IDENTIFY_CARD_DUILCATE);
+            throw new RestApiException(StatusCode.IDENTIFY_CARD_DUPLICATE);
         }
         Account account = new Account();
         account.setIdentifyCard(request.getIdentifyCard());

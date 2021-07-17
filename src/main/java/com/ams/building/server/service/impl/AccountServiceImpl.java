@@ -4,6 +4,7 @@ import com.ams.building.server.bean.Account;
 import com.ams.building.server.bean.Position;
 import com.ams.building.server.bean.Role;
 import com.ams.building.server.constant.Constants;
+import com.ams.building.server.constant.RoleEnum;
 import com.ams.building.server.constant.StatusCode;
 import com.ams.building.server.dao.AccountDAO;
 import com.ams.building.server.exception.RestApiException;
@@ -28,6 +29,8 @@ import java.util.List;
 import java.util.Objects;
 
 import static com.ams.building.server.utils.ValidateUtil.isEmail;
+import static com.ams.building.server.utils.ValidateUtil.isIdentifyCard;
+import static com.ams.building.server.utils.ValidateUtil.isPhoneNumber;
 
 @Transactional
 @Service
@@ -180,6 +183,29 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
 
     @Override
     public Long addApartmentOwner(ApartmentOwnerRequest ownerRequest) {
+        if (Objects.isNull(ownerRequest) || StringUtils.isEmpty(ownerRequest.getEmail())
+                || StringUtils.isEmpty(ownerRequest.getDob()) || StringUtils.isEmpty(ownerRequest.getPhone())
+                || StringUtils.isEmpty(ownerRequest.getName()) || StringUtils.isEmpty(ownerRequest.getCurrentAddress())
+                || StringUtils.isEmpty(ownerRequest.getHomeTown()) || StringUtils.isEmpty(ownerRequest.getIdentifyCard())) {
+            throw new RestApiException(StatusCode.DATA_EMPTY);
+        }
+        if (isEmail(ownerRequest.getEmail())) {
+            throw new RestApiException(StatusCode.EMAIL_NOT_RIGHT_FORMAT);
+        }
+        if (isIdentifyCard(ownerRequest.getIdentifyCard())) {
+            throw new RestApiException(StatusCode.IDENTIFY_CARD_NOT_RIGHT);
+        }
+        if (isPhoneNumber(ownerRequest.getPhone())) {
+            throw new RestApiException(StatusCode.PHONE_NUMBER_NOT_RIGHT_FORMAT);
+        }
+        Account currentAccount = accountDao.getAccountByEmailAndRole(ownerRequest.getEmail(), String.valueOf(RoleEnum.ROLE_LANDLORD));
+        if (Objects.nonNull(currentAccount)) {
+            throw new RestApiException(StatusCode.IDENTIFY_CARD_DUPLICATE);
+        }
+        Account currentAccountDuplicate = accountDao.getAccountByIdentifyAndRole(ownerRequest.getIdentifyCard(), String.valueOf(RoleEnum.ROLE_LANDLORD));
+        if (Objects.nonNull(currentAccountDuplicate)) {
+            throw new RestApiException(StatusCode.IDENTIFY_CARD_DUPLICATE);
+        }
         Account account = new Account();
         account.setEmail(ownerRequest.getEmail());
         account.setPassword(Constants.DEFAULT_PASSWORD);
@@ -189,16 +215,21 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
         account.setPhone(ownerRequest.getPhone());
         account.setCurrentAddress(ownerRequest.getCurrentAddress());
         account.setName(ownerRequest.getName());
-        account.setRole(new Role(3L));
+        Role role = new Role();
+        role.setId(3L);
+        account.setRole(role);
         account.setDob(ownerRequest.getDob());
         account.setHomeTown(ownerRequest.getHomeTown());
         accountDao.save(account);
-        return account.getId();
+        Long id = account.getId();
+        return id;
     }
 
     @Override
     public void disableAccount(Long id) {
+        if (StringUtils.isEmpty(id)) throw new RestApiException(StatusCode.DATA_EMPTY);
         Account account = accountDao.getAccountById(id);
+        if (Objects.isNull(account)) throw new RestApiException(StatusCode.ACCOUNT_NOT_EXIST);
         account.setEnabled(false);
         accountDao.save(account);
     }
@@ -214,15 +245,17 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
 
     @Override
     public void updateResident(UpdateResidentRequest residentRequest) {
-        Account account = accountDao.getAccountById(residentRequest.getAccountId());
-        if (account != null) {
-            account.setName(residentRequest.getName());
-            account.setGender(residentRequest.getGender());
-            account.setDob(residentRequest.getDob());
-            account.setPhone(residentRequest.getPhone());
-            account.setEmail(residentRequest.getEmail());
-            account.setIdentifyCard(residentRequest.getIdentifyCard());
+        if (Objects.isNull(residentRequest) || StringUtils.isEmpty(residentRequest.getName())) {
+            throw new RestApiException(StatusCode.DATA_EMPTY);
         }
+        Account account = accountDao.getAccountById(residentRequest.getAccountId());
+        if (Objects.isNull(account)) throw new RestApiException(StatusCode.ACCOUNT_NOT_EXIST);
+        account.setName(residentRequest.getName());
+        account.setGender(residentRequest.getGender());
+        account.setDob(residentRequest.getDob());
+        account.setPhone(residentRequest.getPhone());
+        account.setEmail(residentRequest.getEmail());
+        account.setIdentifyCard(residentRequest.getIdentifyCard());
         accountDao.save(account);
     }
 
@@ -232,7 +265,9 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
         account.setName(residentRequest.getName());
         account.setPassword(Constants.DEFAULT_PASSWORD);
         account.setIdentifyCard(residentRequest.getIdentifyCard());
-        account.setRole(new Role(5L));
+        Role role = new Role();
+        role.setId(5L);
+        account.setRole(role);
         account.setEmail(residentRequest.getEmail());
         account.setPhone(residentRequest.getPhone());
         account.setGender(residentRequest.getGender());
