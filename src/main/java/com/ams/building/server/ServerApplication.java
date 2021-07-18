@@ -14,6 +14,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -30,6 +32,8 @@ import java.util.Arrays;
 
 @SpringBootApplication
 @EnableJpaAuditing(auditorAwareRef = "auditorAware")
+@EnableJpaRepositories
+@EnableAsync
 public class ServerApplication {
 
     public static void main(String[] args) {
@@ -79,10 +83,6 @@ public class ServerApplication {
                     .hasAnyAuthority(RoleEnum.ROLE_ADMIN.name(), RoleEnum.ROLE_MANAGER_SERVICE.name(), RoleEnum.ROLE_EMPLOYEE.name(),
                             RoleEnum.ROLE_LANDLORD.name(), RoleEnum.ROLE_TENANT.name())
                     .antMatchers("/api/member/**").authenticated().anyRequest().permitAll();
-
-//            http.exceptionHandling().accessDeniedHandler(accessDeniedHandler());
-//            http.logout().logoutSuccessUrl("/api/**");
-//            http.rememberMe();
             http.addFilterBefore(new JwtTokenFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
         }
     }

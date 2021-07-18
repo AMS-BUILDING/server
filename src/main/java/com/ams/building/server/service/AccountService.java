@@ -35,4 +35,5 @@ public interface AccountService {
 
     void updateResident(UpdateResidentRequest residentRequest);
 
+    void forwardPassword (String email);
 }
