@@ -11,10 +11,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FileStore {
-    public static String UPLOAD_FOLDER = "F:\\abc";// "/Volumes/Data/files/";//
+    public static String UPLOAD_FOLDER = "E:\\abd";// "/Volumes/Data/files/";//
 
     public static List<String> getFilePaths(List<MultipartFile> multipartFiles, String prefix) {
-        List<String> images = new ArrayList<String>();
+        List<String> images = new ArrayList<>();
         if (multipartFiles != null) {
             for (int i = 0; i < multipartFiles.size(); i++) {
                 MultipartFile imageFile = multipartFiles.get(i);

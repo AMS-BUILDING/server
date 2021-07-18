@@ -26,4 +26,6 @@ public class PropertyKeys {
     public static final String RESIDENT_CARD_NOT_EXIST = "resident.card.not.exist";
     public static final String LOGIN_FAIL = "login.fail";
     public static final String PAGE_FORBIDDEN = "page.forbidden";
+    public static final String SEND_EMAIL = "send.email.reset.password";
+
 }

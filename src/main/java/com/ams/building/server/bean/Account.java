@@ -75,6 +75,12 @@ public class Account implements Serializable {
     @JoinColumn(name = "position_id", referencedColumnName = "id")
     private Position position;
 
+    @Column(name = "reset_password_token")
+    private String resetPasswordToken;
+
+    @Column(name = "enabled_token")
+    private Boolean enabledToken;
+
     public Account(@NonNull Long id) {
         this.id = id;
     }

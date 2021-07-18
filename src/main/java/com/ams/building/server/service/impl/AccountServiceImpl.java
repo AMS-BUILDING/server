@@ -259,6 +259,11 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
         accountDao.save(account);
     }
 
+    @Override
+    public void forwardPassword(String email) {
+
+    }
+
     private Long addResident(ResidentRequest residentRequest) {
         Account account = new Account();
         account.setEnabled(true);

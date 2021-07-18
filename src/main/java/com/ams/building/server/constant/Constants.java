@@ -65,6 +65,9 @@ public class Constants {
         public static final String URL_API_BLOCK_LIST = "/admin/block/list";
         public static final String URL_API_ROOM_NUMBER_SEARCH = "/admin/room-number/search";
         public static final String URL_API_UPDATE_RESIDENT = "/admin/resident/update";
+        public static final String URL_API_UPDATE_PROFILE_ACCOUNT = "/tenant/update/profile";
+        public static final String URL_API_FORWARD_PASSWORD = "/forward-password";
+        public static final String URL_API_RESET_PASSWORD = "/reset-password";
     }
 
     public class FileProperties {
