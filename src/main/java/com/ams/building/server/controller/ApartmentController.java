@@ -67,9 +67,9 @@ public class ApartmentController {
         //send email
         StringBuilder content = new StringBuilder();
         content.append("\"Hello and welcome new resident!");
-        content.append(" <p>YHere is the password for your first login </p>");
+        content.append(" <p>Here is the password for your first login </p>");
         content.append("<p>  Username :  \"" + ownerRequest.getEmail() + "\"   </p>");
-        content.append("<p>  Password :  \"" + Constants.DEFAULT_PASSWORD + "\"   </p>");
+        content.append("<p>  Password :  \"" + Constants.DEFAULT_PASSWORD_ENCODE + "\"   </p>");
         content.append("<p> We hope you have a nice day! </p>");
         emailService.sendSimpleMessage(ownerRequest.getEmail(), PropertiesReader.getProperty(PropertyKeys.SEND_EMAIL_ADD_APARTMENT), content.toString());
         logger.debug("Add apartmentOwner response : " + new Gson().toJson(response));
@@ -98,9 +98,9 @@ public class ApartmentController {
     private void sendResidentEmail(ResidentRequest residentRequest) throws MessagingException {
         StringBuilder content = new StringBuilder();
         content.append("\"Hello and welcome new resident!");
-        content.append(" <p>YHere is the password for your first login </p>");
+        content.append(" <p>Here is the password for your first login </p>");
         content.append("<p>  Username :  \"" + residentRequest.getEmail() + "\"   </p>");
-        content.append("<p>  Password :  \"" + Constants.DEFAULT_PASSWORD + "\"   </p>");
+        content.append("<p>  Password :  \"" + Constants.DEFAULT_PASSWORD_ENCODE + "\"   </p>");
         content.append("<p> We hope you have a nice day! </p>");
         emailService.sendSimpleMessage(residentRequest.getEmail(), PropertiesReader.getProperty(PropertyKeys.SEND_EMAIL_ADD_APARTMENT), content.toString());
     }
