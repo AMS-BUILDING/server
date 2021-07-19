@@ -12,7 +12,6 @@ import com.ams.building.server.dao.AccountDAO;
 import com.ams.building.server.dao.ApartmentDAO;
 import com.ams.building.server.dao.BlockDAO;
 import com.ams.building.server.dao.FloorDAO;
-import com.ams.building.server.dao.RoomNumberDAO;
 import com.ams.building.server.exception.RestApiException;
 import com.ams.building.server.response.AccountDetailResponse;
 import com.ams.building.server.response.AccountResponse;
@@ -57,9 +56,6 @@ public class ApartmentServiceImpl implements ApartmentService {
     @Autowired
     private BlockDAO blockDAO;
 
-    @Autowired
-    private RoomNumberDAO roomNumberDAO;
-
     @Override
     public ApiResponse apartmentList(String roomName, String householderName, Integer page, Integer size) {
         List<ApartmentResponse> apartmentResponses = new ArrayList<>();
@@ -78,7 +74,6 @@ public class ApartmentServiceImpl implements ApartmentService {
 
     @Override
     public void exportApartmentList(HttpServletResponse response, String roomName, String householderName) {
-
         try {
             Pageable pageable = PageRequest.of(0, 50000);
             Page<Apartment> apartments = apartmentDAO.searchApartmentByRoomNumberHouseholderName(roomName, householderName, pageable);
@@ -124,7 +119,6 @@ public class ApartmentServiceImpl implements ApartmentService {
     @Override
     public AccountDetailResponse getAccountDetail(Long accountId, Long apartmentId) {
         Apartment apartment = apartmentDAO.getAccountDetail(accountId, apartmentId);
-
         AccountDetailResponse accountDetailResponse = AccountDetailResponse.builder()
                 .name(apartment.getAccount().getName())
                 .gender(apartment.getAccount().getGender())
@@ -141,11 +135,18 @@ public class ApartmentServiceImpl implements ApartmentService {
     }
 
     @Override
+    public List<Long> disableApartment(Long id) {
+        List<Apartment> apartmentList = apartmentDAO.searchAccountByRoomNumberId(id);
+        if (apartmentList != null) {
+            apartmentList.forEach(apartment -> disableAccount(apartment));
+        }
+        return null;
+    }
+
+    @Override
     public void addOwnerToApartment(Long apartmentId, Long ownerId) {
         Account account = accountDAO.getAccountById(ownerId);
-
         Apartment apartment = apartmentDAO.getApartmentById(apartmentId);
-
         apartment.setAccount(account);
         apartmentDAO.save(apartment);
     }
@@ -246,6 +247,12 @@ public class ApartmentServiceImpl implements ApartmentService {
                 .phone(apartment.getAccount().getPhone())
                 .build();
         return response;
+    }
+
+    private void disableAccount(Apartment apartment) {
+        Account account = accountDAO.getAccountById(apartment.getAccount().getId());
+        account.setEnabled(false);
+        accountDAO.save(account);
     }
 
 }

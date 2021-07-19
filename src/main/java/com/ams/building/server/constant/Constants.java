@@ -21,10 +21,8 @@ public class Constants {
         public static final String URL_API_SEARCH_ABSENT = "/admin/absent/search";
         public static final String URL_API_EXPORT_SEARCH_ABSENT = "/admin/absent/export";
         public static final String URL_API_INSERT_ABSENT = "/landlord/absent/add";
-        public static final String URL_API_ADD_ACCOUNT = "/admin/account/add";
         public static final String URL_API_UPDATE_ACCOUNT = "/admin/account/update";
         public static final String URL_API_GET_ACCOUNT = "/admin/account/get-one";
-        public static final String URL_API_FIND_ACCOUNT = "/admin/list/account";
         public static final String URL_API_INSERT_FEEDBACK = "/landlord/feedback/add";
         public static final String URL_API_SEARCH_FEEDBACK = "/admin/feedback/search";
         public static final String URL_API_SEARCH_POSITION = "/manager-service/position/search";
@@ -57,7 +55,7 @@ public class Constants {
         public static final String URL_API_SEARCH_APARTMENT = "/admin/apartment/search";
         public static final String URL_API_ADD_APARTMENT_OWNER = "/admin/apartment/add/owner";
         public static final String URL_API_ADD_APARTMENT_RESIDENT = "/admin/apartment/add/resident";
-        public static final String URL_API_DISABLE_APARTMENT_OWNER = "/admin/apartment/disable/owner";
+        public static final String URL_API_DISABLE_APARTMENT = "/admin/apartment/disable";
         public static final String URL_API_SEARCH_APARTMENT_RESIDENT = "/admin/apartment/search/resident";
         public static final String URL_API_ACCOUNT_DETAIL = "/admin/account/detail";
         public static final String URL_API_EXPORT_APARTMENT = "/admin/apartment/export";
@@ -68,6 +66,7 @@ public class Constants {
         public static final String URL_API_UPDATE_PROFILE_ACCOUNT = "/tenant/update/profile";
         public static final String URL_API_FORWARD_PASSWORD = "/forward-password";
         public static final String URL_API_RESET_PASSWORD = "/reset-password";
+        public static final String URL_API_CHANGE_PASSWORD = "/change-password";
     }
 
     public class FileProperties {

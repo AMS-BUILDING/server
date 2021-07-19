@@ -68,6 +68,9 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public void removeEmployee(Long id, String role) {
+        if (StringUtils.isEmpty(id) || StringUtils.isEmpty(role)) {
+            throw new RestApiException(StatusCode.DATA_EMPTY);
+        }
         Account account = accountDao.getAccountByIdAndRole(id, role);
         if (Objects.isNull(account)) {
             throw new RestApiException(StatusCode.ACCOUNT_NOT_EXIST);
@@ -77,10 +80,23 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public void updateEmployee(Long accountId, EmployeeRequest request) {
-        if (Objects.isNull(request) || StringUtils.isEmpty(request.getIdentifyCard()) ||
-                StringUtils.isEmpty(request.getDob()) || StringUtils.isEmpty(request.getCurrentAddress()) ||
-                StringUtils.isEmpty(request.getPhoneNumber()) || StringUtils.isEmpty(request.getHomeTown())) {
+        if (Objects.isNull(request)) {
             throw new RestApiException(StatusCode.DATA_EMPTY);
+        }
+        if (StringUtils.isEmpty(request.getIdentifyCard())) {
+            throw new RestApiException(StatusCode.IDENTIFY_CARD_EMPTY);
+        }
+        if (StringUtils.isEmpty(request.getDob())) {
+            throw new RestApiException(StatusCode.DOB_EMPTY);
+        }
+        if (StringUtils.isEmpty(request.getCurrentAddress())) {
+            throw new RestApiException(StatusCode.CURRENT_ADDRESS_EMPTY);
+        }
+        if (StringUtils.isEmpty(request.getHomeTown())) {
+            throw new RestApiException(StatusCode.HOME_TOWN_EMPTY);
+        }
+        if (StringUtils.isEmpty(request.getPhoneNumber())) {
+            throw new RestApiException(StatusCode.PHONE_EMPTY);
         }
         if (!isPhoneNumber(request.getPhoneNumber())) {
             throw new RestApiException(StatusCode.PHONE_NUMBER_NOT_RIGHT_FORMAT);
@@ -108,11 +124,26 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public void addEmployee(EmployeeRequest request) {
-        if (Objects.isNull(request) || StringUtils.isEmpty(request.getEmail()) ||
-                StringUtils.isEmpty(request.getDob()) || StringUtils.isEmpty(request.getCurrentAddress()) ||
-                StringUtils.isEmpty(request.getPhoneNumber()) || StringUtils.isEmpty(request.getIdentifyCard()) ||
-                StringUtils.isEmpty(request.getHomeTown())) {
+        if (Objects.isNull(request)) {
             throw new RestApiException(StatusCode.DATA_EMPTY);
+        }
+        if (StringUtils.isEmpty(request.getIdentifyCard())) {
+            throw new RestApiException(StatusCode.IDENTIFY_CARD_EMPTY);
+        }
+        if (StringUtils.isEmpty(request.getDob())) {
+            throw new RestApiException(StatusCode.DOB_EMPTY);
+        }
+        if (StringUtils.isEmpty(request.getCurrentAddress())) {
+            throw new RestApiException(StatusCode.CURRENT_ADDRESS_EMPTY);
+        }
+        if (StringUtils.isEmpty(request.getHomeTown())) {
+            throw new RestApiException(StatusCode.HOME_TOWN_EMPTY);
+        }
+        if (StringUtils.isEmpty(request.getPhoneNumber())) {
+            throw new RestApiException(StatusCode.PHONE_EMPTY);
+        }
+        if (StringUtils.isEmpty(request.getEmail())) {
+            throw new RestApiException(StatusCode.EMAIL_EMPTY);
         }
         if (!isEmail(request.getEmail())) {
             throw new RestApiException(StatusCode.EMAIL_NOT_RIGHT_FORMAT);
@@ -126,6 +157,10 @@ public class EmployeeServiceImpl implements EmployeeService {
         Account searchAccountByIdentify = accountDao.getAccountByIdentifyAndRole(request.getIdentifyCard(), String.valueOf(RoleEnum.ROLE_EMPLOYEE));
         if (Objects.nonNull(searchAccountByIdentify)) {
             throw new RestApiException(StatusCode.IDENTIFY_CARD_DUPLICATE);
+        }
+        Account searchAccountByEmail = accountDao.getAccountByEmailAndRole(request.getEmail(), String.valueOf(RoleEnum.ROLE_EMPLOYEE));
+        if (Objects.nonNull(searchAccountByEmail)) {
+            throw new RestApiException(StatusCode.ACCOUNT_REGISTER);
         }
         Account account = new Account();
         account.setIdentifyCard(request.getIdentifyCard());

@@ -70,7 +70,9 @@ public class ResidentCardServiceImpl implements ResidentCardService {
 
     @Override
     public void removeResidentCard(Long id) {
-        if (StringUtils.isEmpty(id)) throw new RestApiException(StatusCode.DATA_EMPTY);
+        if (StringUtils.isEmpty(id)) {
+            throw new RestApiException(StatusCode.DATA_EMPTY);
+        }
         ResidentCard residentCard = residentCardDAO.getDetailResidentCardById(id);
         if (Objects.isNull(residentCard)) throw new RestApiException(StatusCode.RESIDENT_CARD_NOT_EXIST);
         residentCardDAO.delete(residentCard);
@@ -78,14 +80,24 @@ public class ResidentCardServiceImpl implements ResidentCardService {
 
     @Override
     public void addResidentCard(String email) {
-        if (StringUtils.isEmpty(email)) throw new RestApiException(StatusCode.DATA_EMPTY);
-        if (!isEmail(email)) throw new RestApiException(StatusCode.EMAIL_NOT_RIGHT_FORMAT);
+        if (StringUtils.isEmpty(email)) {
+            throw new RestApiException(StatusCode.EMAIL_EMPTY);
+        }
+        if (!isEmail(email)) {
+            throw new RestApiException(StatusCode.EMAIL_NOT_RIGHT_FORMAT);
+        }
         Account account = accountDAO.getAccountByEmailAndRole(email, String.valueOf(RoleEnum.ROLE_LANDLORD));
-        if (Objects.isNull(account)) throw new RestApiException(StatusCode.ACCOUNT_NOT_EXIST);
+        if (Objects.isNull(account)) {
+            throw new RestApiException(StatusCode.ACCOUNT_NOT_EXIST);
+        }
         Apartment apartment = apartmentDAO.getApartmentByAccountId(account.getId(), String.valueOf(RoleEnum.ROLE_LANDLORD));
-        if (Objects.isNull(apartment)) throw new RestApiException(StatusCode.APARTMENT_NOT_EXIST);
+        if (Objects.isNull(apartment)) {
+            throw new RestApiException(StatusCode.APARTMENT_NOT_EXIST);
+        }
         RoomNumber roomNumber = apartment.getRoomNumber();
-        if (Objects.isNull(roomNumber)) throw new RestApiException(StatusCode.ROOM_NUMBER_NOT_EXIST);
+        if (Objects.isNull(roomNumber)) {
+            throw new RestApiException(StatusCode.ROOM_NUMBER_NOT_EXIST);
+        }
         String roomName = roomNumber.getRoomName();
         ResidentCard newCard = new ResidentCard();
         newCard.setAccount(account);

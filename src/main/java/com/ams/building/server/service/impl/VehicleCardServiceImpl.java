@@ -48,26 +48,38 @@ public class VehicleCardServiceImpl implements VehicleCardService {
 
     @Override
     public VehicleCardResponse detailVehicleCard(Long id) {
-        if (StringUtils.isEmpty(id)) throw new RestApiException(StatusCode.DATA_EMPTY);
+        if (StringUtils.isEmpty(id)) {
+            throw new RestApiException(StatusCode.DATA_EMPTY);
+        }
         VehicleCard card = vehicleCardDAO.getVehicleCardById(id);
-        if (Objects.isNull(card)) throw new RestApiException(StatusCode.VEHICLE_CARD_NOT_EXIST);
+        if (Objects.isNull(card)) {
+            throw new RestApiException(StatusCode.VEHICLE_CARD_NOT_EXIST);
+        }
         VehicleCardResponse response = convertToCardResponse(card);
         return response;
     }
 
     @Override
     public void updateStatusVehicleCard(Long id, Long statusId) {
-        if (StringUtils.isEmpty(id)) throw new RestApiException(StatusCode.DATA_EMPTY);
+        if (StringUtils.isEmpty(id)) {
+            throw new RestApiException(StatusCode.DATA_EMPTY);
+        }
         VehicleCard card = vehicleCardDAO.getVehicleCardById(id);
-        if (Objects.isNull(card)) throw new RestApiException(StatusCode.VEHICLE_CARD_NOT_EXIST);
+        if (Objects.isNull(card)) {
+            throw new RestApiException(StatusCode.VEHICLE_CARD_NOT_EXIST);
+        }
         vehicleCardDAO.updateStatus(statusId, id);
     }
 
     @Override
     public void removeVehicleCard(Long id) {
-        if (StringUtils.isEmpty(id)) throw new RestApiException(StatusCode.DATA_EMPTY);
+        if (StringUtils.isEmpty(id)) {
+            throw new RestApiException(StatusCode.DATA_EMPTY);
+        }
         VehicleCard card = vehicleCardDAO.getVehicleCardById(id);
-        if (Objects.isNull(card)) throw new RestApiException(StatusCode.VEHICLE_CARD_NOT_EXIST);
+        if (Objects.isNull(card)) {
+            throw new RestApiException(StatusCode.VEHICLE_CARD_NOT_EXIST);
+        }
         vehicleCardDAO.delete(card);
     }
 

@@ -11,7 +11,15 @@ public interface AccountService {
 
     void add(LoginResponse loginResponse);
 
+    Long addApartmentOwner(ApartmentOwnerRequest ownerRequest);
+
+    List<Long> addListResident(List<ResidentRequest> residentRequestList);
+
+    void updateResident(UpdateResidentRequest residentRequest);
+
     void update(LoginResponse loginResponse);
+
+    void changePassword(LoginResponse loginResponse);
 
     void updateProfile(LoginResponse loginResponse);
 
@@ -27,13 +35,6 @@ public interface AccountService {
 
     void changeAccountLock(long id);
 
-    Long addApartmentOwner(ApartmentOwnerRequest ownerRequest);
+    void forwardPassword(String email);
 
-    void disableAccount(Long id);
-
-    List<Long> addListResident(List<ResidentRequest> residentRequestList);
-
-    void updateResident(UpdateResidentRequest residentRequest);
-
-    void forwardPassword (String email);
 }

@@ -13,11 +13,11 @@ import java.util.List;
 @Repository
 public interface ApartmentDAO extends JpaRepository<Apartment, Long> {
 
-    @Query("SELECT a FROM Apartment a WHERE a.account.id =?1 AND a.account.role.name=?2")
-    Apartment getApartmentByAccountId(Long accountId, String role);
-
     @Query("SELECT a FROM Apartment a WHERE a.id = ?1")
     Apartment getApartmentById(Long id);
+
+    @Query("SELECT a FROM Apartment a WHERE a.account.id =?1 AND a.account.role.name=?2")
+    Apartment getApartmentByAccountId(Long accountId, String role);
 
     @Query("SELECT a FROM Apartment a WHERE a.account.name LIKE CONCAT('%',:householderName,'%') AND a.roomNumber.roomName LIKE CONCAT('%',:roomNumber,'%') AND a.account.enabled = true AND a.account.role.name ='ROLE_LANDLORD' ORDER BY a.id")
     Page<Apartment> searchApartmentByRoomNumberHouseholderName(@Param("householderName") String householderName, @Param("roomNumber") String roomNumber, Pageable pageable);
@@ -30,5 +30,8 @@ public interface ApartmentDAO extends JpaRepository<Apartment, Long> {
 
     @Query("SELECT a FROM Apartment a WHERE a.roomNumber.floorBlock.block.id = :blockId AND a.roomNumber.floorBlock.floor.id = :floorId AND a.account IS NULL")
     List<Apartment> searchRoomNumberByBlockAndFloorNullAccount(@Param("blockId") Long blockId, @Param("floorId") Long floorId);
+
+    @Query("SELECT a FROM Apartment a WHERE a.roomNumber.id = :roomNumberId")
+    List<Apartment> searchAccountByRoomNumberId(@Param("roomNumberId") Long apartmentId);
 
 }

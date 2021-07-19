@@ -27,7 +27,22 @@ public enum StatusCode {
     RESIDENT_CARD_NOT_EXIST(419, PropertiesReader.getProperty(PropertyKeys.RESIDENT_CARD_NOT_EXIST)),
     ROOM_NUMBER_NOT_EXIST(420, PropertiesReader.getProperty(PropertyKeys.ROOM_NUMBER_NOT_EXIST)),
     LOGIN_FAIL(421, PropertiesReader.getProperty(PropertyKeys.LOGIN_FAIL)),
-    PAGE_FORBIDDEN(422, PropertiesReader.getProperty(PropertyKeys.PAGE_FORBIDDEN));
+    PAGE_FORBIDDEN(422, PropertiesReader.getProperty(PropertyKeys.PAGE_FORBIDDEN)),
+    NAME_EMPTY(423, PropertiesReader.getProperty(PropertyKeys.NAME_EMPTY)),
+    DOB_EMPTY(424, PropertiesReader.getProperty(PropertyKeys.DOB_EMPTY)),
+    HOME_TOWN_EMPTY(425, PropertiesReader.getProperty(PropertyKeys.HOME_TOWN_EMPTY)),
+    REASON_EMPTY(426, PropertiesReader.getProperty(PropertyKeys.REASON_EMPTY)),
+    START_DATE_EMPTY(427, PropertiesReader.getProperty(PropertyKeys.START_DATE_EMPTY)),
+    END_DATE_EMPTY(428, PropertiesReader.getProperty(PropertyKeys.END_DATE_EMPTY)),
+    EMAIL_EMPTY(429, PropertiesReader.getProperty(PropertyKeys.EMAIL_EMPTY)),
+    PASSWORD_EMPTY(430, PropertiesReader.getProperty(PropertyKeys.PASSWORD_EMPTY)),
+    PHONE_EMPTY(431, PropertiesReader.getProperty(PropertyKeys.PHONE_EMPTY)),
+    IDENTIFY_CARD_EMPTY(432, PropertiesReader.getProperty(PropertyKeys.IDENTIFY_CARD_EMPTY)),
+    CURRENT_ADDRESS_EMPTY(433, PropertiesReader.getProperty(PropertyKeys.CURRENT_ADDRESS_EMPTY)),
+    PASSWORD_NOT_MATCH(434, PropertiesReader.getProperty(PropertyKeys.PASSWORD_NOT_MATCH)),
+    ACCOUNT_REGISTER(435, PropertiesReader.getProperty(PropertyKeys.ACCOUNT_REGISTER)),
+    DESCRIPTION_EMPTY(436, PropertiesReader.getProperty(PropertyKeys.DESCRIPTION_EMPTY)),
+    TITLE_EMPTY(437, PropertiesReader.getProperty(PropertyKeys.TITLE_EMPTY));
 
     private Integer status;
 

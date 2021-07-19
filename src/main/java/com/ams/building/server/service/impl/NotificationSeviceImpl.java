@@ -15,7 +15,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -39,8 +38,14 @@ public class NotificationSeviceImpl implements NotificationService {
 
     @Override
     public void addNotification(NotificationRequest request) {
-        if (Objects.isNull(request) || StringUtils.isEmpty(request.getDescription()) || StringUtils.isEmpty(request.getTitle()))
+        if (Objects.isNull(request))
             throw new RestApiException(StatusCode.DATA_EMPTY);
+        if (StringUtils.isEmpty(request.getDescription())) {
+            throw new RestApiException(StatusCode.DESCRIPTION_EMPTY);
+        }
+        if (StringUtils.isEmpty(request.getTitle())) {
+            throw new RestApiException(StatusCode.TITLE_EMPTY);
+        }
         Notification notification = new Notification();
         notification.setDescription(request.getDescription());
         notification.setTitle(request.getTitle());

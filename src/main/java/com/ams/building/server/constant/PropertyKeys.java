@@ -27,5 +27,21 @@ public class PropertyKeys {
     public static final String LOGIN_FAIL = "login.fail";
     public static final String PAGE_FORBIDDEN = "page.forbidden";
     public static final String SEND_EMAIL = "send.email.reset.password";
+    public static final String SEND_EMAIL_ADD_APARTMENT = "send.email.add.apartment";
+    public static final String NAME_EMPTY = "name.empty";
+    public static final String DOB_EMPTY = "dob.empty";
+    public static final String HOME_TOWN_EMPTY = "home.town.empty";
+    public static final String REASON_EMPTY = "reason.empty";
+    public static final String START_DATE_EMPTY = "start.date.empty";
+    public static final String END_DATE_EMPTY = "end.date.empty";
+    public static final String EMAIL_EMPTY = "email.empty";
+    public static final String PASSWORD_EMPTY = "password.empty";
+    public static final String PHONE_EMPTY = "phone.empty";
+    public static final String IDENTIFY_CARD_EMPTY = "identify.card.empty";
+    public static final String CURRENT_ADDRESS_EMPTY = "current.address.empty";
+    public static final String PASSWORD_NOT_MATCH = "password.not.match";
+    public static final String ACCOUNT_REGISTER = "account.register";
+    public static final String DESCRIPTION_EMPTY = "description.empty";
+    public static final String TITLE_EMPTY = "title.empty";
 
 }

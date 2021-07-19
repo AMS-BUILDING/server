@@ -67,7 +67,9 @@ public class RequestServiceServiceImpl implements RequestServiceService {
 
     @Override
     public RequestServiceResponse getRequestServiceById(Long id) {
-        if (StringUtils.isEmpty(id)) throw new RestApiException(StatusCode.DATA_EMPTY);
+        if (StringUtils.isEmpty(id)) {
+            throw new RestApiException(StatusCode.DATA_EMPTY);
+        }
         RequestService service = requestServiceDAO.findRequestServiceById(id);
         if (Objects.isNull(service)) {
             throw new RestApiException(StatusCode.REQUEST_SERVICE_NOT_EXIST);
@@ -78,10 +80,13 @@ public class RequestServiceServiceImpl implements RequestServiceService {
 
     @Override
     public void updateStatusRequest(Long statusId, Long requestId) {
-        if (StringUtils.isEmpty(requestId) || StringUtils.isEmpty(statusId))
+        if (StringUtils.isEmpty(requestId) || StringUtils.isEmpty(statusId)) {
             throw new RestApiException(StatusCode.DATA_EMPTY);
+        }
         RequestService service = requestServiceDAO.findRequestServiceById(requestId);
-        if (Objects.isNull(service)) throw new RestApiException(StatusCode.REQUEST_SERVICE_NOT_EXIST);
+        if (Objects.isNull(service)) {
+            throw new RestApiException(StatusCode.REQUEST_SERVICE_NOT_EXIST);
+        }
         requestServiceDAO.updateStatus(statusId, requestId);
     }
 
