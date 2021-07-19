@@ -55,7 +55,6 @@ public class ApartmentController {
         ResponseEntity<ApiResponse> response = new ResponseEntity<>(apiResponse, HttpStatus.OK);
         logger.debug("searchApartment response : " + new Gson().toJson(response));
         return response;
-
     }
 
     @PostMapping(value = Constants.UrlPath.URL_API_ADD_APARTMENT_OWNER)
