@@ -18,6 +18,8 @@ import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import java.util.Objects;
 
+import static com.ams.building.server.utils.ValidateUtil.isEmail;
+
 @Component
 public class EmailServiceImpl implements EmailService {
 
@@ -47,6 +49,12 @@ public class EmailServiceImpl implements EmailService {
         if (StringUtils.isEmpty(token)) {
             throw new RestApiException(StatusCode.DATA_EMPTY);
         }
+        if (StringUtils.isEmpty(email)) {
+            throw new RestApiException(StatusCode.EMAIL_EMPTY);
+        }
+        if (!isEmail(email)) {
+            throw new RestApiException(StatusCode.EMAIL_NOT_RIGHT_FORMAT);
+        }
         Account account = sendEmailAccountDao.findAccountByEmail(email);
         if (Objects.isNull(account)) {
             throw new RestApiException(StatusCode.ACCOUNT_NOT_EXIST);
@@ -67,6 +75,5 @@ public class EmailServiceImpl implements EmailService {
         account.setPassword(encodedPassword);
         account.setResetPasswordToken(null);
         sendEmailAccountDao.save(account);
-
     }
 }
