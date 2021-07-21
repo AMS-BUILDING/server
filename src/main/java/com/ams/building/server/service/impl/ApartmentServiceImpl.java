@@ -3,7 +3,6 @@ package com.ams.building.server.service.impl;
 import com.ams.building.server.bean.Account;
 import com.ams.building.server.bean.Apartment;
 import com.ams.building.server.bean.Block;
-import com.ams.building.server.bean.Floor;
 import com.ams.building.server.bean.FloorBlock;
 import com.ams.building.server.bean.RoomNumber;
 import com.ams.building.server.constant.Constants;
@@ -11,7 +10,7 @@ import com.ams.building.server.constant.StatusCode;
 import com.ams.building.server.dao.AccountDAO;
 import com.ams.building.server.dao.ApartmentDAO;
 import com.ams.building.server.dao.BlockDAO;
-import com.ams.building.server.dao.FloorDAO;
+import com.ams.building.server.dao.FloorBlockDAO;
 import com.ams.building.server.exception.RestApiException;
 import com.ams.building.server.response.AccountDetailResponse;
 import com.ams.building.server.response.AccountResponse;
@@ -51,7 +50,7 @@ public class ApartmentServiceImpl implements ApartmentService {
     private AccountDAO accountDAO;
 
     @Autowired
-    private FloorDAO floorDAO;
+    private FloorBlockDAO floorBlockDAO;
 
     @Autowired
     private BlockDAO blockDAO;
@@ -170,15 +169,15 @@ public class ApartmentServiceImpl implements ApartmentService {
     }
 
     @Override
-    public List<FloorResponse> floorList() {
-        List<Floor> floors = floorDAO.findAll();
+    public List<FloorResponse> floorList(Long blockId) {
+        List<FloorBlock> floors = floorBlockDAO.floorBlockByBlockId(blockId);
         List<FloorResponse> responses = new ArrayList<>();
         floors.forEach(s -> responses.add(convertFloor(s)));
         return responses;
     }
 
-    private FloorResponse convertFloor(Floor floor) {
-        FloorResponse response = FloorResponse.builder().floorName(floor.getFloorName()).id(floor.getId()).build();
+    private FloorResponse convertFloor(FloorBlock floor) {
+        FloorResponse response = FloorResponse.builder().floorName(floor.getFloor().getFloorName()).id(floor.getFloor().getId()).build();
         return response;
     }
 

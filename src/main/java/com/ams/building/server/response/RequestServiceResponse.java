@@ -9,6 +9,7 @@ import lombok.Setter;
 @Setter
 public class RequestServiceResponse {
 
+    private Long id;
     private String name;
     private String block;
     private String roomName;

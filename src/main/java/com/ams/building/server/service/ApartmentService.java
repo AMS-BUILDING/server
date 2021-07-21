@@ -26,6 +26,6 @@ public interface ApartmentService {
 
     List<BlockResponse> blockList();
 
-    List<FloorResponse> floorList();
+    List<FloorResponse> floorList(Long blockId);
 
 }
