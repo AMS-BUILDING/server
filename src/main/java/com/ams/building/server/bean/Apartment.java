@@ -4,9 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
 import lombok.Setter;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -30,12 +30,11 @@ public class Apartment implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @NonNull
     private Long id;
 
-
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "account_id", referencedColumnName = "id")
     private Account account;
 
@@ -46,4 +45,5 @@ public class Apartment implements Serializable {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "room_number_id", referencedColumnName = "id")
     private RoomNumber roomNumber;
+
 }

@@ -1,29 +1,40 @@
 package com.ams.building.server.service;
 
-import com.ams.building.server.response.AccountResponse;
+import com.ams.building.server.request.ApartmentOwnerRequest;
+import com.ams.building.server.request.ResidentRequest;
+import com.ams.building.server.request.UpdateResidentRequest;
+import com.ams.building.server.response.LoginResponse;
 
 import java.util.List;
 
 public interface AccountService {
 
-    void add(AccountResponse accountDTO);
+    void add(LoginResponse loginResponse);
 
-    void update(AccountResponse accountDTO);
+    Long addApartmentOwner(ApartmentOwnerRequest ownerRequest);
 
-    void updateProfile(AccountResponse accountDTO);
+    List<Long> addListResident(List<ResidentRequest> residentRequestList);
+
+    void updateResident(UpdateResidentRequest residentRequest);
+
+    void update(LoginResponse loginResponse);
+
+    void changePassword(LoginResponse loginResponse);
+
+    void updateProfile(LoginResponse loginResponse);
 
     void delete(Long id);
 
-    List<AccountResponse> find();
+    List<LoginResponse> find();
 
-    AccountResponse getById(Long id);
+    LoginResponse getById(Long id);
 
-    AccountResponse getByEmail(String email);
+    LoginResponse getByEmail(String email);
 
     Long count();
 
-    Long counTotal();
-
     void changeAccountLock(long id);
+
+    void forwardPassword(String email);
 
 }

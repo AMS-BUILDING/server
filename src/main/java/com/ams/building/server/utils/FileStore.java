@@ -1,6 +1,5 @@
 package com.ams.building.server.utils;
 
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -12,76 +11,75 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FileStore {
-	public static String UPLOAD_FOLDER = "F:\\abc";// "/Volumes/Data/files/";//
+    public static String UPLOAD_FOLDER = "E:\\abd";// "/Volumes/Data/files/";//
 
-	public static List<String> getFilePaths(List<MultipartFile> multipartFiles, String prefix) {
-		List<String> images = new ArrayList<String>();
-		if (multipartFiles != null) {
-			for (int i = 0; i < multipartFiles.size(); i++) {
-				MultipartFile imageFile = multipartFiles.get(i);
-				if (imageFile != null && !imageFile.isEmpty()) {
-					try {
-						int index = imageFile.getOriginalFilename().lastIndexOf(".");
-						String ext = imageFile.getOriginalFilename().substring(index);
-						String image = prefix + System.currentTimeMillis() + "-" + i + ext;
+    public static List<String> getFilePaths(List<MultipartFile> multipartFiles, String prefix) {
+        List<String> images = new ArrayList<>();
+        if (multipartFiles != null) {
+            for (int i = 0; i < multipartFiles.size(); i++) {
+                MultipartFile imageFile = multipartFiles.get(i);
+                if (imageFile != null && !imageFile.isEmpty()) {
+                    try {
+                        int index = imageFile.getOriginalFilename().lastIndexOf(".");
+                        String ext = imageFile.getOriginalFilename().substring(index);
+                        String image = prefix + System.currentTimeMillis() + "-" + i + ext;
 
-						Path pathAvatar = Paths.get(UPLOAD_FOLDER + File.separator + image);
-						Files.write(pathAvatar, imageFile.getBytes());
+                        Path pathAvatar = Paths.get(UPLOAD_FOLDER + File.separator + image);
+                        Files.write(pathAvatar, imageFile.getBytes());
 
-						images.add(image);
-					} catch (IOException e) {
-						throw  new RuntimeException();
+                        images.add(image);
+                    } catch (IOException e) {
+                        throw new RuntimeException();
 
-					}
-				}
-			}
-		}
-		return images;
-	}
+                    }
+                }
+            }
 
-	public static String getFilePath(MultipartFile multipartFile, String prefix) {
-		if (multipartFile != null && !multipartFile.isEmpty()) {
-			try {
-				int index = multipartFile.getOriginalFilename().lastIndexOf(".");
-				String ext = multipartFile.getOriginalFilename().substring(index);
-				String image = prefix + System.currentTimeMillis() + ext;
+        }
+        return images;
+    }
 
-				Path pathImage = Paths.get(UPLOAD_FOLDER + File.separator + image);
-				Files.write(pathImage, multipartFile.getBytes());
+    public static String getFilePath(MultipartFile multipartFile, String prefix) {
+        if (multipartFile != null && !multipartFile.isEmpty()) {
+            try {
+                int index = multipartFile.getOriginalFilename().lastIndexOf(".");
+                String ext = multipartFile.getOriginalFilename().substring(index);
+                String image = prefix + System.currentTimeMillis() + ext;
 
-				return image;
-			} catch (IOException e) {
-			}
-		}
-		return null;
-	}
+                Path pathImage = Paths.get(UPLOAD_FOLDER + File.separator + image);
+                Files.write(pathImage, multipartFile.getBytes());
 
-	@Async
-	public static void deleteFiles(List<String> filePaths) {
-		if (filePaths != null) {
-			filePaths.forEach(image -> {
-				try {
-					File avatarFile = new File(UPLOAD_FOLDER + File.separator + image);
-					if (avatarFile.exists()) {
-						avatarFile.delete();
-					}
-				} catch (Exception e) {
-				}
-			});
-		}
-	}
+                return image;
+            } catch (IOException e) {
+            }
+        }
+        return null;
+    }
 
-	@Async
-	public static void deleteFile(String filePath) {
-		if (filePath != null) {
-			try {
-				File avatarFile = new File(UPLOAD_FOLDER + File.separator + filePath);
-				if (avatarFile.exists()) {
-					avatarFile.delete();
-				}
-			} catch (Exception e) {
-			}
-		}
-	}
+    public static void deleteFiles(List<String> filePaths) {
+        if (filePaths != null) {
+            filePaths.forEach(image -> {
+                try {
+                    File avatarFile = new File(UPLOAD_FOLDER + File.separator + image);
+                    if (avatarFile.exists()) {
+                        avatarFile.delete();
+                    }
+                } catch (Exception e) {
+                }
+            });
+        }
+    }
+
+    public static void deleteFile(String filePath) {
+        if (filePath != null) {
+            try {
+                File avatarFile = new File(UPLOAD_FOLDER + File.separator + filePath);
+                if (avatarFile.exists()) {
+                    avatarFile.delete();
+                }
+            } catch (Exception e) {
+            }
+        }
+    }
 
 }

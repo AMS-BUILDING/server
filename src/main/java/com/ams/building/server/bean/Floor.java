@@ -32,4 +32,5 @@ public class Floor implements Serializable {
 
     @Column(name = "floor_name")
     private String floorName;
+
 }

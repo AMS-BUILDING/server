@@ -40,4 +40,5 @@ public class FloorBlock implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "floor_id", referencedColumnName = "id")
     private Floor floor;
+
 }

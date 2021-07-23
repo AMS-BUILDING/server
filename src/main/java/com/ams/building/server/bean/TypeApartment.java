@@ -32,4 +32,5 @@ public class TypeApartment implements Serializable {
 
     @Column(name = "type_name")
     private String typeName;
+
 }

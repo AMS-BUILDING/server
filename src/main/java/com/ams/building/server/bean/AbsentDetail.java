@@ -16,6 +16,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -25,14 +26,14 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "temporarily_absent_detail")
+@Table(name = "temporarily_absent_detail", uniqueConstraints = {@UniqueConstraint(columnNames = {"identify_card", "absent_type_id"})})
 public class AbsentDetail implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     @Id
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @NonNull
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -43,20 +44,20 @@ public class AbsentDetail implements Serializable {
     @JoinColumn(name = "apartment_id", referencedColumnName = "id")
     private Apartment apartment;
 
-    @Column
+    @Column(name = "name")
     private String name;
 
     @Column(name = "reason")
     private String reason;
 
-    @Column(name = "identity_card")
+    @Column(name = "identify_card")
     @NonNull
-    private String identityCard;
+    private String identifyCard;
 
     @Column(name = "home_town")
     private String homeTown;
 
-    @Column
+    @Column(name = "dob")
     private String dob;
 
     @Column(name = "start_date")
@@ -64,5 +65,5 @@ public class AbsentDetail implements Serializable {
 
     @Column(name = "end_date")
     private Date endDate;
-}
 
+}

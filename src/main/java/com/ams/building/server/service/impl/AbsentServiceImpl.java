@@ -7,6 +7,7 @@ import com.ams.building.server.bean.Block;
 import com.ams.building.server.bean.FloorBlock;
 import com.ams.building.server.bean.RoomNumber;
 import com.ams.building.server.constant.Constants;
+import com.ams.building.server.constant.RoleEnum;
 import com.ams.building.server.constant.StatusCode;
 import com.ams.building.server.dao.AbsentDetailDAO;
 import com.ams.building.server.dao.AbsentTypeDAO;
@@ -14,8 +15,7 @@ import com.ams.building.server.dao.ApartmentDAO;
 import com.ams.building.server.exception.RestApiException;
 import com.ams.building.server.request.AbsentRequest;
 import com.ams.building.server.response.AbsentResponse;
-import com.ams.building.server.response.AccountResponse;
-import com.ams.building.server.response.ListAbsentResponse;
+import com.ams.building.server.response.ApiResponse;
 import com.ams.building.server.service.AbsentService;
 import com.ams.building.server.utils.DateTimeUtils;
 import org.apache.log4j.Logger;
@@ -28,7 +28,6 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletResponse;
-import javax.transaction.Transactional;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
@@ -40,8 +39,6 @@ import java.util.Objects;
 import static com.ams.building.server.utils.DateTimeUtils.convertDateToStringWithTimezone;
 import static com.ams.building.server.utils.ValidateUtil.isIdentifyCard;
 
-
-@Transactional
 @Service
 public class AbsentServiceImpl implements AbsentService {
 
@@ -57,8 +54,8 @@ public class AbsentServiceImpl implements AbsentService {
     private ApartmentDAO apartmentDAO;
 
     @Override
-    public ListAbsentResponse absentList(String name, String identifyCard, Long absentType, Integer page, Integer size) {
-        List<AbsentResponse> absentDTOS = new ArrayList<>();
+    public ApiResponse absentList(String name, String identifyCard, Long absentType, Integer page, Integer size) {
+        List<AbsentResponse> absentResponses = new ArrayList<>();
         Pageable pageable = PageRequest.of(page, size);
         Page<AbsentDetail> absentDetails;
         if (absentType == -1) {
@@ -67,19 +64,24 @@ public class AbsentServiceImpl implements AbsentService {
             absentDetails = absentDao.absentList(name, identifyCard, absentType, pageable);
         }
         for (AbsentDetail ad : absentDetails) {
-            AbsentResponse absentResponse = covertAbsentDetailToResponse(ad);
-            absentDTOS.add(absentResponse);
+            AbsentResponse response = covertAbsentDetailToDTO(ad);
+            absentResponses.add(response);
         }
-        Integer totalPage = absentDetails.getTotalPages();
-        ListAbsentResponse response = ListAbsentResponse.builder().absentResponses(absentDTOS).totalPage(totalPage).build();
+        Long totalPage = absentDetails.getTotalElements();
+        ApiResponse response = ApiResponse.builder().data(absentResponses).totalElement(totalPage).build();
         return response;
     }
 
     @Override
-    public void exportAbsentDetailList(HttpServletResponse response, String name, String identifyCard, Long absentType, Integer page, Integer size) {
+    public void exportAbsentDetailList(HttpServletResponse response, String name, String identifyCard, Long absentType) {
         try {
-            Pageable pageable = PageRequest.of(page, size);
-            Page<AbsentDetail> absentDetails = absentDao.absentList(name, identifyCard, absentType, pageable);
+            Pageable pageable = PageRequest.of(0, 50000);
+            Page<AbsentDetail> absentDetails;
+            if (absentType != -1) {
+                absentDetails = absentDao.absentList(name, identifyCard, absentType, pageable);
+            } else {
+                absentDetails = absentDao.absentListNotByAbsentType(name, identifyCard, pageable);
+            }
             String csvFileName = "Absent Detail.csv";
             response.setContentType(Constants.TEXT_CSV);
             // creates mock data
@@ -90,7 +92,7 @@ public class AbsentServiceImpl implements AbsentService {
             OutputStream os = response.getOutputStream();
             os.write(bom);
             final PrintWriter w = new PrintWriter(new OutputStreamWriter(os, "UTF-8"));
-            w.println("Name,Identify Card,Absent Type,Reasob,Home Town, Block, RoomNumber, Start Date, End Date");
+            w.println("Tên ,Chứng minh thư,Loại đăng kí,Lí do,Quê quán, Số block, Số phòng, Ngày bắt đầu,Ngày kết thúc");
             if (!CollectionUtils.isEmpty((Collection<?>) absentDetails)) {
                 for (AbsentDetail absentDetail : absentDetails) {
                     w.println(writeAbsentDetail(absentDetail));
@@ -109,14 +111,29 @@ public class AbsentServiceImpl implements AbsentService {
         if (Objects.isNull(request)) {
             throw new RestApiException(StatusCode.ABSENT_DETAIL_NOT_EXIST);
         }
-        if (StringUtils.isEmpty(request.getName()) || StringUtils.isEmpty(request.getIdentifyCard()) || StringUtils.isEmpty(request.getDob()) || StringUtils.isEmpty(request.getAbsentType()) || StringUtils.isEmpty(request.getHomeTown())) {
-            throw new RestApiException(StatusCode.DATA_EMPTY);
+        if (StringUtils.isEmpty(request.getName())) {
+            throw new RestApiException(StatusCode.NAME_EMPTY);
+        }
+        if (StringUtils.isEmpty(request.getDob())) {
+            throw new RestApiException(StatusCode.DOB_EMPTY);
+        }
+        if (StringUtils.isEmpty(request.getHomeTown())) {
+            throw new RestApiException(StatusCode.HOME_TOWN_EMPTY);
+        }
+        if (StringUtils.isEmpty(request.getReason())) {
+            throw new RestApiException(StatusCode.REASON_EMPTY);
+        }
+        if (StringUtils.isEmpty(request.getStartDate())) {
+            throw new RestApiException(StatusCode.START_DATE_EMPTY);
+        }
+        if (StringUtils.isEmpty(request.getEndDate())) {
+            throw new RestApiException(StatusCode.END_DATE_EMPTY);
         }
         AbsentType absentType = absentTypeDAO.findAbsentTypeById(request.getAbsentType());
         if (Objects.isNull(absentType)) {
             throw new RestApiException(StatusCode.ABSENT_TYPE_NOT_EXIST);
         }
-        Apartment apartment = apartmentDAO.getApartmentByAccountId(request.getAccountDetailId());
+        Apartment apartment = apartmentDAO.getApartmentByAccountId(request.getAccountId(), String.valueOf(RoleEnum.ROLE_LANDLORD));
         if (Objects.isNull(apartment)) {
             throw new RestApiException(StatusCode.APARTMENT_NOT_EXIST);
         }
@@ -125,14 +142,14 @@ public class AbsentServiceImpl implements AbsentService {
         }
         AbsentDetail findAbsent = absentDao.getAbsentDetailByIdentityCardAndAbsentType(request.getIdentifyCard(), request.getAbsentType());
         if (Objects.nonNull(findAbsent)) {
-            throw new RestApiException(StatusCode.IDENTIFY_CARD_DUILCATE);
+            throw new RestApiException(StatusCode.IDENTIFY_CARD_DUPLICATE);
         }
         AbsentDetail absentDetail = new AbsentDetail();
         absentDetail.setAbsentType(absentType);
         absentDetail.setName(request.getName());
         absentDetail.setReason(request.getReason());
         absentDetail.setHomeTown(request.getHomeTown());
-        absentDetail.setIdentityCard(request.getIdentifyCard());
+        absentDetail.setIdentifyCard(request.getIdentifyCard());
         absentDetail.setDob(convertDateToStringWithTimezone(request.getDob(), DateTimeUtils.DD_MM_YYYY, null));
         absentDetail.setEndDate(request.getEndDate());
         absentDetail.setStartDate(request.getStartDate());
@@ -140,7 +157,7 @@ public class AbsentServiceImpl implements AbsentService {
         absentDao.save(absentDetail);
     }
 
-    private AbsentResponse covertAbsentDetailToResponse(AbsentDetail absentDetail) {
+    private AbsentResponse covertAbsentDetailToDTO(AbsentDetail absentDetail) {
         Apartment apartment = absentDetail.getApartment();
         RoomNumber roomNumber = apartment.getRoomNumber();
         FloorBlock floorBlock = roomNumber.getFloorBlock();
@@ -149,10 +166,10 @@ public class AbsentServiceImpl implements AbsentService {
         String startDate = convertDateToStringWithTimezone(absentDetail.getStartDate(), DateTimeUtils.DD_MM_YYYY, null);
         String endDate = convertDateToStringWithTimezone(absentDetail.getEndDate(), DateTimeUtils.DD_MM_YYYY, null);
 
-        AbsentResponse absentDTO = AbsentResponse.builder()
+        AbsentResponse response = AbsentResponse.builder()
                 .absentDetailId(absentDetail.getId())
                 .name(absentDetail.getName())
-                .identifyCard(absentDetail.getIdentityCard())
+                .identifyCard(absentDetail.getIdentifyCard())
                 .homeTown(absentDetail.getHomeTown())
                 .block(block.getBlockName())
                 .roomNumber(roomNumber.getRoomName())
@@ -161,7 +178,7 @@ public class AbsentServiceImpl implements AbsentService {
                 .absentType(absentType.getAbsentType())
                 .reason(absentDetail.getReason())
                 .build();
-        return absentDTO;
+        return response;
     }
 
     private String writeAbsentDetail(AbsentDetail absentDetail) {
@@ -179,7 +196,7 @@ public class AbsentServiceImpl implements AbsentService {
 
             if (Objects.nonNull(absentDetail)) {
                 name = absentDetail.getName();
-                identifyCard = absentDetail.getIdentityCard();
+                identifyCard = absentDetail.getIdentifyCard();
                 homeTown = absentDetail.getHomeTown();
                 reason = absentDetail.getReason();
             }
@@ -202,5 +219,4 @@ public class AbsentServiceImpl implements AbsentService {
         }
         return content;
     }
-
 }

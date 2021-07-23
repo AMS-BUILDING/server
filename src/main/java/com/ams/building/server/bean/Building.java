@@ -38,4 +38,5 @@ public class Building implements Serializable {
 
     @Column(name = "description")
     private String description;
+
 }
