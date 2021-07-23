@@ -40,4 +40,14 @@ public interface AccountService {
 
     AccountAppResponse detailAccountApp(Long id);
 
+    void updateAccountAppByName(String name, Long id);
+
+    void updateAccountAppByIdentifyCard(String identifyCard, Long id);
+
+    void updateAccountAppByDob(String dob, Long id);
+
+    void updateAccountAppByPhoneNumber(String phoneNumber, Long id);
+
+    void updateAccountAppByCurrentAddress(String currentAddress, Long id);
+
 }

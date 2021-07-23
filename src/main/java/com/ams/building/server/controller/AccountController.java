@@ -6,6 +6,7 @@ import com.ams.building.server.constant.PropertyKeys;
 import com.ams.building.server.constant.StatusCode;
 import com.ams.building.server.dao.SendEmailAccountDAO;
 import com.ams.building.server.exception.RestApiException;
+import com.ams.building.server.response.AccountAppResponse;
 import com.ams.building.server.response.LoginResponse;
 import com.ams.building.server.response.UserPrincipal;
 import com.ams.building.server.service.AccountService;
@@ -21,6 +22,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -109,4 +111,59 @@ public class AccountController {
         loginResponse.setId(currentUser.getId());
         accountService.changePassword(loginResponse);
     }
+
+    @GetMapping(Constants.UrlPath.URL_API_DETAIL_ACCOUNT + "/{id}")
+    public ResponseEntity<?> detailAccountApp(@PathVariable("id") Long id) {
+        logger.debug("detailAccountApp request: " + id);
+        AccountAppResponse accountAppResponse = accountService.detailAccountApp(id);
+        ResponseEntity<AccountAppResponse> response = new ResponseEntity<>(accountAppResponse, HttpStatus.OK);
+        logger.debug("detailAccountApp response: " + new Gson().toJson(response));
+        return response;
+    }
+
+    @PostMapping(Constants.UrlPath.URL_API_UPDATE_ACCOUNT_APP_BY_NAME + "/{id}")
+    public ResponseEntity<?> updateAccountByName(@PathVariable("id") Long id, @RequestParam("name") String name) {
+        logger.debug("detailAccountApp request: " + name);
+        accountService.updateAccountAppByName(name, id);
+        ResponseEntity<String> response = new ResponseEntity<>("Update success", HttpStatus.OK);
+        logger.debug("detailAccountApp response: " + new Gson().toJson(response));
+        return response;
+    }
+
+    @PostMapping(Constants.UrlPath.URL_API_UPDATE_ACCOUNT_APP_BY_DOB + "/{id}")
+    public ResponseEntity<?> updateAccountByDob(@PathVariable("id") Long id, @RequestParam("dob") String dob) {
+        logger.debug("detailAccountApp request: " + dob);
+        accountService.updateAccountAppByDob(dob, id);
+        ResponseEntity<String> response = new ResponseEntity<>("Update success", HttpStatus.OK);
+        logger.debug("detailAccountApp response: " + new Gson().toJson(response));
+        return response;
+    }
+
+    @PostMapping(Constants.UrlPath.URL_API_UPDATE_ACCOUNT_APP_BY_IDENTIFY_CARD + "/{id}")
+    public ResponseEntity<?> updateAccountByIdentifyCard(@PathVariable("id") Long id, @RequestParam("identifyCard") String identifyCard) {
+        logger.debug("detailAccountApp request: " + identifyCard);
+        accountService.updateAccountAppByIdentifyCard(identifyCard, id);
+        ResponseEntity<String> response = new ResponseEntity<>("Update success", HttpStatus.OK);
+        logger.debug("detailAccountApp response: " + new Gson().toJson(response));
+        return response;
+    }
+
+    @PostMapping(Constants.UrlPath.URL_API_UPDATE_ACCOUNT_APP_BY_PHONE_NUMBER + "/{id}")
+    public ResponseEntity<?> updateAccountByPhoneNumber(@PathVariable("id") Long id, @RequestParam("phoneNumber") String phoneNumber) {
+        logger.debug("detailAccountApp request: " + phoneNumber);
+        accountService.updateAccountAppByPhoneNumber(phoneNumber, id);
+        ResponseEntity<String> response = new ResponseEntity<>("Update success", HttpStatus.OK);
+        logger.debug("detailAccountApp response: " + new Gson().toJson(response));
+        return response;
+    }
+
+    @PostMapping(Constants.UrlPath.URL_API_UPDATE_ACCOUNT_APP_BY_CURRENT_ADDRESS + "/{id}")
+    public ResponseEntity<?> updateAccountByCurrentAddress(@PathVariable("id") Long id, @RequestParam("currentAddress") String currentAddress) {
+        logger.debug("detailAccountApp request: " + currentAddress);
+        accountService.updateAccountAppByCurrentAddress(currentAddress, id);
+        ResponseEntity<String> response = new ResponseEntity<>("Update success", HttpStatus.OK);
+        logger.debug("detailAccountApp response: " + new Gson().toJson(response));
+        return response;
+    }
+
 }
