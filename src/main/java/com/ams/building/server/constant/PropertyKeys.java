@@ -46,5 +46,6 @@ public class PropertyKeys {
     public static final String PASSWORD_USED = "password.used";
     public static final String PASSWORD_AND_CONFIRM_PASSWORD_NOT_MATCH = "password.and.confirm.password.not.match";
     public static final String PASSWORD_NOT_RIGHT_FORMAT = "password.not.right.format";
+    public static final String STAR_EMPTY = "star.empty";
 
 }

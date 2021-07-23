@@ -11,6 +11,7 @@ public class FeedbackResponse {
 
     private Long feedbackId;
     private String description;
+    private Integer star;
     private String name;
     private String createdDate;
 

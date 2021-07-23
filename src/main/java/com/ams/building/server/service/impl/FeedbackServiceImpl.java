@@ -16,6 +16,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,8 +36,11 @@ public class FeedbackServiceImpl implements FeedbackService {
         if (Objects.isNull(feedbackRequest)) {
             throw new RestApiException(StatusCode.FEEDBACK_EMPTY);
         }
-        if (feedbackRequest.getDescription().isEmpty()) {
+        if (StringUtils.isEmpty(feedbackRequest.getDescription())) {
             throw new RestApiException(StatusCode.DESCRIPTION_EMPTY);
+        }
+        if (StringUtils.isEmpty(feedbackRequest.getStar())) {
+            throw new RestApiException(StatusCode.STAR_EMPTY);
         }
         Account account = accountDAO.getAccountById(feedbackRequest.getAccountId());
         if (Objects.isNull(account)) {
@@ -44,6 +48,7 @@ public class FeedbackServiceImpl implements FeedbackService {
         }
         Feedback feedback = new Feedback();
         feedback.setDescription(feedbackRequest.getDescription());
+        feedback.setStar(feedbackRequest.getStar());
         feedback.setAccount(account);
         feedbackDAO.save(feedback);
     }
@@ -66,6 +71,7 @@ public class FeedbackServiceImpl implements FeedbackService {
         feedbackResponse.setFeedbackId(feedback.getId());
         feedbackResponse.setName(feedback.getAccount().getName());
         feedbackResponse.setDescription(feedback.getDescription());
+        feedbackResponse.setStar(feedback.getStar());
         feedbackResponse.setCreatedDate(DateTimeUtils.convertDateToStringWithTimezone(feedback.getCreatedDate(), DateTimeUtils.DD_MM_YYYY, null));
         return feedbackResponse;
     }

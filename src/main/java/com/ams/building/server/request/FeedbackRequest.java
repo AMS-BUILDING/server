@@ -10,6 +10,7 @@ import lombok.Setter;
 public class FeedbackRequest {
 
     private Long accountId;
+    private Integer star;
     private String description;
 
 }

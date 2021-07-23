@@ -45,7 +45,8 @@ public enum StatusCode {
     TITLE_EMPTY(437, PropertiesReader.getProperty(PropertyKeys.TITLE_EMPTY)),
     PASSWORD_USED(438, PropertiesReader.getProperty(PropertyKeys.PASSWORD_USED)),
     PASSWORD_AND_CONFIRM_PASSWORD_NOT_MATCH(439, PropertiesReader.getProperty(PropertyKeys.PASSWORD_AND_CONFIRM_PASSWORD_NOT_MATCH)),
-    PASSWORD_NOT_RIGHT_FORMAT(440, PropertiesReader.getProperty(PropertyKeys.PASSWORD_NOT_RIGHT_FORMAT));
+    PASSWORD_NOT_RIGHT_FORMAT(440, PropertiesReader.getProperty(PropertyKeys.PASSWORD_NOT_RIGHT_FORMAT)),
+    STAR_EMPTY(441, PropertiesReader.getProperty(PropertyKeys.STAR_EMPTY));
 
     private Integer status;
 
