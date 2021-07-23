@@ -1,6 +1,7 @@
 package com.ams.building.server.service;
 
 import com.ams.building.server.request.ApartmentOwnerRequest;
+import com.ams.building.server.request.PasswordRequest;
 import com.ams.building.server.request.ResidentRequest;
 import com.ams.building.server.request.UpdateResidentRequest;
 import com.ams.building.server.response.AccountAppResponse;
@@ -49,5 +50,7 @@ public interface AccountService {
     void updateAccountAppByPhoneNumber(String phoneNumber, Long id);
 
     void updateAccountAppByCurrentAddress(String currentAddress, Long id);
+
+    void changePassword(Long id, PasswordRequest request);
 
 }

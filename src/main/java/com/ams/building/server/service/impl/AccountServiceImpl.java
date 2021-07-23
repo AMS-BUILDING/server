@@ -11,6 +11,7 @@ import com.ams.building.server.dao.AccountDAO;
 import com.ams.building.server.dao.ApartmentDAO;
 import com.ams.building.server.exception.RestApiException;
 import com.ams.building.server.request.ApartmentOwnerRequest;
+import com.ams.building.server.request.PasswordRequest;
 import com.ams.building.server.request.ResidentRequest;
 import com.ams.building.server.request.UpdateResidentRequest;
 import com.ams.building.server.response.AccountAppResponse;
@@ -34,6 +35,7 @@ import java.util.Objects;
 
 import static com.ams.building.server.utils.ValidateUtil.isEmail;
 import static com.ams.building.server.utils.ValidateUtil.isIdentifyCard;
+import static com.ams.building.server.utils.ValidateUtil.isPassword;
 import static com.ams.building.server.utils.ValidateUtil.isPhoneNumber;
 
 @Transactional
@@ -538,6 +540,31 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
             throw new RestApiException(StatusCode.ACCOUNT_NOT_EXIST);
         }
         currenAccount.setCurrentAddress(currentAddress);
+        accountDao.save(currenAccount);
+    }
+
+    @Override
+    public void changePassword(Long id, PasswordRequest request) {
+        if (StringUtils.isEmpty(id)) {
+            throw new RestApiException(StatusCode.DATA_EMPTY);
+        }
+        if (StringUtils.isEmpty(request.getNewPassword())) {
+            throw new RestApiException(StatusCode.PASSWORD_EMPTY);
+        }
+        if (!isPassword(request.getNewPassword())) {
+            throw new RestApiException(StatusCode.PASSWORD_NOT_RIGHT_FORMAT);
+        }
+        if (!request.getNewPassword().equals(request.getConfirmPassword())) {
+            throw new RestApiException(StatusCode.PASSWORD_AND_CONFIRM_PASSWORD_NOT_MATCH);
+        }
+        Account currenAccount = accountDao.getAccountById(id);
+        if (Objects.isNull(currenAccount)) {
+            throw new RestApiException(StatusCode.ACCOUNT_NOT_EXIST);
+        }
+        if (PasswordGenerator.checkHashStrings(currenAccount.getPassword(), request.getNewPassword())) {
+            throw new RestApiException(StatusCode.PASSWORD_USED);
+        }
+        currenAccount.setPassword(PasswordGenerator.getHashString(request.getNewPassword()));
         accountDao.save(currenAccount);
     }
 
