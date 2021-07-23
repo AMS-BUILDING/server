@@ -4,7 +4,6 @@ import com.ams.building.server.bean.Account;
 import com.ams.building.server.bean.Position;
 import com.ams.building.server.bean.Role;
 import com.ams.building.server.constant.Constants;
-import com.ams.building.server.constant.RoleEnum;
 import com.ams.building.server.constant.StatusCode;
 import com.ams.building.server.dao.AccountDAO;
 import com.ams.building.server.exception.RestApiException;
@@ -368,11 +367,11 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
         if (!isPhoneNumber(ownerRequest.getPhone())) {
             throw new RestApiException(StatusCode.PHONE_NUMBER_NOT_RIGHT_FORMAT);
         }
-        Account currentAccount = accountDao.getAccountByEmailAndRole(ownerRequest.getEmail(), String.valueOf(RoleEnum.ROLE_LANDLORD));
+        Account currentAccount = accountDao.getAccountByEmail(ownerRequest.getEmail());
         if (Objects.nonNull(currentAccount)) {
             throw new RestApiException(StatusCode.IDENTIFY_CARD_DUPLICATE);
         }
-        Account currentAccountDuplicate = accountDao.getAccountByIdentifyAndRole(ownerRequest.getIdentifyCard(), String.valueOf(RoleEnum.ROLE_LANDLORD));
+        Account currentAccountDuplicate = accountDao.getAccountByIdentify(ownerRequest.getIdentifyCard());
         if (Objects.nonNull(currentAccountDuplicate)) {
             throw new RestApiException(StatusCode.IDENTIFY_CARD_DUPLICATE);
         }
@@ -385,6 +384,7 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
         account.setPhone(ownerRequest.getPhone());
         account.setCurrentAddress(ownerRequest.getCurrentAddress());
         account.setName(ownerRequest.getName());
+        account.setImage(Constants.DEFAULT_AVATAR);
         Role role = new Role();
         role.setId(3L);
         account.setRole(role);
@@ -445,7 +445,6 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
 
     @Override
     public void forwardPassword(String email) {
-
     }
 
     private Long addResident(ResidentRequest residentRequest) {
@@ -461,6 +460,7 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
         account.setPhone(residentRequest.getPhone());
         account.setGender(residentRequest.getGender());
         account.setDob(residentRequest.getDob());
+        account.setImage(Constants.DEFAULT_AVATAR);
         Position position = new Position();
         position.setId(residentRequest.getPositionId());
         account.setPosition(position);
@@ -483,4 +483,5 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
         response.setIdentifyCard(account.getIdentifyCard());
         return response;
     }
+
 }

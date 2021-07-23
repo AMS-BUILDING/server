@@ -12,7 +12,10 @@ public class Constants {
     public static final String HEADER_KEY = "Content-Disposition";
 
     public static final String DEFAULT_PASSWORD = "$2a$12$vh2FQgxSpUARxQiQK1bjXeILadCSYzT.w04Up6IcG6Dg5InXiRQc.";
+
     public static final String DEFAULT_PASSWORD_ENCODE = "123456";
+
+    public static final String DEFAULT_AVATAR = "avatar_default.png";
 
     public class UrlPath {
 

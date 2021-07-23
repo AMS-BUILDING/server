@@ -2,7 +2,6 @@ package com.ams.building.server.controller;
 
 import com.ams.building.server.constant.Constants;
 import com.ams.building.server.constant.StatusCode;
-import com.ams.building.server.exception.JwtCustomException;
 import com.ams.building.server.exception.RestApiException;
 import com.ams.building.server.request.LoginRequest;
 import com.ams.building.server.response.LoginResponse;
@@ -10,7 +9,9 @@ import com.ams.building.server.response.TokenResponse;
 import com.ams.building.server.response.UserPrincipal;
 import com.ams.building.server.sercurity.JwtTokenProvider;
 import com.ams.building.server.service.AccountService;
+import com.google.gson.Gson;
 import org.apache.catalina.security.SecurityConfig;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpStatus;
@@ -32,6 +33,8 @@ import org.springframework.web.bind.annotation.RestController;
 @Import(SecurityConfig.class)
 public class LoginController {
 
+    private static final Logger logger = Logger.getLogger(LoginController.class);
+
     @Autowired
     private AuthenticationManager authenticationManager;
 
@@ -43,6 +46,7 @@ public class LoginController {
 
     @PostMapping(Constants.UrlPath.URL_API_LOGIN)
     public TokenResponse login(@RequestBody LoginRequest request) {
+        logger.debug("addAbsent request : " + new Gson().toJson(request));
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
             return jwtTokenProvider.createToken(request.getUsername());

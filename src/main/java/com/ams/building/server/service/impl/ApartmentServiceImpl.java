@@ -26,6 +26,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
@@ -117,7 +118,13 @@ public class ApartmentServiceImpl implements ApartmentService {
 
     @Override
     public AccountDetailResponse getAccountDetail(Long accountId, Long apartmentId) {
+        if (StringUtils.isEmpty(accountId) || StringUtils.isEmpty(apartmentId)) {
+            throw new RestApiException(StatusCode.DATA_EMPTY);
+        }
         Apartment apartment = apartmentDAO.getAccountDetail(accountId, apartmentId);
+        if (Objects.isNull(apartment)) {
+            throw new RestApiException(StatusCode.APARTMENT_NOT_EXIST);
+        }
         AccountDetailResponse accountDetailResponse = AccountDetailResponse.builder()
                 .name(apartment.getAccount().getName())
                 .gender(apartment.getAccount().getGender())
@@ -134,24 +141,39 @@ public class ApartmentServiceImpl implements ApartmentService {
     }
 
     @Override
-    public List<Long> disableApartment(Long id) {
-        List<Apartment> apartmentList = apartmentDAO.searchAccountByRoomNumberId(id);
-        if (apartmentList != null) {
-            apartmentList.forEach(apartment -> disableAccount(apartment));
+    public void disableApartment(Long id) {
+        if (StringUtils.isEmpty(id)) {
+            throw new RestApiException(StatusCode.DATA_EMPTY);
         }
-        return null;
+        List<Apartment> apartmentList = apartmentDAO.searchAccountByRoomNumberId(id);
+        if (apartmentList.isEmpty()) {
+            throw new RestApiException(StatusCode.APARTMENT_NOT_EXIST);
+        }
+        apartmentList.forEach(apartment -> disableAccount(apartment));
     }
 
     @Override
     public void addOwnerToApartment(Long apartmentId, Long ownerId) {
+        if (StringUtils.isEmpty(apartmentId) || StringUtils.isEmpty(ownerId)) {
+            throw new RestApiException(StatusCode.DATA_EMPTY);
+        }
         Account account = accountDAO.getAccountById(ownerId);
+        if (Objects.isNull(account)) {
+            throw new RestApiException(StatusCode.ACCOUNT_NOT_EXIST);
+        }
         Apartment apartment = apartmentDAO.getApartmentById(apartmentId);
+        if (Objects.isNull(apartment)) {
+            throw new RestApiException(StatusCode.APARTMENT_NOT_EXIST);
+        }
         apartment.setAccount(account);
         apartmentDAO.save(apartment);
     }
 
     @Override
     public void addListResidentToApartment(Long apartmentId, List<Long> residentId) {
+        if (StringUtils.isEmpty(apartmentId) || StringUtils.isEmpty(residentId)) {
+            throw new RestApiException(StatusCode.DATA_EMPTY);
+        }
         residentId.forEach(id -> addResident(apartmentId, id));
     }
 
@@ -163,17 +185,20 @@ public class ApartmentServiceImpl implements ApartmentService {
         return responses;
     }
 
-    private BlockResponse convertBlock(Block block) {
-        BlockResponse response = BlockResponse.builder().blockName(block.getBlockName()).id(block.getId()).build();
-        return response;
-    }
-
     @Override
     public List<FloorResponse> floorList(Long blockId) {
         List<FloorBlock> floors = floorBlockDAO.floorBlockByBlockId(blockId);
         List<FloorResponse> responses = new ArrayList<>();
         floors.forEach(s -> responses.add(convertFloor(s)));
         return responses;
+    }
+
+    private BlockResponse convertBlock(Block block) {
+        if (Objects.isNull(block)) {
+            throw new RestApiException(StatusCode.BLOCK_NOT_EXIST);
+        }
+        BlockResponse response = BlockResponse.builder().blockName(block.getBlockName()).id(block.getId()).build();
+        return response;
     }
 
     private FloorResponse convertFloor(FloorBlock floor) {
@@ -224,9 +249,17 @@ public class ApartmentServiceImpl implements ApartmentService {
     }
 
     private void addResident(Long apartmentId, Long id) {
+        if (StringUtils.isEmpty(apartmentId) || StringUtils.isEmpty(id)) {
+            throw new RestApiException(StatusCode.DATA_EMPTY);
+        }
         Account account = accountDAO.getAccountById(id);
+        if (Objects.isNull(account)) {
+            throw new RestApiException(StatusCode.ACCOUNT_NOT_EXIST);
+        }
         Apartment apartment = apartmentDAO.getApartmentById(apartmentId);
-
+        if (Objects.isNull(apartment)) {
+            throw new RestApiException(StatusCode.APARTMENT_NOT_EXIST);
+        }
         Apartment newApartment = Apartment.builder()
                 .account(account)
                 .building(apartment.getBuilding())
@@ -249,6 +282,9 @@ public class ApartmentServiceImpl implements ApartmentService {
     }
 
     private void disableAccount(Apartment apartment) {
+        if (Objects.isNull(apartment)) {
+            throw new RestApiException(StatusCode.APARTMENT_NOT_EXIST);
+        }
         Account account = accountDAO.getAccountById(apartment.getAccount().getId());
         account.setEnabled(false);
         accountDAO.save(account);

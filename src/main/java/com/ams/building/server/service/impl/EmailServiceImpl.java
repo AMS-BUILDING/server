@@ -76,4 +76,5 @@ public class EmailServiceImpl implements EmailService {
         account.setResetPasswordToken(null);
         sendEmailAccountDao.save(account);
     }
+
 }

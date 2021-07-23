@@ -22,7 +22,7 @@ public interface ApartmentService {
 
     AccountDetailResponse getAccountDetail( Long accountId,Long apartmentId );
 
-    List<Long> disableApartment(Long id);
+    void disableApartment(Long id);
 
     List<BlockResponse> blockList();
 

@@ -4,7 +4,6 @@ import com.ams.building.server.bean.Account;
 import com.ams.building.server.bean.Position;
 import com.ams.building.server.bean.Role;
 import com.ams.building.server.constant.Constants;
-import com.ams.building.server.constant.RoleEnum;
 import com.ams.building.server.constant.StatusCode;
 import com.ams.building.server.dao.AccountDAO;
 import com.ams.building.server.dao.PositionDAO;
@@ -67,11 +66,11 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public void removeEmployee(Long id, String role) {
-        if (StringUtils.isEmpty(id) || StringUtils.isEmpty(role)) {
+    public void removeEmployee(Long id) {
+        if (StringUtils.isEmpty(id)) {
             throw new RestApiException(StatusCode.DATA_EMPTY);
         }
-        Account account = accountDao.getAccountByIdAndRole(id, role);
+        Account account = accountDao.getAccountById(id);
         if (Objects.isNull(account)) {
             throw new RestApiException(StatusCode.ACCOUNT_NOT_EXIST);
         }
@@ -104,7 +103,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         if (!isIdentifyCard(request.getIdentifyCard())) {
             throw new RestApiException(StatusCode.IDENTIFY_CARD_NOT_RIGHT);
         }
-        Account currentAccount = accountDao.getAccountByIdAndRole(accountId, String.valueOf(RoleEnum.ROLE_EMPLOYEE));
+        Account currentAccount = accountDao.getAccountById(accountId);
         if (Objects.isNull(currentAccount)) {
             throw new RestApiException(StatusCode.ACCOUNT_NOT_EXIST);
         }
@@ -154,11 +153,11 @@ public class EmployeeServiceImpl implements EmployeeService {
         if (!isIdentifyCard(request.getIdentifyCard())) {
             throw new RestApiException(StatusCode.IDENTIFY_CARD_NOT_RIGHT);
         }
-        Account searchAccountByIdentify = accountDao.getAccountByIdentifyAndRole(request.getIdentifyCard(), String.valueOf(RoleEnum.ROLE_EMPLOYEE));
+        Account searchAccountByIdentify = accountDao.getAccountByIdentify(request.getIdentifyCard());
         if (Objects.nonNull(searchAccountByIdentify)) {
             throw new RestApiException(StatusCode.IDENTIFY_CARD_DUPLICATE);
         }
-        Account searchAccountByEmail = accountDao.getAccountByEmailAndRole(request.getEmail(), String.valueOf(RoleEnum.ROLE_EMPLOYEE));
+        Account searchAccountByEmail = accountDao.getAccountByEmail(request.getEmail());
         if (Objects.nonNull(searchAccountByEmail)) {
             throw new RestApiException(StatusCode.ACCOUNT_REGISTER);
         }
@@ -171,6 +170,8 @@ public class EmployeeServiceImpl implements EmployeeService {
         account.setPhone(request.getPhoneNumber());
         account.setCurrentAddress(request.getCurrentAddress());
         account.setName(request.getName());
+        account.setPassword(Constants.DEFAULT_PASSWORD);
+        account.setImage(Constants.DEFAULT_AVATAR);
         account.setEnabled(true);
         Position position = positionDAO.getOne(request.getPosition());
         account.setPosition(position);
@@ -180,11 +181,11 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public EmployeeResponse getEmployeeById(Long accountId, String role) {
-        if (StringUtils.isEmpty(accountId) || StringUtils.isEmpty(role)) {
+    public EmployeeResponse getEmployeeById(Long accountId) {
+        if (StringUtils.isEmpty(accountId)) {
             throw new RestApiException(StatusCode.DATA_EMPTY);
         }
-        Account account = accountDao.getAccountByIdAndRole(accountId, role);
+        Account account = accountDao.getAccountById(accountId);
         if (Objects.isNull(account)) {
             throw new RestApiException(StatusCode.ACCOUNT_NOT_EXIST);
         }
@@ -282,4 +283,5 @@ public class EmployeeServiceImpl implements EmployeeService {
         }
         return content;
     }
+
 }

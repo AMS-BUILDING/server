@@ -10,13 +10,13 @@ public interface EmployeeService {
 
     ApiResponse searchAccountByNamePhoneIdentifyCardAndRoleAndPosition(Integer page, Integer size, String name, String phoneNumber, String identifyCard, Long position, String roles);
 
-    void removeEmployee(Long id, String role);
+    void removeEmployee(Long id);
 
     void updateEmployee(Long accountId, EmployeeRequest request);
 
     void addEmployee(EmployeeRequest request);
 
-    EmployeeResponse getEmployeeById(Long accountId, String role);
+    EmployeeResponse getEmployeeById(Long accountId);
 
     void downloadSearchEmployee(HttpServletResponse httpServletResponse, String name, String phoneNumber, String identifyCard, Long position, String roles);
 

@@ -50,7 +50,7 @@ public class EmployeeController {
     @GetMapping(Constants.UrlPath.URL_API_GET_ONE_EMPLOYEE + "/{id}")
     public ResponseEntity<?> getOneEmployeeById(@PathVariable("id") Long accountId) {
         logger.debug("getOneEmployeeById: request " + accountId);
-        EmployeeResponse employeeResponse = employeeService.getEmployeeById(accountId, String.valueOf(RoleEnum.ROLE_EMPLOYEE));
+        EmployeeResponse employeeResponse = employeeService.getEmployeeById(accountId);
         ResponseEntity<EmployeeResponse> response = new ResponseEntity<>(employeeResponse, HttpStatus.OK);
         logger.debug("getOneEmployeeById response: " + new Gson().toJson(response));
         return response;
@@ -59,7 +59,7 @@ public class EmployeeController {
     @PostMapping(Constants.UrlPath.URL_API_REMOVE_EMPLOYEE + "/{id}")
     public ResponseEntity<?> removeEmployee(@PathVariable("id") Long accountId) {
         logger.debug("removeEmployee: request " + accountId);
-        employeeService.removeEmployee(accountId, String.valueOf(RoleEnum.ROLE_EMPLOYEE));
+        employeeService.removeEmployee(accountId);
         ResponseEntity<String> response = new ResponseEntity<>("Remove success", HttpStatus.OK);
         logger.debug("removeEmployee response: " + new Gson().toJson(response));
         return response;

@@ -2,7 +2,7 @@ package com.ams.building.server.exception;
 
 import org.springframework.http.HttpStatus;
 
-public class JwtCustomException extends  RuntimeException{
+public class JwtCustomException extends RuntimeException {
 
     private static final long serialVersionUID = 1L;
 
@@ -22,4 +22,5 @@ public class JwtCustomException extends  RuntimeException{
     public HttpStatus getHttpStatus() {
         return httpStatus;
     }
+
 }

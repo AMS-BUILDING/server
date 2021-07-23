@@ -12,4 +12,5 @@ public interface SendEmailAccountDAO extends JpaRepository<Account, Long> {
     Account findAccountByEmail(String email);
 
     Account findAccountByResetPasswordToken(String token);
+
 }

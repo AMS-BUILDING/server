@@ -94,4 +94,5 @@ public class VehicleCardServiceImpl implements VehicleCardService {
         response.setStatus(card.getStatusVehicleCard().getStatusName());
         return response;
     }
+
 }

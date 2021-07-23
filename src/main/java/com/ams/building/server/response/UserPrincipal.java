@@ -16,13 +16,14 @@ import java.util.Collection;
 @EqualsAndHashCode(callSuper = true)
 public class UserPrincipal extends User implements Serializable {
 
-	private static final long serialVersionUID = 1L;
-	private Long id;
-	private String name;
-	private Long roleId;
+    private static final long serialVersionUID = 1L;
+    private Long id;
+    private String name;
+    private Long roleId;
 
-	public UserPrincipal(String username, String password, boolean enabled, boolean accountNonExpired, boolean credentialsNonExpired, boolean accountNonLocked,
+    public UserPrincipal(String username, String password, boolean enabled, boolean accountNonExpired, boolean credentialsNonExpired, boolean accountNonLocked,
                          Collection<? extends GrantedAuthority> authorities) {
-		super(username, password, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked, authorities);
-	}
+        super(username, password, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked, authorities);
+    }
+
 }

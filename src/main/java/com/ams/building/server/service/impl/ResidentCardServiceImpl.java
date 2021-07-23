@@ -86,7 +86,7 @@ public class ResidentCardServiceImpl implements ResidentCardService {
         if (!isEmail(email)) {
             throw new RestApiException(StatusCode.EMAIL_NOT_RIGHT_FORMAT);
         }
-        Account account = accountDAO.getAccountByEmailAndRole(email, String.valueOf(RoleEnum.ROLE_LANDLORD));
+        Account account = accountDAO.getAccountByEmail(email);
         if (Objects.isNull(account)) {
             throw new RestApiException(StatusCode.ACCOUNT_NOT_EXIST);
         }
@@ -145,4 +145,5 @@ public class ResidentCardServiceImpl implements ResidentCardService {
         response.setStatus(card.getStatusResidentCard().getStatusName());
         return response;
     }
+
 }
