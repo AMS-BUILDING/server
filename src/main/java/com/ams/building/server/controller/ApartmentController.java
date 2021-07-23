@@ -6,8 +6,8 @@ import com.ams.building.server.request.ApartmentOwnerRequest;
 import com.ams.building.server.request.ResidentRequest;
 import com.ams.building.server.request.ResidentRequestWrap;
 import com.ams.building.server.request.UpdateResidentRequest;
-import com.ams.building.server.response.AccountDetailResponse;
 import com.ams.building.server.response.ApiResponse;
+import com.ams.building.server.response.RoomNumberResponse;
 import com.ams.building.server.service.AccountService;
 import com.ams.building.server.service.ApartmentService;
 import com.ams.building.server.service.EmailService;
@@ -133,14 +133,14 @@ public class ApartmentController {
         return response;
     }
 
-    @GetMapping(value = Constants.UrlPath.URL_API_ACCOUNT_DETAIL)
-    public ResponseEntity<?> accountDetail(@RequestParam(name = "apartmentId") Long apartmentId,
-                                           @RequestParam(name = "accountId") Long accountId) {
-        logger.debug("accountDetail request : " + apartmentId + " - " + accountId);
-        AccountDetailResponse accountDetailResponse = apartmentService.getAccountDetail(accountId, apartmentId);
-        ResponseEntity<AccountDetailResponse> response = new ResponseEntity<>(accountDetailResponse, HttpStatus.OK);
-        logger.debug("accountDetail response : " + new Gson().toJson(response));
-        return response;
+    @GetMapping(value = Constants.UrlPath.URL_API_ROOM_NUMBER_SEARCH)
+    public ResponseEntity<?> searchRoomNumber(@RequestParam(name = "floorId") Long floorId,
+                                              @RequestParam(name = "blockId") Long blockId) {
+        logger.debug("searchRoomNumber request : " + floorId + " - " + blockId);
+        List<RoomNumberResponse> apiResponse = apartmentService.roomNumberList(blockId, floorId);
+        ResponseEntity<List<RoomNumberResponse>> responseEntity = new ResponseEntity<>(apiResponse, HttpStatus.OK);
+        logger.debug("RoomNumberList response" + new Gson().toJson(responseEntity));
+        return responseEntity;
     }
 
     @PostMapping(value = Constants.UrlPath.URL_API_UPDATE_RESIDENT)

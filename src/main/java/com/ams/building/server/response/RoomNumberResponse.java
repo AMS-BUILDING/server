@@ -9,6 +9,7 @@ import lombok.Setter;
 @Setter
 public class RoomNumberResponse {
 
+    private Long apartmentId;
     private Long id;
     private String roomName;
 

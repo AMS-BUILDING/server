@@ -12,12 +12,12 @@ import com.ams.building.server.dao.ApartmentDAO;
 import com.ams.building.server.dao.BlockDAO;
 import com.ams.building.server.dao.FloorBlockDAO;
 import com.ams.building.server.exception.RestApiException;
-import com.ams.building.server.response.AccountDetailResponse;
 import com.ams.building.server.response.AccountResponse;
 import com.ams.building.server.response.ApartmentResponse;
 import com.ams.building.server.response.ApiResponse;
 import com.ams.building.server.response.BlockResponse;
 import com.ams.building.server.response.FloorResponse;
+import com.ams.building.server.response.RoomNumberResponse;
 import com.ams.building.server.service.ApartmentService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -117,30 +117,6 @@ public class ApartmentServiceImpl implements ApartmentService {
     }
 
     @Override
-    public AccountDetailResponse getAccountDetail(Long accountId, Long apartmentId) {
-        if (StringUtils.isEmpty(accountId) || StringUtils.isEmpty(apartmentId)) {
-            throw new RestApiException(StatusCode.DATA_EMPTY);
-        }
-        Apartment apartment = apartmentDAO.getAccountDetail(accountId, apartmentId);
-        if (Objects.isNull(apartment)) {
-            throw new RestApiException(StatusCode.APARTMENT_NOT_EXIST);
-        }
-        AccountDetailResponse accountDetailResponse = AccountDetailResponse.builder()
-                .name(apartment.getAccount().getName())
-                .gender(apartment.getAccount().getGender())
-                .dob(apartment.getAccount().getDob())
-                .phone(apartment.getAccount().getPhone())
-                .email(apartment.getAccount().getEmail())
-                .identityCard(apartment.getAccount().getIdentifyCard())
-                .blockName(apartment.getRoomNumber().getFloorBlock().getBlock().getBlockName())
-                .roomNumber(apartment.getRoomNumber().getRoomName())
-                .currentAddress(apartment.getAccount().getCurrentAddress())
-                .homeTown(apartment.getAccount().getHomeTown())
-                .build();
-        return accountDetailResponse;
-    }
-
-    @Override
     public void disableApartment(Long id) {
         if (StringUtils.isEmpty(id)) {
             throw new RestApiException(StatusCode.DATA_EMPTY);
@@ -193,11 +169,20 @@ public class ApartmentServiceImpl implements ApartmentService {
         return responses;
     }
 
-    private BlockResponse convertBlock(Block block) {
-        if (Objects.isNull(block)) {
-            throw new RestApiException(StatusCode.BLOCK_NOT_EXIST);
-        }
-        BlockResponse response = BlockResponse.builder().blockName(block.getBlockName()).id(block.getId()).build();
+    @Override
+    public List<RoomNumberResponse> roomNumberList(Long blockId, Long floorId) {
+        List<Apartment> apartments = apartmentDAO.searchRoomNumberByBlockAndFloorNullAccount(blockId, floorId);
+        List<RoomNumberResponse> responses = new ArrayList<>();
+        apartments.forEach(s -> responses.add(convertRoomNumberToDTO(s)));
+        return responses;
+    }
+
+    private RoomNumberResponse convertRoomNumberToDTO(Apartment apartment) {
+        RoomNumberResponse response = RoomNumberResponse.builder()
+                .apartmentId(apartment.getId())
+                .roomName(apartment.getRoomNumber().getRoomName())
+                .id(apartment.getRoomNumber().getId())
+                .build();
         return response;
     }
 
@@ -288,6 +273,14 @@ public class ApartmentServiceImpl implements ApartmentService {
         Account account = accountDAO.getAccountById(apartment.getAccount().getId());
         account.setEnabled(false);
         accountDAO.save(account);
+    }
+
+    private BlockResponse convertBlock(Block block) {
+        if (Objects.isNull(block)) {
+            throw new RestApiException(StatusCode.BLOCK_NOT_EXIST);
+        }
+        BlockResponse response = BlockResponse.builder().blockName(block.getBlockName()).id(block.getId()).build();
+        return response;
     }
 
 }
