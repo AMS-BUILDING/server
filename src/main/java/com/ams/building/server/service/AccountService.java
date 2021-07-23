@@ -3,6 +3,7 @@ package com.ams.building.server.service;
 import com.ams.building.server.request.ApartmentOwnerRequest;
 import com.ams.building.server.request.ResidentRequest;
 import com.ams.building.server.request.UpdateResidentRequest;
+import com.ams.building.server.response.AccountAppResponse;
 import com.ams.building.server.response.LoginResponse;
 
 import java.util.List;
@@ -36,5 +37,7 @@ public interface AccountService {
     void changeAccountLock(long id);
 
     void forwardPassword(String email);
+
+    AccountAppResponse detailAccountApp(Long id);
 
 }

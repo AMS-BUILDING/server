@@ -34,4 +34,7 @@ public interface ApartmentDAO extends JpaRepository<Apartment, Long> {
     @Query("SELECT a FROM Apartment a WHERE a.roomNumber.id = :roomNumberId")
     List<Apartment> searchAccountByRoomNumberId(@Param("roomNumberId") Long apartmentId);
 
+    @Query("SELECT a FROM Apartment a WHERE a.account.id =?1")
+    Apartment getApartmentByAccountId(Long accountId);
+
 }

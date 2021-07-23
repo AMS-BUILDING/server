@@ -1,15 +1,19 @@
 package com.ams.building.server.service.impl;
 
 import com.ams.building.server.bean.Account;
+import com.ams.building.server.bean.Apartment;
 import com.ams.building.server.bean.Position;
 import com.ams.building.server.bean.Role;
+import com.ams.building.server.bean.RoomNumber;
 import com.ams.building.server.constant.Constants;
 import com.ams.building.server.constant.StatusCode;
 import com.ams.building.server.dao.AccountDAO;
+import com.ams.building.server.dao.ApartmentDAO;
 import com.ams.building.server.exception.RestApiException;
 import com.ams.building.server.request.ApartmentOwnerRequest;
 import com.ams.building.server.request.ResidentRequest;
 import com.ams.building.server.request.UpdateResidentRequest;
+import com.ams.building.server.response.AccountAppResponse;
 import com.ams.building.server.response.LoginResponse;
 import com.ams.building.server.response.UserPrincipal;
 import com.ams.building.server.service.AccountService;
@@ -38,6 +42,9 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
 
     @Autowired
     private AccountDAO accountDao;
+
+    @Autowired
+    private ApartmentDAO apartmentDAO;
 
     @Override
     public void add(LoginResponse loginResponse) {
@@ -445,6 +452,42 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
 
     @Override
     public void forwardPassword(String email) {
+    }
+
+    @Override
+    public AccountAppResponse detailAccountApp(Long id) {
+        if (Objects.isNull(id)) {
+            throw new RestApiException(StatusCode.DATA_EMPTY);
+        }
+        Account account = accountDao.getAccountById(id);
+        if (Objects.isNull(account)) {
+            throw new RestApiException(StatusCode.ACCOUNT_NOT_EXIST);
+        }
+        AccountAppResponse response = convertToAccountApp(account);
+        return response;
+    }
+
+    private AccountAppResponse convertToAccountApp(Account account) {
+        AccountAppResponse response = AccountAppResponse.builder().build();
+        Apartment apartment = apartmentDAO.getApartmentByAccountId(account.getId());
+        if (Objects.isNull(apartment)) {
+            throw new RestApiException(StatusCode.APARTMENT_NOT_EXIST);
+        }
+        RoomNumber roomNumber = apartment.getRoomNumber();
+        if (Objects.isNull(roomNumber)) {
+            throw new RestApiException(StatusCode.ROOM_NUMBER_NOT_EXIST);
+        }
+        response.setId(account.getId());
+        response.setName(account.getName());
+        response.setRoomNumber(roomNumber.getRoomName());
+        response.setDob(account.getDob());
+        response.setIdentifyCard(account.getIdentifyCard());
+        response.setEmail(account.getEmail());
+        response.setPhoneNumber(account.getPhone());
+        response.setCurrentAddress(account.getCurrentAddress());
+        response.setImageAvatar(account.getImage());
+        response.setPassword(PasswordGenerator.getHashString(account.getPassword()));
+        return response;
     }
 
     private Long addResident(ResidentRequest residentRequest) {
