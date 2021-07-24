@@ -91,6 +91,7 @@ public class Constants {
         public static final String URL_API_CHANGE_PASSWORD_APP = "/tenant/change-password";
         public static final String URL_API_DEPENDENT_PERSON_APP = "/tenant/dependent-person";
         public static final String URL_API_MANAGEMENT_PERSON_APP = "/tenant/management-person";
+        public static final String URL_API_DETAIL_BUILDING_APP = "/tenant/detail-building";
 
     }
 
