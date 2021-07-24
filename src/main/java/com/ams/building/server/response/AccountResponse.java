@@ -15,5 +15,8 @@ public class AccountResponse {
     private String phone;
     private String blockName;
     private String roomNumber;
+    private String dob;
+    private String identifyCard;
+    private String relationShip;
 
 }
