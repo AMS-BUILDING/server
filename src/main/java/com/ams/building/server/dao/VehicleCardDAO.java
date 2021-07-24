@@ -10,6 +10,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 @Repository
 public interface VehicleCardDAO extends JpaRepository<VehicleCard, Long> {
@@ -27,5 +28,8 @@ public interface VehicleCardDAO extends JpaRepository<VehicleCard, Long> {
     @Modifying
     @Query(" UPDATE VehicleCard r SET r.statusVehicleCard.id =:statusId WHERE r.id =:id ")
     void updateStatus(@Param("statusId") Long statusId, @Param("id") Long id);
+
+    @Query("SELECT v FROM VehicleCard v WHERE v.account.id =?1 AND v.vehicle.id=?2 ORDER BY v.id ")
+    List<VehicleCard> vehicleListByAccountIdAndTypeId(Long accountId, Long vehicleTypeId);
 
 }

@@ -56,8 +56,7 @@ public class Constants {
         public static final String URL_API_DETAIL_VEHICLE_CARD = "/manager-service/vehicle-card/get-one";
         public static final String URL_API_UPDATE_VEHICLE_CARD = "/manager-service/vehicle-card/update";
         public static final String URL_API_REMOVE_VEHICLE_CARD = "/manager-service/vehicle-card/remove";
-        public static final String URL_API_LIST_STATUS_VEHICLE_CARD = "/manager-service/vehicle-card/list"
-                ;
+        public static final String URL_API_LIST_STATUS_VEHICLE_CARD = "/manager-service/vehicle-card/list";
         public static final String URL_API_SEARCH_RESIDENT_CARD = "/admin/resident-card/search";
         public static final String URL_API_UPDATE_RESIDENT_CARD = "/admin/resident-card/update";
         public static final String URL_API_REMOVE_RESIDENT_CARD = "/admin/resident-card/remove";
@@ -93,6 +92,7 @@ public class Constants {
         public static final String URL_API_MANAGEMENT_PERSON_APP = "/tenant/management-person";
         public static final String URL_API_DETAIL_BUILDING_APP = "/tenant/detail-building";
         public static final String URL_API_REQUEST_SERVICE_REGISTER_APP = "/landlord/request-service/list";
+        public static final String URL_API_VEHICLE_APP = "/tenant/vehicle-by-id";
     }
 
     public class FileProperties {

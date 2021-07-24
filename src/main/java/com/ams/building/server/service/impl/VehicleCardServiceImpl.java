@@ -1,11 +1,16 @@
 package com.ams.building.server.service.impl;
 
+import com.ams.building.server.bean.Account;
+import com.ams.building.server.bean.Vehicle;
 import com.ams.building.server.bean.VehicleCard;
 import com.ams.building.server.constant.StatusCode;
+import com.ams.building.server.dao.AccountDAO;
 import com.ams.building.server.dao.VehicleCardDAO;
+import com.ams.building.server.dao.VehicleDAO;
 import com.ams.building.server.exception.RestApiException;
 import com.ams.building.server.response.ApiResponse;
 import com.ams.building.server.response.VehicleCardResponse;
+import com.ams.building.server.response.VehicleTypeResponse;
 import com.ams.building.server.service.VehicleCardService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +24,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import static com.ams.building.server.utils.DateTimeUtils.DD_MM_YYYY;
+import static com.ams.building.server.utils.DateTimeUtils.convertDateToString;
+
 @Service
 public class VehicleCardServiceImpl implements VehicleCardService {
 
@@ -26,6 +34,12 @@ public class VehicleCardServiceImpl implements VehicleCardService {
 
     @Autowired
     private VehicleCardDAO vehicleCardDAO;
+
+    @Autowired
+    private AccountDAO accountDAO;
+
+    @Autowired
+    private VehicleDAO vehicleDAO;
 
     @Override
     public ApiResponse searchVehicleCard(Integer page, Integer size, String vehicleOwner, String phoneNumber, String licenesPlates, Long statusId) {
@@ -83,6 +97,25 @@ public class VehicleCardServiceImpl implements VehicleCardService {
         vehicleCardDAO.delete(card);
     }
 
+    @Override
+    public List<VehicleTypeResponse> listVehicleByTypeAndByAccountId(Long id, Long vehicleTypeId) {
+        if (StringUtils.isEmpty(id) || StringUtils.isEmpty(vehicleTypeId)) {
+            throw new RestApiException(StatusCode.DATA_EMPTY);
+        }
+        Account account = accountDAO.getAccountById(id);
+        if (Objects.isNull(account)) {
+            throw new RestApiException(StatusCode.ACCOUNT_NOT_EXIST);
+        }
+        Vehicle vehicle = vehicleDAO.getById(vehicleTypeId);
+        if (Objects.isNull(vehicle)) {
+            throw new RestApiException(StatusCode.VEHICLE_NOT_EXIST);
+        }
+        List<VehicleCard> vehicleCards = vehicleCardDAO.vehicleListByAccountIdAndTypeId(id, vehicleTypeId);
+        List<VehicleTypeResponse> responses = new ArrayList<>();
+        vehicleCards.forEach(c -> responses.add(convertToVehicleTypeResponse(c)));
+        return responses;
+    }
+
     private VehicleCardResponse convertToCardResponse(VehicleCard card) {
         VehicleCardResponse response = VehicleCardResponse.builder().build();
         response.setVehicleOwner(card.getAccount().getName());
@@ -92,6 +125,17 @@ public class VehicleCardServiceImpl implements VehicleCardService {
         response.setType(card.getVehicle().getVehicleName());
         response.setColor(card.getVehicleColor());
         response.setStatus(card.getStatusVehicleCard().getStatusName());
+        return response;
+    }
+
+    private VehicleTypeResponse convertToVehicleTypeResponse(VehicleCard card) {
+        VehicleTypeResponse response = VehicleTypeResponse.builder().build();
+        response.setVehicleName(card.getVehicleName());
+        response.setVehicleBranch(card.getVehicleBranch());
+        response.setColor(card.getVehicleColor());
+        response.setLicensePlates(card.getLicensePlate());
+        response.setStartDate(convertDateToString(card.getStartDate(), DD_MM_YYYY));
+        response.setSeat(card.getVehicle().getId() == 3 ? "5" : card.getVehicle().getId() == 4 ? "7" : "");
         return response;
     }
 
