@@ -10,6 +10,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 @Repository
 public interface RequestServiceDAO extends JpaRepository<RequestService, Long> {
@@ -27,5 +28,8 @@ public interface RequestServiceDAO extends JpaRepository<RequestService, Long> {
 
     @Query("SELECT r FROM RequestService  r WHERE r.id=?1")
     RequestService findRequestServiceById(Long id);
+
+    @Query("SELECT r FROM RequestService r WHERE r.account.id=?1 AND r.statusServiceRequest.id=?2 ORDER BY r.id")
+    List<RequestService> requestServiceByAccountId(Long accountId, Long statusId);
 
 }

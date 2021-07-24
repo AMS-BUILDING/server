@@ -48,7 +48,7 @@ public class Constants {
         public static final String URL_API_ADD_NOTIFICATION = "/admin/notification/add";
 
         public static final String URL_API_SEARCH_REQUEST_SERVICE = "/manager-service/request-service/search";
-        public static final String URL_API_UPDATE_REQUEST_SERVICE = "/manager-service/request-service/update";
+        public static final String URL_API_UPDATE_REQUEST_SERVICE = "/landlord/request-service/update";
         public static final String URL_API_GET_ONE_REQUEST_SERVICE = "/manager-service/request-service/get-one";
         public static final String URL_API_LIST_STATUS_REQUEST_SERVICE = "/manager-service/request-service/list";
 
@@ -92,7 +92,7 @@ public class Constants {
         public static final String URL_API_DEPENDENT_PERSON_APP = "/tenant/dependent-person";
         public static final String URL_API_MANAGEMENT_PERSON_APP = "/tenant/management-person";
         public static final String URL_API_DETAIL_BUILDING_APP = "/tenant/detail-building";
-
+        public static final String URL_API_REQUEST_SERVICE_REGISTER_APP = "/landlord/request-service/list";
     }
 
     public class FileProperties {
