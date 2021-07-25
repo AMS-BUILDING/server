@@ -1,7 +1,6 @@
 package com.ams.building.server.bean;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -18,7 +17,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import java.io.Serializable;
 
-@Builder
 @Getter
 @Setter
 @AllArgsConstructor

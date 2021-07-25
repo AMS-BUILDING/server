@@ -96,7 +96,8 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
         account.setPhone(loginResponse.getPhone());
         account.setCurrentAddress(loginResponse.getCurrentAddress());
         account.setName(loginResponse.getName());
-        Role role = Role.builder().id(loginResponse.getId()).build();
+        Role role = new Role();
+        role.setId(loginResponse.getRoleId());
         account.setRole(role);
         account.setDob(loginResponse.getDob());
         account.setHomeTown(loginResponse.getHomeTown());
@@ -150,7 +151,8 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
         account.setPhone(loginResponse.getPhone());
         account.setCurrentAddress(loginResponse.getCurrentAddress());
         account.setName(loginResponse.getName());
-        Role role = Role.builder().id(loginResponse.getId()).build();
+        Role role =new Role();
+        role.setId(loginResponse.getRoleId());
         account.setRole(role);
         account.setDob(loginResponse.getDob());
         account.setHomeTown(loginResponse.getHomeTown());

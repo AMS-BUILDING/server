@@ -274,12 +274,10 @@ public class ApartmentServiceImpl implements ApartmentService {
         if (Objects.isNull(apartment)) {
             throw new RestApiException(StatusCode.APARTMENT_NOT_EXIST);
         }
-        Apartment newApartment = Apartment.builder()
-                .account(account)
-                .building(apartment.getBuilding())
-                .roomNumber(apartment.getRoomNumber())
-                .build();
-
+        Apartment newApartment = new Apartment();
+        newApartment.setAccount(account);
+        newApartment.setBuilding(apartment.getBuilding());
+        newApartment.setRoomNumber(apartment.getRoomNumber());
         apartmentDAO.save(newApartment);
     }
 
