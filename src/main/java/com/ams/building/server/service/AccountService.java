@@ -53,4 +53,8 @@ public interface AccountService {
 
     void changePassword(Long id, PasswordRequest request);
 
+    void validateApartmentOwner(ApartmentOwnerRequest ownerRequest);
+
+    void validateListResident(List<ResidentRequest> residentRequestList, ApartmentOwnerRequest ownerRequest);
+
 }

@@ -20,6 +20,11 @@ public class RestApiException extends RuntimeException {
         this.message = statusCode.getMessage();
     }
 
+    public RestApiException(String message) {
+        this.status = StatusCode.ERROR_UNKNOWN.getStatus();
+        this.message = message;
+    }
+
     public Integer getStatus() {
         return status;
     }

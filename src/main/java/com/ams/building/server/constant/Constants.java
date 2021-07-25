@@ -62,9 +62,6 @@ public class Constants {
         public static final String URL_API_REMOVE_RESIDENT_CARD = "/admin/resident-card/remove";
         public static final String URL_API_ADD_RESIDENT_CARD = "/admin/resident-card/add";
 
-        public static final String URL_API_LOGIN = "/login";
-        public static final String URL_API_PROFILE = "/member/account/profile";
-
         public static final String URL_API_SEARCH_APARTMENT = "/admin/apartment/search";
         public static final String URL_API_ADD_APARTMENT_OWNER = "/admin/apartment/add/owner";
         public static final String URL_API_ADD_APARTMENT_RESIDENT = "/admin/apartment/add/resident";
@@ -75,7 +72,11 @@ public class Constants {
         public static final String URL_API_BLOCK_LIST = "/admin/block/list";
         public static final String URL_API_ROOM_NUMBER_SEARCH = "/admin/room-number/search";
         public static final String URL_API_UPDATE_RESIDENT = "/admin/resident/update";
+        public static final String URL_API_VALIDATE_OWNER = "/admin/validate/owner";
+        public static final String URL_API_VALIDATE_RESIDENT = "/admin/validate/resident";
 
+        public static final String URL_API_LOGIN = "/login";
+        public static final String URL_API_PROFILE = "/member/account/profile";
         public static final String URL_API_UPDATE_PROFILE_ACCOUNT = "/tenant/update/profile";
         public static final String URL_API_FORWARD_PASSWORD = "/forward-password";
         public static final String URL_API_RESET_PASSWORD = "/reset-password";
@@ -92,7 +93,7 @@ public class Constants {
         public static final String URL_API_MANAGEMENT_PERSON_APP = "/tenant/management-person";
         public static final String URL_API_DETAIL_BUILDING_APP = "/tenant/detail-building";
         public static final String URL_API_REQUEST_SERVICE_REGISTER_APP = "/landlord/request-service/list";
-        public static final String URL_API_VEHICLE_APP = "/tenant/vehicle-by-id";
+        public static final String URL_API_VEHICLE_APP = "/tenant/vehicle-by-account-id";
     }
 
     public class FileProperties {

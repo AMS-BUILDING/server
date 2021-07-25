@@ -1,6 +1,5 @@
 package com.ams.building.server.constant;
 
-
 import com.ams.building.server.utils.PropertiesReader;
 
 public enum StatusCode {
@@ -47,7 +46,11 @@ public enum StatusCode {
     PASSWORD_AND_CONFIRM_PASSWORD_NOT_MATCH(439, PropertiesReader.getProperty(PropertyKeys.PASSWORD_AND_CONFIRM_PASSWORD_NOT_MATCH)),
     PASSWORD_NOT_RIGHT_FORMAT(440, PropertiesReader.getProperty(PropertyKeys.PASSWORD_NOT_RIGHT_FORMAT)),
     STAR_EMPTY(441, PropertiesReader.getProperty(PropertyKeys.STAR_EMPTY)),
-    VEHICLE_NOT_EXIST(442, PropertiesReader.getProperty(PropertyKeys.VEHICLE_NOT_EXIST));
+    VEHICLE_NOT_EXIST(442, PropertiesReader.getProperty(PropertyKeys.VEHICLE_NOT_EXIST)),
+    BUILDING_NOT_EXIST(443, PropertiesReader.getProperty(PropertyKeys.BUILDING_NOT_EXIST)),
+    EMAIL_REGISTER_BEFORE(444, PropertiesReader.getProperty(PropertyKeys.EMAIL_REGISTER_BEFORE)),
+    DUPLICATE_EMAIL_IN_LIST_RESIDENT(445, PropertiesReader.getProperty(PropertyKeys.DUPLICATE_EMAIL_IN_LIST_RESIDENT)),
+    DUPLICATE_IDENTIFY_CARD_IN_LIST_RESIDENT(446, PropertiesReader.getProperty(PropertyKeys.DUPLICATE_IDENTIFY_CARD_IN_LIST_RESIDENT));
 
     private Integer status;
 
@@ -73,4 +76,5 @@ public enum StatusCode {
     public void setMessage(String message) {
         this.message = message;
     }
+
 }

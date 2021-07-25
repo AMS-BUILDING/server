@@ -22,7 +22,7 @@ public interface ApartmentDAO extends JpaRepository<Apartment, Long> {
     @Query("SELECT a FROM Apartment a WHERE a.account.name LIKE CONCAT('%',:householderName,'%') AND a.roomNumber.roomName LIKE CONCAT('%',:roomNumber,'%') AND a.account.enabled = true AND a.account.role.name ='ROLE_LANDLORD' ORDER BY a.id")
     Page<Apartment> searchApartmentByRoomNumberHouseholderName(@Param("householderName") String householderName, @Param("roomNumber") String roomNumber, Pageable pageable);
 
-    @Query("SELECT  a FROM Apartment a WHERE a.account.name LIKE CONCAT('%',:name,'%') AND a.roomNumber.roomName LIKE CONCAT('%',:roomNumber,'%') AND a.account.phone LIKE CONCAT('%',:phone,'%') ORDER BY a.account.name ASC ")
+    @Query("SELECT  a FROM Apartment a WHERE a.account.name LIKE CONCAT('%',:name,'%') AND a.roomNumber.roomName LIKE CONCAT('%',:roomNumber,'%') AND a.account.phone LIKE CONCAT('%',:phone,'%') ORDER BY a.account.name  ")
     Page<Apartment> searchResidentByNameRoomNumberAndPhone(@Param("name") String name, @Param("roomNumber") String roomNumber, @Param("phone") String phone, Pageable pageable);
 
     @Query("SELECT a FROM Apartment a WHERE a.roomNumber.floorBlock.block.id = :blockId AND a.roomNumber.floorBlock.floor.id = :floorId AND a.account IS NULL")
@@ -34,7 +34,7 @@ public interface ApartmentDAO extends JpaRepository<Apartment, Long> {
     @Query("SELECT a FROM Apartment a WHERE a.account.id =?1")
     Apartment getApartmentByAccountId(Long accountId);
 
-    @Query("SELECT  a FROM Apartment a WHERE a.account.name LIKE CONCAT('%',:name,'%') AND a.roomNumber.roomName LIKE CONCAT('%',:roomNumber,'%') AND a.account.phone LIKE CONCAT('%',:phone,'%') AND a.account.role.name IN :roles ORDER BY a.account.name ASC ")
+    @Query("SELECT  a FROM Apartment a WHERE a.account.name LIKE CONCAT('%',:name,'%') AND a.roomNumber.roomName LIKE CONCAT('%',:roomNumber,'%') AND a.account.phone LIKE CONCAT('%',:phone,'%') AND a.account.role.name IN :roles ORDER BY a.account.name  ")
     List<Apartment> searchResidentByNameRoomNumberAndPhoneList(@Param("name") String name, @Param("roomNumber") String roomNumber, @Param("phone") String phone, @Param("roles") String roles);
 
 }

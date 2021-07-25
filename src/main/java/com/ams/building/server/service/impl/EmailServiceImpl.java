@@ -35,6 +35,7 @@ public class EmailServiceImpl implements EmailService {
     @Override
     @Async
     public void sendSimpleMessage(String email, String subject, String text) throws MessagingException {
+        if (email.isEmpty()) return;
         MimeMessage message = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message);
         helper.setFrom("tuan.nguyen@ekoios.vn");

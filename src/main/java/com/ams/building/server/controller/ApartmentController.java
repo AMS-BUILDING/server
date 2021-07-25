@@ -8,7 +8,6 @@ import com.ams.building.server.request.ResidentRequestWrap;
 import com.ams.building.server.request.UpdateResidentRequest;
 import com.ams.building.server.response.AccountResponse;
 import com.ams.building.server.response.ApiResponse;
-import com.ams.building.server.response.RoomNumberResponse;
 import com.ams.building.server.service.AccountService;
 import com.ams.building.server.service.ApartmentService;
 import com.ams.building.server.service.EmailService;
@@ -59,6 +58,32 @@ public class ApartmentController {
         return response;
     }
 
+    @GetMapping(value = Constants.UrlPath.URL_API_EXPORT_APARTMENT)
+    public void exportApartment(HttpServletResponse httpServletResponse,
+                                @RequestParam(name = "householderName", required = false, defaultValue = "") String householderName,
+                                @RequestParam(name = "roomName", required = false, defaultValue = "") String roomName) {
+        logger.debug("exportApartment request : " + householderName + " - " + roomName);
+        apartmentService.exportApartmentList(httpServletResponse, roomName, householderName);
+    }
+
+    @PostMapping(Constants.UrlPath.URL_API_VALIDATE_OWNER)
+    public ResponseEntity<?> validateOwnerRequest(@RequestBody ApartmentOwnerRequest ownerRequest) {
+        logger.debug("validateOwnerRequest Request : " + new Gson().toJson(ownerRequest));
+        accountService.validateApartmentOwner(ownerRequest);
+        ResponseEntity<String> response = new ResponseEntity<>("Validate success", HttpStatus.OK);
+        logger.debug("validateOwnerRequest response : " + new Gson().toJson(response));
+        return response;
+    }
+
+    @PostMapping(Constants.UrlPath.URL_API_VALIDATE_RESIDENT)
+    public ResponseEntity<?> validateListResident(@RequestBody ResidentRequestWrap requestWrap) {
+        logger.debug("validateListResident Request : " + new Gson().toJson(requestWrap));
+        accountService.validateListResident(requestWrap.getResidentRequestList(), requestWrap.getOwnerRequest());
+        ResponseEntity<String> response = new ResponseEntity<>("Validate success", HttpStatus.OK);
+        logger.debug("validateListResident response : " + new Gson().toJson(response));
+        return response;
+    }
+
     @PostMapping(value = Constants.UrlPath.URL_API_ADD_APARTMENT_OWNER)
     public ResponseEntity<?> addOwner(@RequestBody ApartmentOwnerRequest ownerRequest) throws MessagingException {
         logger.debug("addOwner Request : " + new Gson().toJson(ownerRequest));
@@ -106,21 +131,13 @@ public class ApartmentController {
         emailService.sendSimpleMessage(residentRequest.getEmail(), PropertiesReader.getProperty(PropertyKeys.SEND_EMAIL_ADD_APARTMENT), content.toString());
     }
 
-    @PostMapping(value = Constants.UrlPath.URL_API_DISABLE_APARTMENT)
-    public ResponseEntity<?> disableOwner(@RequestParam(name = "roomNumberId") Long roomNumberId) {
-        logger.debug("disableOwner Request : " + new Gson().toJson(roomNumberId));
-        apartmentService.disableApartment(roomNumberId);
-        ResponseEntity<String> response = new ResponseEntity<>("disableOwner success", HttpStatus.CREATED);
-        return response;
-    }
-
-    @GetMapping(value = Constants.UrlPath.URL_API_EXPORT_APARTMENT)
-    public void exportApartment(HttpServletResponse httpServletResponse,
-                                @RequestParam(name = "householderName", required = false, defaultValue = "") String householderName,
-                                @RequestParam(name = "roomName", required = false, defaultValue = "") String roomName) {
-        logger.debug("exportApartment request : " + householderName + " - " + roomName);
-        apartmentService.exportApartmentList(httpServletResponse, roomName, householderName);
-    }
+//    @PostMapping(value = Constants.UrlPath.URL_API_DISABLE_APARTMENT)
+//    public ResponseEntity<?> disableOwner(@RequestParam(name = "roomNumberId") Long roomNumberId) {
+//        logger.debug("disableOwner Request : " + new Gson().toJson(roomNumberId));
+//        apartmentService.disableApartment(roomNumberId);
+//        ResponseEntity<String> response = new ResponseEntity<>("disableOwner success", HttpStatus.CREATED);
+//        return response;
+//    }
 
     @GetMapping(value = Constants.UrlPath.URL_API_SEARCH_APARTMENT_RESIDENT)
     public ResponseEntity<?> residentOfApartment(@RequestParam(name = "pageNo", required = false, defaultValue = "0") Integer pageNo,
@@ -133,16 +150,6 @@ public class ApartmentController {
         ResponseEntity<ApiResponse> response = new ResponseEntity<>(apiResponse, HttpStatus.OK);
         logger.debug("residentOfApartment response : " + new Gson().toJson(response));
         return response;
-    }
-
-    @GetMapping(value = Constants.UrlPath.URL_API_ROOM_NUMBER_SEARCH)
-    public ResponseEntity<?> searchRoomNumber(@RequestParam(name = "floorId") Long floorId,
-                                              @RequestParam(name = "blockId") Long blockId) {
-        logger.debug("searchRoomNumber request : " + floorId + " - " + blockId);
-        List<RoomNumberResponse> apiResponse = apartmentService.roomNumberList(blockId, floorId);
-        ResponseEntity<List<RoomNumberResponse>> responseEntity = new ResponseEntity<>(apiResponse, HttpStatus.OK);
-        logger.debug("RoomNumberList response" + new Gson().toJson(responseEntity));
-        return responseEntity;
     }
 
     @PostMapping(value = Constants.UrlPath.URL_API_UPDATE_RESIDENT)

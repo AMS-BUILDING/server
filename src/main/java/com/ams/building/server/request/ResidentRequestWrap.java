@@ -12,6 +12,7 @@ import java.util.List;
 public class ResidentRequestWrap {
 
     private List<ResidentRequest> residentRequestList;
+    private ApartmentOwnerRequest ownerRequest;
     private Long apartmentId;
 
 }
