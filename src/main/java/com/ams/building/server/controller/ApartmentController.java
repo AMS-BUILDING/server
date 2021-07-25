@@ -6,6 +6,7 @@ import com.ams.building.server.request.ApartmentOwnerRequest;
 import com.ams.building.server.request.ResidentRequest;
 import com.ams.building.server.request.ResidentRequestWrap;
 import com.ams.building.server.request.UpdateResidentRequest;
+import com.ams.building.server.response.AccountResponse;
 import com.ams.building.server.response.ApiResponse;
 import com.ams.building.server.response.RoomNumberResponse;
 import com.ams.building.server.service.AccountService;
@@ -19,6 +20,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -147,6 +149,15 @@ public class ApartmentController {
     public ResponseEntity<?> residentUpdate(@RequestBody UpdateResidentRequest residentRequest) {
         accountService.updateResident(residentRequest);
         ResponseEntity<String> response = new ResponseEntity<>("Update resident success", HttpStatus.OK);
+        return response;
+    }
+
+    @GetMapping(value = Constants.UrlPath.URL_API_DEPENDENT_PERSON_APP + "/{id}")
+    public ResponseEntity<?> dependentPersonByRoomNumber(@PathVariable("id") Long id) {
+        logger.debug("dependentPersonByRoomNumber request : " + id);
+        List<AccountResponse> dependentPerson = apartmentService.dependentPerson(id);
+        ResponseEntity<List<AccountResponse>> response = new ResponseEntity<>(dependentPerson, HttpStatus.OK);
+        logger.debug("dependentPersonByRoomNumber response: " + new Gson().toJson(response));
         return response;
     }
 

@@ -4,6 +4,7 @@ import com.ams.building.server.constant.Constants;
 import com.ams.building.server.response.ApiResponse;
 import com.ams.building.server.response.StatusVehicleCardResponse;
 import com.ams.building.server.response.VehicleCardResponse;
+import com.ams.building.server.response.VehicleTypeResponse;
 import com.ams.building.server.service.StatusVehicleCardService;
 import com.ams.building.server.service.VehicleCardService;
 import com.google.gson.Gson;
@@ -81,6 +82,15 @@ public class VehicleCardController {
         List<StatusVehicleCardResponse> cardResponses = statusVehicleCardService.listStatus();
         ResponseEntity<List<StatusVehicleCardResponse>> response = new ResponseEntity<>(cardResponses, HttpStatus.OK);
         logger.debug("listStatusVehicleCard response : " + new Gson().toJson(response));
+        return response;
+    }
+
+    @GetMapping(value = Constants.UrlPath.URL_API_VEHICLE_APP + "/{id}")
+    public ResponseEntity<?> listStatusVehicleApp(@PathVariable("id") Long id, @RequestParam Long typeId) {
+        logger.debug("listStatusVehicleApp response : " + id + "-" + typeId);
+        List<VehicleTypeResponse> vehicleResponse = vehicleCardService.listVehicleByTypeAndByAccountId(id, typeId);
+        ResponseEntity<List<VehicleTypeResponse>> response = new ResponseEntity<>(vehicleResponse, HttpStatus.OK);
+        logger.debug("listStatusVehicleApp response : " + new Gson().toJson(response));
         return response;
     }
 

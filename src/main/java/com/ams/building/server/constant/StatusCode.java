@@ -42,7 +42,12 @@ public enum StatusCode {
     PASSWORD_NOT_MATCH(434, PropertiesReader.getProperty(PropertyKeys.PASSWORD_NOT_MATCH)),
     ACCOUNT_REGISTER(435, PropertiesReader.getProperty(PropertyKeys.ACCOUNT_REGISTER)),
     DESCRIPTION_EMPTY(436, PropertiesReader.getProperty(PropertyKeys.DESCRIPTION_EMPTY)),
-    TITLE_EMPTY(437, PropertiesReader.getProperty(PropertyKeys.TITLE_EMPTY));
+    TITLE_EMPTY(437, PropertiesReader.getProperty(PropertyKeys.TITLE_EMPTY)),
+    PASSWORD_USED(438, PropertiesReader.getProperty(PropertyKeys.PASSWORD_USED)),
+    PASSWORD_AND_CONFIRM_PASSWORD_NOT_MATCH(439, PropertiesReader.getProperty(PropertyKeys.PASSWORD_AND_CONFIRM_PASSWORD_NOT_MATCH)),
+    PASSWORD_NOT_RIGHT_FORMAT(440, PropertiesReader.getProperty(PropertyKeys.PASSWORD_NOT_RIGHT_FORMAT)),
+    STAR_EMPTY(441, PropertiesReader.getProperty(PropertyKeys.STAR_EMPTY)),
+    VEHICLE_NOT_EXIST(442, PropertiesReader.getProperty(PropertyKeys.VEHICLE_NOT_EXIST));
 
     private Integer status;
 

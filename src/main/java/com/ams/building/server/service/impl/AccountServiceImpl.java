@@ -1,15 +1,20 @@
 package com.ams.building.server.service.impl;
 
 import com.ams.building.server.bean.Account;
+import com.ams.building.server.bean.Apartment;
 import com.ams.building.server.bean.Position;
 import com.ams.building.server.bean.Role;
+import com.ams.building.server.bean.RoomNumber;
 import com.ams.building.server.constant.Constants;
 import com.ams.building.server.constant.StatusCode;
 import com.ams.building.server.dao.AccountDAO;
+import com.ams.building.server.dao.ApartmentDAO;
 import com.ams.building.server.exception.RestApiException;
 import com.ams.building.server.request.ApartmentOwnerRequest;
+import com.ams.building.server.request.PasswordRequest;
 import com.ams.building.server.request.ResidentRequest;
 import com.ams.building.server.request.UpdateResidentRequest;
+import com.ams.building.server.response.AccountAppResponse;
 import com.ams.building.server.response.LoginResponse;
 import com.ams.building.server.response.UserPrincipal;
 import com.ams.building.server.service.AccountService;
@@ -30,6 +35,7 @@ import java.util.Objects;
 
 import static com.ams.building.server.utils.ValidateUtil.isEmail;
 import static com.ams.building.server.utils.ValidateUtil.isIdentifyCard;
+import static com.ams.building.server.utils.ValidateUtil.isPassword;
 import static com.ams.building.server.utils.ValidateUtil.isPhoneNumber;
 
 @Transactional
@@ -38,6 +44,9 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
 
     @Autowired
     private AccountDAO accountDao;
+
+    @Autowired
+    private ApartmentDAO apartmentDAO;
 
     @Override
     public void add(LoginResponse loginResponse) {
@@ -445,6 +454,141 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
 
     @Override
     public void forwardPassword(String email) {
+    }
+
+    @Override
+    public AccountAppResponse detailAccountApp(Long id) {
+        if (Objects.isNull(id)) {
+            throw new RestApiException(StatusCode.DATA_EMPTY);
+        }
+        Account account = accountDao.getAccountById(id);
+        if (Objects.isNull(account)) {
+            throw new RestApiException(StatusCode.ACCOUNT_NOT_EXIST);
+        }
+        AccountAppResponse response = convertToAccountApp(account);
+        return response;
+    }
+
+    @Override
+    public void updateAccountAppByName(String name, Long id) {
+        if (StringUtils.isEmpty(name)) {
+            throw new RestApiException(StatusCode.NAME_EMPTY);
+        }
+        Account currenAccount = accountDao.getAccountById(id);
+        if (Objects.isNull(currenAccount)) {
+            throw new RestApiException(StatusCode.ACCOUNT_NOT_EXIST);
+        }
+        currenAccount.setName(name);
+        accountDao.save(currenAccount);
+    }
+
+    @Override
+    public void updateAccountAppByIdentifyCard(String identifyCard, Long id) {
+        if (StringUtils.isEmpty(identifyCard)) {
+            throw new RestApiException(StatusCode.IDENTIFY_CARD_EMPTY);
+        }
+        if (!isIdentifyCard(identifyCard)) {
+            throw new RestApiException(StatusCode.IDENTIFY_CARD_NOT_RIGHT);
+        }
+        Account currenAccount = accountDao.getAccountById(id);
+        if (Objects.isNull(currenAccount)) {
+            throw new RestApiException(StatusCode.ACCOUNT_NOT_EXIST);
+        }
+        if (currenAccount.getIdentifyCard().equals(identifyCard)) {
+            throw new RestApiException(StatusCode.IDENTIFY_CARD_DUPLICATE);
+        }
+        currenAccount.setIdentifyCard(identifyCard);
+        accountDao.save(currenAccount);
+    }
+
+    @Override
+    public void updateAccountAppByDob(String dob, Long id) {
+        if (StringUtils.isEmpty(dob)) {
+            throw new RestApiException(StatusCode.DOB_EMPTY);
+        }
+        Account currenAccount = accountDao.getAccountById(id);
+        if (Objects.isNull(currenAccount)) {
+            throw new RestApiException(StatusCode.ACCOUNT_NOT_EXIST);
+        }
+        currenAccount.setDob(dob);
+        accountDao.save(currenAccount);
+    }
+
+    @Override
+    public void updateAccountAppByPhoneNumber(String phoneNumber, Long id) {
+        if (StringUtils.isEmpty(phoneNumber)) {
+            throw new RestApiException(StatusCode.PHONE_EMPTY);
+        }
+        if (!isPhoneNumber(phoneNumber)) {
+            throw new RestApiException(StatusCode.PHONE_NUMBER_NOT_RIGHT_FORMAT);
+        }
+        Account currenAccount = accountDao.getAccountById(id);
+        if (Objects.isNull(currenAccount)) {
+            throw new RestApiException(StatusCode.ACCOUNT_NOT_EXIST);
+        }
+        currenAccount.setPhone(phoneNumber);
+        accountDao.save(currenAccount);
+    }
+
+    @Override
+    public void updateAccountAppByCurrentAddress(String currentAddress, Long id) {
+        if (StringUtils.isEmpty(currentAddress)) {
+            throw new RestApiException(StatusCode.CURRENT_ADDRESS_EMPTY);
+        }
+        Account currenAccount = accountDao.getAccountById(id);
+        if (Objects.isNull(currenAccount)) {
+            throw new RestApiException(StatusCode.ACCOUNT_NOT_EXIST);
+        }
+        currenAccount.setCurrentAddress(currentAddress);
+        accountDao.save(currenAccount);
+    }
+
+    @Override
+    public void changePassword(Long id, PasswordRequest request) {
+        if (StringUtils.isEmpty(id)) {
+            throw new RestApiException(StatusCode.DATA_EMPTY);
+        }
+        if (StringUtils.isEmpty(request.getNewPassword())) {
+            throw new RestApiException(StatusCode.PASSWORD_EMPTY);
+        }
+        if (!isPassword(request.getNewPassword())) {
+            throw new RestApiException(StatusCode.PASSWORD_NOT_RIGHT_FORMAT);
+        }
+        if (!request.getNewPassword().equals(request.getConfirmPassword())) {
+            throw new RestApiException(StatusCode.PASSWORD_AND_CONFIRM_PASSWORD_NOT_MATCH);
+        }
+        Account currenAccount = accountDao.getAccountById(id);
+        if (Objects.isNull(currenAccount)) {
+            throw new RestApiException(StatusCode.ACCOUNT_NOT_EXIST);
+        }
+        if (PasswordGenerator.checkHashStrings(currenAccount.getPassword(), request.getNewPassword())) {
+            throw new RestApiException(StatusCode.PASSWORD_USED);
+        }
+        currenAccount.setPassword(PasswordGenerator.getHashString(request.getNewPassword()));
+        accountDao.save(currenAccount);
+    }
+
+    private AccountAppResponse convertToAccountApp(Account account) {
+        AccountAppResponse response = AccountAppResponse.builder().build();
+        Apartment apartment = apartmentDAO.getApartmentByAccountId(account.getId());
+        if (Objects.isNull(apartment)) {
+            throw new RestApiException(StatusCode.APARTMENT_NOT_EXIST);
+        }
+        RoomNumber roomNumber = apartment.getRoomNumber();
+        if (Objects.isNull(roomNumber)) {
+            throw new RestApiException(StatusCode.ROOM_NUMBER_NOT_EXIST);
+        }
+        response.setId(account.getId());
+        response.setName(account.getName());
+        response.setRoomNumber(roomNumber.getRoomName());
+        response.setDob(account.getDob());
+        response.setIdentifyCard(account.getIdentifyCard());
+        response.setEmail(account.getEmail());
+        response.setPhoneNumber(account.getPhone());
+        response.setCurrentAddress(account.getCurrentAddress());
+        response.setImageAvatar(account.getImage());
+        response.setPassword(PasswordGenerator.getHashString(account.getPassword()));
+        return response;
     }
 
     private Long addResident(ResidentRequest residentRequest) {

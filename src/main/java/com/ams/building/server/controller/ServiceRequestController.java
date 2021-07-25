@@ -2,6 +2,7 @@ package com.ams.building.server.controller;
 
 import com.ams.building.server.constant.Constants;
 import com.ams.building.server.response.ApiResponse;
+import com.ams.building.server.response.HistoryRequestServiceResponse;
 import com.ams.building.server.response.RequestServiceResponse;
 import com.ams.building.server.response.StatusServiceResponse;
 import com.ams.building.server.service.RequestServiceService;
@@ -67,6 +68,15 @@ public class ServiceRequestController {
         requestServiceService.updateStatusRequest(statusId, requestId);
         ResponseEntity<String> response = new ResponseEntity<>("Update Success", HttpStatus.OK);
         logger.debug("updateStatusRequestService response: " + new Gson().toJson(response));
+        return response;
+    }
+
+    @GetMapping(Constants.UrlPath.URL_API_REQUEST_SERVICE_REGISTER_APP + "/{id}")
+    public ResponseEntity<?> serviceRequestInApp(@PathVariable("id") Long id, @RequestParam("statusId") Long statusId) {
+        logger.debug("serviceRequestInApp : request " + id + "-" + statusId);
+        List<HistoryRequestServiceResponse> serviceResponses = requestServiceService.historyServiceResponse(id, statusId);
+        ResponseEntity<List<HistoryRequestServiceResponse>> response = new ResponseEntity<>(serviceResponses, HttpStatus.OK);
+        logger.debug("serviceRequestInApp : response " + new Gson().toJson(response));
         return response;
     }
 

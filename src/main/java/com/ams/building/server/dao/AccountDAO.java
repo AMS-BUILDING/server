@@ -10,6 +10,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 @Repository
 public interface AccountDAO extends JpaRepository<Account, Long> {
@@ -35,5 +36,8 @@ public interface AccountDAO extends JpaRepository<Account, Long> {
 
     @Query("SELECT a FROM Account  a WHERE a.id =?1")
     Account getAccountById(Long id);
+
+    @Query("SELECT a FROM Account a WHERE a.role.id IN (1,2)")
+    List<Account> managementAccount();
 
 }
