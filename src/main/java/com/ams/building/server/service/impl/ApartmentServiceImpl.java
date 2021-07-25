@@ -4,8 +4,10 @@ import com.ams.building.server.bean.Account;
 import com.ams.building.server.bean.Apartment;
 import com.ams.building.server.bean.Block;
 import com.ams.building.server.bean.FloorBlock;
+import com.ams.building.server.bean.Position;
 import com.ams.building.server.bean.RoomNumber;
 import com.ams.building.server.constant.Constants;
+import com.ams.building.server.constant.RoleEnum;
 import com.ams.building.server.constant.StatusCode;
 import com.ams.building.server.dao.AccountDAO;
 import com.ams.building.server.dao.ApartmentDAO;
@@ -177,6 +179,33 @@ public class ApartmentServiceImpl implements ApartmentService {
         return responses;
     }
 
+    @Override
+    public List<AccountResponse> dependentPerson(Long id) {
+        if (Objects.isNull(id)) {
+            throw new RestApiException(StatusCode.DATA_EMPTY);
+        }
+        Account account = accountDAO.getAccountById(id);
+        if (Objects.isNull(account)) {
+            throw new RestApiException(StatusCode.ACCOUNT_NOT_EXIST);
+        }
+        Apartment apartment = apartmentDAO.getApartmentByAccountId(id);
+        if (Objects.isNull(apartment)) {
+            throw new RestApiException(StatusCode.APARTMENT_NOT_EXIST);
+        }
+        RoomNumber roomNumber = apartment.getRoomNumber();
+        if (Objects.isNull(roomNumber)) {
+            throw new RestApiException(StatusCode.ROOM_NUMBER_NOT_EXIST);
+        }
+        String roles = RoleEnum.ROLE_TENANT.toString();
+        List<Apartment> apartments = apartmentDAO.searchResidentByNameRoomNumberAndPhoneList("", roomNumber.getRoomName(), "", roles);
+        List<AccountResponse> residentResponses = new ArrayList<>();
+        for (Apartment a : apartments) {
+            AccountResponse response = convertApartmentToAccountResponse(a);
+            residentResponses.add(response);
+        }
+        return residentResponses;
+    }
+
     private RoomNumberResponse convertRoomNumberToDTO(Apartment apartment) {
         RoomNumberResponse response = RoomNumberResponse.builder()
                 .apartmentId(apartment.getId())
@@ -255,13 +284,33 @@ public class ApartmentServiceImpl implements ApartmentService {
     }
 
     private AccountResponse convertApartmentToAccountResponse(Apartment apartment) {
+        Account account = apartment.getAccount();
+        if (Objects.isNull(account)) {
+            throw new RestApiException(StatusCode.ACCOUNT_NOT_EXIST);
+        }
+        RoomNumber roomNumber = apartment.getRoomNumber();
+        if (Objects.isNull(roomNumber)) {
+            throw new RestApiException(StatusCode.ROOM_NUMBER_NOT_EXIST);
+        }
+        FloorBlock floorBlock = roomNumber.getFloorBlock();
+        if (Objects.isNull(floorBlock)) {
+            throw new RestApiException(StatusCode.FLOOR_BLOCK_NOT_EXIST);
+        }
+        Block block = floorBlock.getBlock();
+        if (Objects.isNull(block)) {
+            throw new RestApiException(StatusCode.BLOCK_NOT_EXIST);
+        }
+        Position position = account.getPosition();
         AccountResponse response = AccountResponse.builder()
                 .apartmentId(apartment.getId())
-                .accountId(apartment.getAccount().getId())
-                .roomNumber(apartment.getRoomNumber().getRoomName())
-                .blockName(apartment.getRoomNumber().getFloorBlock().getBlock().getBlockName())
-                .name(apartment.getAccount().getName())
-                .phone(apartment.getAccount().getPhone())
+                .accountId(account.getId())
+                .roomNumber(roomNumber.getRoomName())
+                .blockName(block.getBlockName())
+                .name(account.getName())
+                .phone(account.getPhone())
+                .dob(account.getDob())
+                .identifyCard(account.getIdentifyCard())
+                .relationShip(position == null ? "Chủ hộ" : position.getName())
                 .build();
         return response;
     }

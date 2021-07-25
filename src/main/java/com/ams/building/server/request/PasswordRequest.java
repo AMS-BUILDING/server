@@ -7,10 +7,9 @@ import lombok.Setter;
 @Builder
 @Getter
 @Setter
-public class FeedbackRequest {
+public class PasswordRequest {
 
-    private Long accountId;
-    private Integer star;
-    private String description;
+    private String newPassword;
+    private String confirmPassword;
 
 }

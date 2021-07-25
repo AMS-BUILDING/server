@@ -1,15 +1,18 @@
 package com.ams.building.server.service.impl;
 
+import com.ams.building.server.bean.Account;
 import com.ams.building.server.bean.Apartment;
 import com.ams.building.server.bean.RequestService;
 import com.ams.building.server.bean.StatusServiceRequest;
 import com.ams.building.server.constant.RoleEnum;
 import com.ams.building.server.constant.StatusCode;
+import com.ams.building.server.dao.AccountDAO;
 import com.ams.building.server.dao.ApartmentDAO;
 import com.ams.building.server.dao.RequestServiceDAO;
 import com.ams.building.server.dao.StatusRequestServiceDAO;
 import com.ams.building.server.exception.RestApiException;
 import com.ams.building.server.response.ApiResponse;
+import com.ams.building.server.response.HistoryRequestServiceResponse;
 import com.ams.building.server.response.RequestServiceResponse;
 import com.ams.building.server.response.StatusServiceResponse;
 import com.ams.building.server.service.RequestServiceService;
@@ -26,6 +29,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import static com.ams.building.server.utils.DateTimeUtils.DD_MM_YYYY;
+import static com.ams.building.server.utils.DateTimeUtils.HH_MM;
+import static com.ams.building.server.utils.DateTimeUtils.convertDateToStringWithTimezone;
+
 @Transactional
 @Service
 public class RequestServiceServiceImpl implements RequestServiceService {
@@ -40,6 +47,9 @@ public class RequestServiceServiceImpl implements RequestServiceService {
 
     @Autowired
     private ApartmentDAO apartmentDAO;
+
+    @Autowired
+    private AccountDAO accountDAO;
 
     @Override
     public List<StatusServiceResponse> statusResponses() {
@@ -90,6 +100,21 @@ public class RequestServiceServiceImpl implements RequestServiceService {
         requestServiceDAO.updateStatus(statusId, requestId);
     }
 
+    @Override
+    public List<HistoryRequestServiceResponse> historyServiceResponse(Long id, Long statusId) {
+        if (StringUtils.isEmpty(id) || StringUtils.isEmpty(statusId)) {
+            throw new RestApiException(StatusCode.DATA_EMPTY);
+        }
+        Account account = accountDAO.getAccountById(id);
+        if (Objects.isNull(account)) {
+            throw new RestApiException(StatusCode.ACCOUNT_NOT_EXIST);
+        }
+        List<RequestService> requestServiceByAccountId = requestServiceDAO.requestServiceByAccountId(id, statusId);
+        List<HistoryRequestServiceResponse> responses = new ArrayList<>();
+        requestServiceByAccountId.forEach(s -> responses.add(convertToHistoryResponse(s)));
+        return responses;
+    }
+
     private StatusServiceResponse covertToStatusRequestResponse(StatusServiceRequest request) {
         StatusServiceResponse response = StatusServiceResponse.builder().build();
         response.setId(request.getId());
@@ -108,6 +133,19 @@ public class RequestServiceServiceImpl implements RequestServiceService {
         response.setStatus(requestService.getStatusServiceRequest().getRequestName());
         response.setRoomName(apartment.getRoomNumber().getRoomName());
         response.setName(requestService.getAccount().getName());
+        return response;
+    }
+
+    private HistoryRequestServiceResponse convertToHistoryResponse(RequestService requestService) {
+        HistoryRequestServiceResponse response = HistoryRequestServiceResponse.builder().build();
+        String serviceName = requestService.getReasonDetailSubService().getDetailSubService().getService().getSubServiceName();
+        String firstDescription = requestService.getStatusServiceRequest().getId() == 3 ? "Đã đăng kí thành công dịch vụ " : "Yêu cầu dịch vụ ";
+        String serviceNameFirst = requestService.getStatusServiceRequest().getId() == 3 ? "Sử dụng dịch vụ " : "Yêu cầu dịch vụ ";
+        String date = convertDateToStringWithTimezone(requestService.getStartDate(), DD_MM_YYYY, null);
+        String time = convertDateToStringWithTimezone(requestService.getStartDate(), HH_MM, null);
+        response.setId(requestService.getId());
+        response.setServiceName(serviceNameFirst + serviceName + " - " + date);
+        response.setDescription(firstDescription + serviceName + " vào lúc " + time + " ngày " + date);
         return response;
     }
 

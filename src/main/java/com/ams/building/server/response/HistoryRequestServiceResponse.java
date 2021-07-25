@@ -7,12 +7,10 @@ import lombok.Setter;
 @Builder
 @Getter
 @Setter
-public class FeedbackResponse {
+public class HistoryRequestServiceResponse {
 
-    private Long feedbackId;
+    private Long id;
+    private String serviceName;
     private String description;
-    private Integer star;
-    private String name;
-    private String createdDate;
 
 }

@@ -7,6 +7,7 @@ import java.util.Random;
 /*we can use 'MD5 password encoder' or 'SHA encryption algorithms', but spring recommend
  * us to use 'BCryptPasswordEncoder' a more stable and strong encryption algorithms.*/
 public class PasswordGenerator {
+
     private static final int strength = 12;
 
     // BCryptPasswordEncoder method

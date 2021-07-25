@@ -1,6 +1,7 @@
 package com.ams.building.server.service;
 
 import com.ams.building.server.response.ApiResponse;
+import com.ams.building.server.response.HistoryRequestServiceResponse;
 import com.ams.building.server.response.RequestServiceResponse;
 import com.ams.building.server.response.StatusServiceResponse;
 
@@ -15,5 +16,7 @@ public interface RequestServiceService {
     RequestServiceResponse getRequestServiceById(Long id);
 
     void updateStatusRequest(Long statusId, Long requestId);
+
+    List<HistoryRequestServiceResponse> historyServiceResponse(Long id, Long statusId);
 
 }

@@ -42,6 +42,9 @@ public class Feedback implements Serializable {
     @Column(name = "description")
     private String description;
 
+    @Column(name = "star")
+    private Integer star;
+
     @Column(name = "created_date")
     private Date createdDate;
 

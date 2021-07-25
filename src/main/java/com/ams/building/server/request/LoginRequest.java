@@ -9,8 +9,6 @@ import lombok.Setter;
 @Builder
 @Getter
 @Setter
-@AllArgsConstructor
-@NoArgsConstructor
 public class LoginRequest {
 
     private String username;
