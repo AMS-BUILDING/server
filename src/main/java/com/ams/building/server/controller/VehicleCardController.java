@@ -41,7 +41,6 @@ public class VehicleCardController {
                                                @RequestParam(value = "phoneNumber", required = false, defaultValue = "") String phoneNumber,
                                                @RequestParam(value = "lincesPlates", required = false, defaultValue = "") String lincesPlates,
                                                @RequestParam(value = "statusId", required = false, defaultValue = "-1") Long statusId) {
-
         logger.debug("searchVehicleCard request : " + owverName + " - " + phoneNumber + " - " + lincesPlates + "-" + statusId);
         Integer pageSize = 5;
         ApiResponse apiResponse = vehicleCardService.searchVehicleCard(pageNo, pageSize, owverName, phoneNumber, lincesPlates, statusId);

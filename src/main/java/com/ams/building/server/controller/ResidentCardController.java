@@ -63,4 +63,5 @@ public class ResidentCardController {
         logger.debug("addResidentCard response : " + new Gson().toJson(response));
         return response;
     }
+
 }

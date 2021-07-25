@@ -36,7 +36,6 @@ public class ServiceRequestController {
                                                   @RequestParam(value = "name", required = false, defaultValue = "") String name,
                                                   @RequestParam(value = "serviceName", required = false, defaultValue = "") String serviceName,
                                                   @RequestParam(value = "statusId", required = false, defaultValue = "-1") Long statusId) {
-
         logger.debug("searchRequestService request : " + name + " - " + serviceName + " - " + statusId);
         Integer pageSize = 5;
         ApiResponse apiResponse = requestServiceService.searchServiceRequest(pageSize, pageNo, name, serviceName, statusId);
