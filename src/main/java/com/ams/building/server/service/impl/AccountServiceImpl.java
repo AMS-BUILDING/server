@@ -741,6 +741,8 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
         Position position = new Position();
         position.setId(residentRequest.getPositionId());
         account.setPosition(position);
+        account.setCurrentAddress(residentRequest.getCurrentAddress());
+        account.setHomeTown(residentRequest.getHomeTown());
         accountDao.save(account);
         return account.getId();
     }
