@@ -1,7 +1,10 @@
 package com.ams.building.server.utils;
 
+import org.apache.commons.lang.RandomStringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -11,7 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FileStore {
-    public static String UPLOAD_FOLDER = "E:\\abd";// "/Volumes/Data/files/";//
+
+    public static String UPLOAD_FOLDER = "./image/";// "/Volumes/Data/files/";//
 
     public static List<String> getFilePaths(List<MultipartFile> multipartFiles, String prefix) {
         List<String> images = new ArrayList<>();
@@ -38,6 +42,18 @@ public class FileStore {
         }
         return images;
     }
+
+    public static String getDefaultAvatar() {
+        try {
+            String fileName = "avatar" + RandomStringUtils.random(10, true, true);
+            BufferedImage image = ImageIO.read(new File("./image/avatar_default.png"));
+            ImageIO.write(image, "png", new File("./image/" + fileName + ".png"));
+            return fileName;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
 
     public static String getFilePath(MultipartFile multipartFile, String prefix) {
         if (multipartFile != null && !multipartFile.isEmpty()) {

@@ -151,7 +151,7 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
         account.setPhone(loginResponse.getPhone());
         account.setCurrentAddress(loginResponse.getCurrentAddress());
         account.setName(loginResponse.getName());
-        Role role =new Role();
+        Role role = new Role();
         role.setId(loginResponse.getRoleId());
         account.setRole(role);
         account.setDob(loginResponse.getDob());
@@ -393,19 +393,19 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
         account.setPassword(Constants.DEFAULT_PASSWORD);
         account.setGender(ownerRequest.getGender());
         account.setIdentifyCard(ownerRequest.getIdentifyCard());
+        account.setImage(FileStore.getDefaultAvatar());
         account.setEnabled(true);
         account.setPhone(ownerRequest.getPhone());
         account.setCurrentAddress(ownerRequest.getCurrentAddress());
         account.setName(ownerRequest.getName());
-        account.setImage(Constants.DEFAULT_AVATAR);
         Role role = new Role();
         role.setId(3L);
         account.setRole(role);
         account.setDob(ownerRequest.getDob());
         account.setHomeTown(ownerRequest.getHomeTown());
         accountDao.save(account);
-        Long id = account.getId();
-        return id;
+        Long accountId = account.getId();
+        return accountId;
     }
 
     @Override
@@ -737,7 +737,7 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
         account.setPhone(residentRequest.getPhone());
         account.setGender(residentRequest.getGender());
         account.setDob(residentRequest.getDob());
-        account.setImage(Constants.DEFAULT_AVATAR);
+        account.setImage(FileStore.getDefaultAvatar());
         Position position = new Position();
         position.setId(residentRequest.getPositionId());
         account.setPosition(position);

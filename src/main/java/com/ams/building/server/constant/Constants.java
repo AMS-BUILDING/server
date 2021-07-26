@@ -15,8 +15,6 @@ public class Constants {
 
     public static final String DEFAULT_PASSWORD_ENCODE = "123456";
 
-    public static final String DEFAULT_AVATAR = "avatar_default.png";
-
     public class UrlPath {
 
         private UrlPath() {
