@@ -6,6 +6,7 @@ import com.ams.building.server.constant.PropertyKeys;
 import com.ams.building.server.constant.StatusCode;
 import com.ams.building.server.dao.SendEmailAccountDAO;
 import com.ams.building.server.exception.RestApiException;
+import com.ams.building.server.request.ForwardPasswordRequest;
 import com.ams.building.server.request.PasswordRequest;
 import com.ams.building.server.response.AccountAppResponse;
 import com.ams.building.server.response.LoginResponse;
@@ -23,6 +24,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -49,7 +51,7 @@ public class AccountController {
     private EmailService emailService;
 
     @PostMapping(Constants.UrlPath.URL_API_UPDATE_PROFILE_ACCOUNT)
-    public ResponseEntity<?> updateAccountProfile(@RequestBody LoginResponse accountDTO) {
+    public ResponseEntity<?> updateAccountProfile(@ModelAttribute LoginResponse accountDTO) {
         logger.debug(" updateAccountProfile: request " + new Gson().toJson(accountDTO));
         UserPrincipal currentUser = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication()
                 .getPrincipal();
@@ -64,26 +66,27 @@ public class AccountController {
     public ResponseEntity<?> sendEmail(@RequestParam(name = "email", required = false, defaultValue = "") String email) throws MessagingException {
         String token = RandomNumber.getRandomNumberString();
         emailService.updateResetPasswordToken(token, email);
-        String resetPassWordLink = "/forward-password?token=" + token;
+        String resetPassWordLink = "/forward-password";
         StringBuilder content = new StringBuilder();
-        content.append("Hello");
-        content.append(" <p>You have requested to reset your password </p>");
-        content.append(" <p>Click the link below to change your password </p>");
-        content.append(" <p><b><a href=\"" + resetPassWordLink + "\"> Change my Password </a><b></p>");
-        content.append("<p> Ignore this email if you do remember your password , or you havav not made the request</p>");
-        content.append("<p>   your code  is :   \"" + token + "\"   </p>");
+        content.append("Xin chào");
+        content.append(" <p>Bạn đã yêu cầu đặt lại mật khẩu của mình </p>");
+        content.append(" <p> Ấn vào link dưới đây để thay đổi mật khẩu của bạn </p>");
+        content.append(" <p><b><a href=\"" + resetPassWordLink + "\"> Thay đổi mật khẩu</a><b></p>");
+        content.append("<p> Bỏ qua email này nếu bạn nhớ mật khẩu của mình hoặc bạn chưa thực hiện yêu cầu</p>");
+        content.append("<p>   Mã xác nhận  là :   \"" + token + "\"   </p>");
         emailService.sendSimpleMessage(email, PropertiesReader.getProperty(PropertyKeys.SEND_EMAIL), content.toString());
         ResponseEntity<String> response = new ResponseEntity<>("Send Link  Forward Password Success", HttpStatus.OK);
         return response;
     }
 
     @PostMapping(Constants.UrlPath.URL_API_RESET_PASSWORD)
-    public ResponseEntity<?> resetPassword(@RequestParam(name = "token", required = false, defaultValue = "") String token, @RequestParam(name = "password", required = false, defaultValue = "") String password) {
+    public ResponseEntity<?> resetPassword(@RequestBody ForwardPasswordRequest forwardPasswordRequest) {
+        String token = forwardPasswordRequest.getToken();
         Account account = sendEmailAccountDao.findAccountByResetPasswordToken(token);
         if (Objects.isNull(account)) {
-            throw new RestApiException(StatusCode.ACCOUNT_NOT_EXIST);
+            throw new RestApiException(StatusCode.CODE_NOT_RIGHT);
         }
-        emailService.updatePassWord(account, password);
+        emailService.updatePassWord(account, forwardPasswordRequest.getPassword());
         ResponseEntity<String> response = new ResponseEntity<>("Reset Password Success", HttpStatus.OK);
         return response;
     }

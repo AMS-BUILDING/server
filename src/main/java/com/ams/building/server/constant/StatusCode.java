@@ -50,7 +50,8 @@ public enum StatusCode {
     BUILDING_NOT_EXIST(443, PropertiesReader.getProperty(PropertyKeys.BUILDING_NOT_EXIST)),
     EMAIL_REGISTER_BEFORE(444, PropertiesReader.getProperty(PropertyKeys.EMAIL_REGISTER_BEFORE)),
     DUPLICATE_EMAIL_IN_LIST_RESIDENT(445, PropertiesReader.getProperty(PropertyKeys.DUPLICATE_EMAIL_IN_LIST_RESIDENT)),
-    DUPLICATE_IDENTIFY_CARD_IN_LIST_RESIDENT(446, PropertiesReader.getProperty(PropertyKeys.DUPLICATE_IDENTIFY_CARD_IN_LIST_RESIDENT));
+    DUPLICATE_IDENTIFY_CARD_IN_LIST_RESIDENT(446, PropertiesReader.getProperty(PropertyKeys.DUPLICATE_IDENTIFY_CARD_IN_LIST_RESIDENT)),
+    CODE_NOT_RIGHT(447, PropertiesReader.getProperty(PropertyKeys.CODE_NOT_RIGHT));
 
     private Integer status;
 
