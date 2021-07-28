@@ -180,7 +180,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         account.setEnabled(true);
         Position position = positionDAO.getOne(request.getPosition());
         account.setPosition(position);
-        Role role = roleDAO.getOne(4L);
+        Role role = roleDAO.getById(4L);
         account.setRole(role);
         accountDao.save(account);
     }
@@ -243,7 +243,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         response.setHomeTown(account.getHomeTown());
         response.setIdentifyCard(account.getIdentifyCard());
         String gender;
-        if (account.getGender() == true) {
+        if (account.getGender()) {
             gender = Constants.AccountGender.GENDER_MALE;
         } else {
             gender = Constants.AccountGender.GENDER_FEMALE;

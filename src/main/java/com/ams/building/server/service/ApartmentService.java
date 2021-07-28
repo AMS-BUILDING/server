@@ -22,8 +22,6 @@ public interface ApartmentService {
 
     ApiResponse accountOfApartment(String name, String roomNumber, String phone, Integer page, Integer size);
 
-    void disableApartment(Long id);
-
     List<BlockResponse> blockList();
 
     List<FloorResponse> floorList(Long blockId);

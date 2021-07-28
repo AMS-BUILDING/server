@@ -168,13 +168,45 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
 
     @Override
     public void updateProfile(LoginResponse loginResponse) {
+        if (Objects.isNull(loginResponse)) {
+            throw new RestApiException(StatusCode.DATA_EMPTY);
+        }
         Account account = accountDao.getAccountById(loginResponse.getId());
         if (Objects.isNull(account)) {
             throw new RestApiException(StatusCode.ACCOUNT_NOT_EXIST);
         }
+        if (StringUtils.isEmpty(loginResponse.getName())) {
+            throw new RestApiException(StatusCode.NAME_EMPTY);
+        }
+        if (StringUtils.isEmpty(loginResponse.getPhone())) {
+            throw new RestApiException(StatusCode.PHONE_EMPTY);
+        }
+        if (StringUtils.isEmpty(loginResponse.getDob())) {
+            throw new RestApiException(StatusCode.DOB_EMPTY);
+        }
+        if (StringUtils.isEmpty(loginResponse.getHomeTown())) {
+            throw new RestApiException(StatusCode.HOME_TOWN_EMPTY);
+        }
+        if (StringUtils.isEmpty(loginResponse.getCurrentAddress())) {
+            throw new RestApiException(StatusCode.CURRENT_ADDRESS_EMPTY);
+        }
+        if (StringUtils.isEmpty(loginResponse.getIdentifyCard())) {
+            throw new RestApiException(StatusCode.IDENTIFY_CARD_EMPTY);
+        }
+        if (!isIdentifyCard(loginResponse.getIdentifyCard())) {
+            throw new RestApiException(StatusCode.IDENTIFY_CARD_NOT_RIGHT);
+        }
+        List<String> identifyCards = new ArrayList<>();
+        identifyCards.add(loginResponse.getIdentifyCard());
+        Account currentAccount = accountDao.getAccountByListIdentifyCard(identifyCards).get(0);
+        if (!account.getIdentifyCard().equalsIgnoreCase(loginResponse.getIdentifyCard()) && Objects.nonNull(currentAccount)) {
+            throw new RestApiException(StatusCode.IDENTIFY_CARD_DUPLICATE);
+        }
         account.setName(loginResponse.getName());
         account.setPhone(loginResponse.getPhone());
         account.setImage(loginResponse.getImage());
+        account.setHomeTown(loginResponse.getHomeTown());
+        account.setCurrentAddress(loginResponse.getCurrentAddress());
         accountDao.save(account);
     }
 
@@ -217,51 +249,6 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
 
     @Override
     public Long addApartmentOwner(ApartmentOwnerRequest ownerRequest) {
-        if (Objects.isNull(ownerRequest)) {
-            throw new RestApiException(StatusCode.DATA_EMPTY);
-        }
-        if (StringUtils.isEmpty(ownerRequest.getName())) {
-            throw new RestApiException(StatusCode.NAME_EMPTY);
-        }
-        if (StringUtils.isEmpty(ownerRequest.getDob())) {
-            throw new RestApiException(StatusCode.DOB_EMPTY);
-        }
-        if (StringUtils.isEmpty(ownerRequest.getEmail())) {
-            throw new RestApiException(StatusCode.EMAIL_EMPTY);
-        }
-        if (StringUtils.isEmpty(ownerRequest.getPhone())) {
-            throw new RestApiException(StatusCode.PHONE_EMPTY);
-        }
-        if (StringUtils.isEmpty(ownerRequest.getCurrentAddress())) {
-            throw new RestApiException(StatusCode.CURRENT_ADDRESS_EMPTY);
-        }
-        if (StringUtils.isEmpty(ownerRequest.getIdentifyCard())) {
-            throw new RestApiException(StatusCode.IDENTIFY_CARD_EMPTY);
-        }
-        if (StringUtils.isEmpty(ownerRequest.getHomeTown())) {
-            throw new RestApiException(StatusCode.HOME_TOWN_EMPTY);
-        }
-        if (!isEmail(ownerRequest.getEmail())) {
-            throw new RestApiException(StatusCode.EMAIL_NOT_RIGHT_FORMAT);
-        }
-        if (!isIdentifyCard(ownerRequest.getIdentifyCard())) {
-            throw new RestApiException(StatusCode.IDENTIFY_CARD_NOT_RIGHT);
-        }
-        if (!isPhoneNumber(ownerRequest.getPhone())) {
-            throw new RestApiException(StatusCode.PHONE_NUMBER_NOT_RIGHT_FORMAT);
-        }
-        List<String> emails = new ArrayList<>();
-        emails.add(ownerRequest.getEmail());
-        Account currentAccount = accountDao.getAccountByListEmail(emails).get(0);
-        if (Objects.nonNull(currentAccount)) {
-            throw new RestApiException(StatusCode.IDENTIFY_CARD_DUPLICATE);
-        }
-        List<String> identifyCards = new ArrayList<>();
-        identifyCards.add(ownerRequest.getIdentifyCard());
-        Account currentAccountDuplicate = accountDao.getAccountByListIdentifyCard(identifyCards).get(0);
-        if (Objects.nonNull(currentAccountDuplicate)) {
-            throw new RestApiException(StatusCode.IDENTIFY_CARD_DUPLICATE);
-        }
         Account account = new Account();
         account.setEmail(ownerRequest.getEmail());
         account.setPassword(Constants.DEFAULT_PASSWORD);
@@ -278,8 +265,8 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
         account.setDob(ownerRequest.getDob());
         account.setHomeTown(ownerRequest.getHomeTown());
         accountDao.save(account);
-        Long accountId = account.getId();
-        return accountId;
+        Long id = account.getId();
+        return id;
     }
 
     @Override
@@ -296,6 +283,10 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
         if (Objects.isNull(residentRequest)) {
             throw new RestApiException(StatusCode.DATA_EMPTY);
         }
+        Account account = accountDao.getAccountById(residentRequest.getAccountId());
+        if (Objects.isNull(account)) {
+            throw new RestApiException(StatusCode.ACCOUNT_NOT_EXIST);
+        }
         if (StringUtils.isEmpty(residentRequest.getName())) {
             throw new RestApiException(StatusCode.NAME_EMPTY);
         }
@@ -306,27 +297,36 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
             if (!isPhoneNumber(residentRequest.getPhone())) {
                 throw new RestApiException(StatusCode.PHONE_NUMBER_NOT_RIGHT_FORMAT);
             }
+        } else {
+            account.setPhone(null);
         }
         if (!StringUtils.isEmpty(residentRequest.getEmail())) {
             if (!isEmail(residentRequest.getEmail())) {
                 throw new RestApiException(StatusCode.EMAIL_NOT_RIGHT_FORMAT);
             }
+            if (residentRequest.getEmail().equalsIgnoreCase(account.getEmail())) {
+                throw new RestApiException(StatusCode.EMAIL_REGISTER_BEFORE);
+            }
+            account.setEmail(residentRequest.getEmail());
+        } else {
+            account.setEmail(null);
         }
         if (!StringUtils.isEmpty(residentRequest.getIdentifyCard())) {
             if (!isIdentifyCard(residentRequest.getIdentifyCard())) {
-                throw new RestApiException(StatusCode.IDENTIFY_CARD_EMPTY);
+                throw new RestApiException(StatusCode.IDENTIFY_CARD_NOT_RIGHT);
             }
-        }
-        Account account = accountDao.getAccountById(residentRequest.getAccountId());
-        if (Objects.isNull(account)) {
-            throw new RestApiException(StatusCode.ACCOUNT_NOT_EXIST);
+            if (account.getIdentifyCard().equalsIgnoreCase(residentRequest.getIdentifyCard())) {
+                throw new RestApiException(StatusCode.IDENTIFY_CARD_DUPLICATE);
+            }
+            account.setIdentifyCard(residentRequest.getIdentifyCard());
+        } else {
+            account.setIdentifyCard(null);
         }
         account.setName(residentRequest.getName());
         account.setGender(residentRequest.getGender());
         account.setDob(residentRequest.getDob());
-        account.setPhone(residentRequest.getPhone());
-        account.setEmail(residentRequest.getEmail());
-        account.setIdentifyCard(residentRequest.getIdentifyCard());
+        account.setHomeTown(residentRequest.getHomeTown());
+        account.setCurrentAddress(residentRequest.getCurrentAddress());
         accountDao.save(account);
     }
 

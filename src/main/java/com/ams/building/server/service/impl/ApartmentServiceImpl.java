@@ -132,17 +132,17 @@ public class ApartmentServiceImpl implements ApartmentService {
         return response;
     }
 
-    @Override
-    public void disableApartment(Long id) {
-        if (StringUtils.isEmpty(id)) {
-            throw new RestApiException(StatusCode.DATA_EMPTY);
-        }
-        List<Apartment> apartmentList = apartmentDAO.searchAccountByRoomNumberId(id);
-        if (apartmentList.isEmpty()) {
-            throw new RestApiException(StatusCode.APARTMENT_NOT_EXIST);
-        }
-        apartmentList.forEach(apartment -> disableAccount(apartment));
-    }
+//    @Override
+//    public void disableApartment(Long id) {
+//        if (StringUtils.isEmpty(id)) {
+//            throw new RestApiException(StatusCode.DATA_EMPTY);
+//        }
+//        List<Apartment> apartmentList = apartmentDAO.searchAccountByRoomNumberId(id);
+//        if (apartmentList.isEmpty()) {
+//            throw new RestApiException(StatusCode.APARTMENT_NOT_EXIST);
+//        }
+//        apartmentList.forEach(apartment -> disableAccount(apartment));
+//    }
 
     @Override
     public void addOwnerToApartment(Long apartmentId, Long ownerId) {
@@ -410,15 +410,6 @@ public class ApartmentServiceImpl implements ApartmentService {
                 .relationShip(position == null ? "Chủ hộ" : position.getName())
                 .build();
         return response;
-    }
-
-    private void disableAccount(Apartment apartment) {
-        if (Objects.isNull(apartment)) {
-            throw new RestApiException(StatusCode.APARTMENT_NOT_EXIST);
-        }
-        Account account = accountDAO.getAccountById(apartment.getAccount().getId());
-        account.setEnabled(false);
-        accountDAO.save(account);
     }
 
     private BlockResponse convertBlock(Block block) {
