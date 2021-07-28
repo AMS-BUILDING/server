@@ -1,6 +1,7 @@
 package com.ams.building.server.service.impl;
 
 import com.ams.building.server.bean.Account;
+import com.ams.building.server.constant.RoleEnum;
 import com.ams.building.server.dao.AccountDAO;
 import com.ams.building.server.response.ManagerPersonResponse;
 import com.ams.building.server.service.ManagementPersonService;
@@ -22,7 +23,10 @@ public class ManagementPersonServiceImpl implements ManagementPersonService {
 
     @Override
     public List<ManagerPersonResponse> managementPersonServices() {
-        List<Account> managementAccount = accountDAO.managementAccount();
+        List<String> roles = new ArrayList<>();
+        roles.add(RoleEnum.ROLE_ADMIN.toString());
+        roles.add(RoleEnum.ROLE_MANAGER_SERVICE.toString());
+        List<Account> managementAccount = accountDAO.managementAccount(roles);
         List<ManagerPersonResponse> response = new ArrayList<>();
         managementAccount.forEach(a -> response.add(convertToPersonResponse(a)));
         logger.debug("managementPersonServices :" + new Gson().toJson(response));

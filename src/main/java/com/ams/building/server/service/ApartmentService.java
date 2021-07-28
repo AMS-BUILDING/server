@@ -1,5 +1,6 @@
 package com.ams.building.server.service;
 
+import com.ams.building.server.request.ResidentRequest;
 import com.ams.building.server.response.AccountResponse;
 import com.ams.building.server.response.ApiResponse;
 import com.ams.building.server.response.BlockResponse;
@@ -30,5 +31,7 @@ public interface ApartmentService {
     List<RoomNumberResponse> roomNumberList(Long blockId, Long floorId);
 
     List<AccountResponse> dependentPerson(Long id);
+
+    void addResidentToApartment(Long apartmentId, ResidentRequest request);
 
 }

@@ -5,6 +5,7 @@ import com.ams.building.server.bean.Apartment;
 import com.ams.building.server.bean.Block;
 import com.ams.building.server.bean.FloorBlock;
 import com.ams.building.server.bean.Position;
+import com.ams.building.server.bean.Role;
 import com.ams.building.server.bean.RoomNumber;
 import com.ams.building.server.constant.Constants;
 import com.ams.building.server.constant.RoleEnum;
@@ -14,6 +15,7 @@ import com.ams.building.server.dao.ApartmentDAO;
 import com.ams.building.server.dao.BlockDAO;
 import com.ams.building.server.dao.FloorBlockDAO;
 import com.ams.building.server.exception.RestApiException;
+import com.ams.building.server.request.ResidentRequest;
 import com.ams.building.server.response.AccountResponse;
 import com.ams.building.server.response.ApartmentResponse;
 import com.ams.building.server.response.ApiResponse;
@@ -21,6 +23,7 @@ import com.ams.building.server.response.BlockResponse;
 import com.ams.building.server.response.FloorResponse;
 import com.ams.building.server.response.RoomNumberResponse;
 import com.ams.building.server.service.ApartmentService;
+import com.ams.building.server.utils.FileStore;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -39,6 +42,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
+
+import static com.ams.building.server.utils.ValidateUtil.isEmail;
+import static com.ams.building.server.utils.ValidateUtil.isIdentifyCard;
+import static com.ams.building.server.utils.ValidateUtil.isPhoneNumber;
 
 @Transactional
 @Service
@@ -62,7 +69,9 @@ public class ApartmentServiceImpl implements ApartmentService {
     public ApiResponse apartmentList(String roomName, String householderName, Integer page, Integer size) {
         List<ApartmentResponse> apartmentResponses = new ArrayList<>();
         Pageable pageable = PageRequest.of(page, size);
-        Page<Apartment> apartments = apartmentDAO.searchApartmentByRoomNumberHouseholderName(roomName, householderName, pageable);
+        List<String> roles = new ArrayList<>();
+        roles.add(RoleEnum.ROLE_LANDLORD.toString());
+        Page<Apartment> apartments = apartmentDAO.searchResidentByNameRoomNumberAndPhone(householderName, roomName, "", roles, pageable);
 
         for (Apartment a : apartments) {
             ApartmentResponse response = covertApartmentToDTO(a);
@@ -78,7 +87,9 @@ public class ApartmentServiceImpl implements ApartmentService {
     public void exportApartmentList(HttpServletResponse response, String roomName, String householderName) {
         try {
             Pageable pageable = PageRequest.of(0, 50000);
-            Page<Apartment> apartments = apartmentDAO.searchApartmentByRoomNumberHouseholderName(roomName, householderName, pageable);
+            List<String> roles = new ArrayList<>();
+            roles.add(RoleEnum.ROLE_LANDLORD.toString());
+            Page<Apartment> apartments = apartmentDAO.searchResidentByNameRoomNumberAndPhone(householderName, roomName, "", roles, pageable);
             String csvFileName = "ApartmentList.csv";
             response.setContentType(Constants.TEXT_CSV);
             // creates mock data
@@ -107,7 +118,10 @@ public class ApartmentServiceImpl implements ApartmentService {
     public ApiResponse accountOfApartment(String name, String roomNumber, String phone, Integer page, Integer size) {
         List<AccountResponse> residentResponses = new ArrayList<>();
         Pageable pageable = PageRequest.of(page, size);
-        Page<Apartment> apartments = apartmentDAO.searchResidentByNameRoomNumberAndPhone(name, roomNumber, phone, pageable);
+        List<String> roles = new ArrayList<>();
+        roles.add(RoleEnum.ROLE_LANDLORD.toString());
+        roles.add(RoleEnum.ROLE_TENANT.toString());
+        Page<Apartment> apartments = apartmentDAO.searchResidentByNameRoomNumberAndPhone(name, roomNumber, phone, roles, pageable);
 
         for (Apartment apartment : apartments) {
             AccountResponse response = convertApartmentToAccountResponse(apartment);
@@ -196,14 +210,99 @@ public class ApartmentServiceImpl implements ApartmentService {
         if (Objects.isNull(roomNumber)) {
             throw new RestApiException(StatusCode.ROOM_NUMBER_NOT_EXIST);
         }
-        String roles = RoleEnum.ROLE_TENANT.toString();
-        List<Apartment> apartments = apartmentDAO.searchResidentByNameRoomNumberAndPhoneList("", roomNumber.getRoomName(), "", roles);
+        Pageable pageable = PageRequest.of(0, 50000);
+        List<String> roles = new ArrayList<>();
+        roles.add(RoleEnum.ROLE_TENANT.toString());
+        List<Apartment> apartments = apartmentDAO.searchResidentByNameRoomNumberAndPhone("", roomNumber.getRoomName(), "", roles, pageable).toList();
         List<AccountResponse> residentResponses = new ArrayList<>();
         for (Apartment a : apartments) {
             AccountResponse response = convertApartmentToAccountResponse(a);
             residentResponses.add(response);
         }
         return residentResponses;
+    }
+
+    @Override
+    public void addResidentToApartment(Long apartmentId, ResidentRequest request) {
+        if (StringUtils.isEmpty(apartmentId) || Objects.isNull(request)) {
+            throw new RestApiException(StatusCode.DATA_EMPTY);
+        }
+        Apartment apartment = apartmentDAO.getApartmentById(apartmentId);
+        if (Objects.isNull(apartment)) {
+            throw new RestApiException(StatusCode.APARTMENT_NOT_EXIST);
+        }
+        Account account = addAccountRoleResident(request);
+        Apartment newApartment = new Apartment();
+        newApartment.setAccount(account);
+        newApartment.setBuilding(apartment.getBuilding());
+        newApartment.setRoomNumber(apartment.getRoomNumber());
+        apartmentDAO.save(newApartment);
+    }
+
+    private Account addAccountRoleResident(ResidentRequest request) {
+        Account account = new Account();
+        if (Objects.isNull(request)) {
+            throw new RestApiException(StatusCode.DATA_EMPTY);
+        }
+        if (StringUtils.isEmpty(request.getName())) {
+            throw new RestApiException(StatusCode.NAME_EMPTY);
+        }
+        if (!StringUtils.isEmpty(request.getIdentifyCard())) {
+            if (!isIdentifyCard(request.getIdentifyCard())) {
+                throw new RestApiException(StatusCode.IDENTIFY_CARD_NOT_RIGHT);
+            }
+            List<String> identifyCards = new ArrayList<>();
+            identifyCards.add(request.getIdentifyCard());
+            Account currentAccount = accountDAO.getAccountByListIdentifyCard(identifyCards).get(0);
+            if (Objects.nonNull(currentAccount)) {
+                throw new RestApiException(StatusCode.IDENTIFY_CARD_DUPLICATE);
+            }
+            account.setIdentifyCard(request.getIdentifyCard());
+        } else {
+            account.setIdentifyCard(null);
+        }
+        if (!StringUtils.isEmpty(request.getPhone())) {
+            if (!isPhoneNumber(request.getPhone())) {
+                throw new RestApiException(StatusCode.PHONE_NUMBER_NOT_RIGHT_FORMAT);
+            }
+        }
+        if (!StringUtils.isEmpty(request.getEmail())) {
+            if (!isEmail(request.getEmail())) {
+                throw new RestApiException(StatusCode.EMAIL_NOT_RIGHT_FORMAT);
+            }
+            List<String> emails = new ArrayList<>();
+            emails.add(request.getEmail());
+            Account currentAccount = accountDAO.getAccountByListEmail(emails).get(0);
+            if (Objects.nonNull(currentAccount)) {
+                throw new RestApiException(StatusCode.EMAIL_REGISTER_BEFORE);
+            }
+            account.setEmail(request.getEmail());
+        } else {
+            account.setEmail(null);
+        }
+        if (StringUtils.isEmpty(request.getCurrentAddress())) {
+            throw new RestApiException(StatusCode.CURRENT_ADDRESS_EMPTY);
+        }
+        if (StringUtils.isEmpty(request.getHomeTown())) {
+            throw new RestApiException(StatusCode.HOME_TOWN_EMPTY);
+        }
+        account.setName(request.getName());
+        account.setPhone(request.getPhone());
+        account.setGender(request.getGender());
+        account.setPassword(Constants.DEFAULT_PASSWORD);
+        account.setImage(FileStore.getDefaultAvatar());
+        account.setDob(request.getDob());
+        account.setEnabled(true);
+        account.setHomeTown(request.getHomeTown());
+        account.setCurrentAddress(request.getCurrentAddress());
+        Role role = new Role();
+        role.setId(3L);
+        account.setRole(role);
+        Position position = new Position();
+        position.setId(request.getPositionId());
+        account.setPosition(position);
+        accountDAO.save(account);
+        return account;
     }
 
     private RoomNumberResponse convertRoomNumberToDTO(Apartment apartment) {

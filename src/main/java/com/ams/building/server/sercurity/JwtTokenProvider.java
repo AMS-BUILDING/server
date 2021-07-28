@@ -23,8 +23,10 @@ import org.springframework.util.StringUtils;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 
 @Service
@@ -53,7 +55,9 @@ public class JwtTokenProvider {
             throw new RestApiException(StatusCode.NAME_EMPTY);
         }
         Claims claims = Jwts.claims().setSubject(username);
-        Account account = accountDAO.getAccountByEmail(username);
+        List<String> emails = new ArrayList<>();
+        emails.add(username);
+        Account account = accountDAO.getAccountByListEmail(emails).get(0);
         if (Objects.isNull(account)) {
             throw new RestApiException(StatusCode.ACCOUNT_NOT_EXIST);
         }

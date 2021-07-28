@@ -14,7 +14,7 @@ public class AccountDetailResponse {
     private String dob;
     private String phone;
     private String email;
-    private String identityCard;
+    private String identifyCard;
     private String blockName;
     private String roomNumber;
     private String currentAddress;

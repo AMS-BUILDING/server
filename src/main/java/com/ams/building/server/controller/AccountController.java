@@ -7,7 +7,6 @@ import com.ams.building.server.constant.StatusCode;
 import com.ams.building.server.dao.SendEmailAccountDAO;
 import com.ams.building.server.exception.RestApiException;
 import com.ams.building.server.request.ForwardPasswordRequest;
-import com.ams.building.server.request.PasswordRequest;
 import com.ams.building.server.response.AccountAppResponse;
 import com.ams.building.server.response.LoginResponse;
 import com.ams.building.server.response.UserPrincipal;
@@ -66,12 +65,9 @@ public class AccountController {
     public ResponseEntity<?> sendEmail(@RequestParam(name = "email", required = false, defaultValue = "") String email) throws MessagingException {
         String token = RandomNumber.getRandomNumberString();
         emailService.updateResetPasswordToken(token, email);
-        String resetPassWordLink = "/forward-password";
         StringBuilder content = new StringBuilder();
         content.append("Xin chào");
         content.append(" <p>Bạn đã yêu cầu đặt lại mật khẩu của mình </p>");
-        content.append(" <p> Ấn vào link dưới đây để thay đổi mật khẩu của bạn </p>");
-        content.append(" <p><b><a href=\"" + resetPassWordLink + "\"> Thay đổi mật khẩu</a><b></p>");
         content.append("<p> Bỏ qua email này nếu bạn nhớ mật khẩu của mình hoặc bạn chưa thực hiện yêu cầu</p>");
         content.append("<p>   Mã xác nhận  là :   \"" + token + "\"   </p>");
         emailService.sendSimpleMessage(email, PropertiesReader.getProperty(PropertyKeys.SEND_EMAIL), content.toString());
@@ -81,6 +77,7 @@ public class AccountController {
 
     @PostMapping(Constants.UrlPath.URL_API_RESET_PASSWORD)
     public ResponseEntity<?> resetPassword(@RequestBody ForwardPasswordRequest forwardPasswordRequest) {
+        logger.debug("resentPassword request: " + new Gson().toJson(forwardPasswordRequest));
         String token = forwardPasswordRequest.getToken();
         Account account = sendEmailAccountDao.findAccountByResetPasswordToken(token);
         if (Objects.isNull(account)) {
@@ -93,6 +90,7 @@ public class AccountController {
 
     @PostMapping(Constants.UrlPath.URL_API_CHANGE_PASSWORD)
     public void changePassword(@RequestBody LoginResponse loginResponse) {
+        logger.debug("changePassword request: " + new Gson().toJson(loginResponse));
         UserPrincipal currentUser = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication()
                 .getPrincipal();
         loginResponse.setId(currentUser.getId());
@@ -171,12 +169,12 @@ public class AccountController {
     }
 
     @PostMapping(Constants.UrlPath.URL_API_CHANGE_PASSWORD_APP)
-    public ResponseEntity<?> changePassword(@RequestBody PasswordRequest request) {
-        logger.debug("changePassword request: " + new Gson().toJson(request));
+    public ResponseEntity<?> changePassword(@RequestBody String password) {
+        logger.debug("changePassword request: " + password);
         UserPrincipal currentUser = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication()
                 .getPrincipal();
         Long id = currentUser.getId();
-        accountService.changePassword(id, request);
+        accountService.changePassword(id, password);
         ResponseEntity<String> response = new ResponseEntity<>("Update success", HttpStatus.OK);
         logger.debug("changePassword response: " + new Gson().toJson(response));
         return response;

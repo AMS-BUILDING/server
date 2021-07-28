@@ -7,7 +7,6 @@ import com.ams.building.server.bean.Block;
 import com.ams.building.server.bean.FloorBlock;
 import com.ams.building.server.bean.RoomNumber;
 import com.ams.building.server.constant.Constants;
-import com.ams.building.server.constant.RoleEnum;
 import com.ams.building.server.constant.StatusCode;
 import com.ams.building.server.dao.AbsentDetailDAO;
 import com.ams.building.server.dao.AbsentTypeDAO;
@@ -133,14 +132,14 @@ public class AbsentServiceImpl implements AbsentService {
         if (Objects.isNull(absentType)) {
             throw new RestApiException(StatusCode.ABSENT_TYPE_NOT_EXIST);
         }
-        Apartment apartment = apartmentDAO.getApartmentByAccountId(request.getAccountId(), String.valueOf(RoleEnum.ROLE_LANDLORD));
+        Apartment apartment = apartmentDAO.getApartmentByAccountId(request.getAccountId());
         if (Objects.isNull(apartment)) {
             throw new RestApiException(StatusCode.APARTMENT_NOT_EXIST);
         }
         if (!isIdentifyCard(request.getIdentifyCard())) {
             throw new RestApiException(StatusCode.IDENTIFY_CARD_NOT_RIGHT);
         }
-        AbsentDetail findAbsent = absentDao.getAbsentDetailByIdentityCardAndAbsentType(request.getIdentifyCard(), request.getAbsentType());
+        AbsentDetail findAbsent = absentDao.getAbsentDetailByIdentifyCardAndAbsentType(request.getIdentifyCard(), request.getAbsentType());
         if (Objects.nonNull(findAbsent)) {
             throw new RestApiException(StatusCode.IDENTIFY_CARD_DUPLICATE);
         }

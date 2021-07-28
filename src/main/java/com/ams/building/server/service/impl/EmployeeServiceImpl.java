@@ -154,11 +154,15 @@ public class EmployeeServiceImpl implements EmployeeService {
         if (!isIdentifyCard(request.getIdentifyCard())) {
             throw new RestApiException(StatusCode.IDENTIFY_CARD_NOT_RIGHT);
         }
-        Account searchAccountByIdentify = accountDao.getAccountByIdentify(request.getIdentifyCard());
+        List<String> identifyCard = new ArrayList<>();
+        identifyCard.add(request.getIdentifyCard());
+        Account searchAccountByIdentify = accountDao.getAccountByListIdentifyCard(identifyCard).get(0);
         if (Objects.nonNull(searchAccountByIdentify)) {
             throw new RestApiException(StatusCode.IDENTIFY_CARD_DUPLICATE);
         }
-        Account searchAccountByEmail = accountDao.getAccountByEmail(request.getEmail());
+        List<String> emails = new ArrayList<>();
+        emails.add(request.getEmail());
+        Account searchAccountByEmail = accountDao.getAccountByListEmail(emails).get(0);
         if (Objects.nonNull(searchAccountByEmail)) {
             throw new RestApiException(StatusCode.ACCOUNT_REGISTER);
         }
@@ -237,7 +241,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         response.setCurrentAddress(account.getCurrentAddress());
         response.setDob(account.getDob());
         response.setHomeTown(account.getHomeTown());
-        response.setIdentityCard(account.getIdentifyCard());
+        response.setIdentifyCard(account.getIdentifyCard());
         String gender;
         if (account.getGender() == true) {
             gender = Constants.AccountGender.GENDER_MALE;

@@ -72,6 +72,7 @@ public class Constants {
         public static final String URL_API_UPDATE_RESIDENT = "/admin/resident/update";
         public static final String URL_API_VALIDATE_OWNER = "/admin/validate/owner";
         public static final String URL_API_VALIDATE_RESIDENT = "/admin/validate/resident";
+        public static final String URL_API_ADD_A_APARTMENT = "/admin/a/apartment/add";
 
         public static final String URL_API_LOGIN = "/login";
         public static final String URL_API_PROFILE = "/member/account/profile";
