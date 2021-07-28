@@ -15,7 +15,11 @@ public class AccountResponse {
     private String phone;
     private String blockName;
     private String roomNumber;
+    private Boolean gender;
     private String dob;
+    private String email;
+    private String homeTown;
+    private String currentAddress;
     private String identifyCard;
     private String relationShip;
 

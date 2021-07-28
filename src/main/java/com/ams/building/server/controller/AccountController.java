@@ -88,15 +88,6 @@ public class AccountController {
         return response;
     }
 
-    @PostMapping(Constants.UrlPath.URL_API_CHANGE_PASSWORD)
-    public void changePassword(@RequestBody LoginResponse loginResponse) {
-        logger.debug("changePassword request: " + new Gson().toJson(loginResponse));
-        UserPrincipal currentUser = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication()
-                .getPrincipal();
-        loginResponse.setId(currentUser.getId());
-        accountService.changePassword(loginResponse);
-    }
-
     @GetMapping(Constants.UrlPath.URL_API_DETAIL_ACCOUNT)
     public ResponseEntity<?> detailAccountApp() {
         UserPrincipal currentUser = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication()
@@ -168,7 +159,7 @@ public class AccountController {
         return response;
     }
 
-    @PostMapping(Constants.UrlPath.URL_API_CHANGE_PASSWORD_APP)
+    @PostMapping(Constants.UrlPath.URL_API_CHANGE_PASSWORD)
     public ResponseEntity<?> changePassword(@RequestBody String password) {
         logger.debug("changePassword request: " + password);
         UserPrincipal currentUser = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication()

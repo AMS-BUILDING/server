@@ -46,20 +46,20 @@ public class DetailApartmentBilling implements Serializable {
     private Double subServicePrice;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "residential_card_id", referencedColumnName = "id")
+    @JoinColumn(name = "resident_card_id", referencedColumnName = "id")
     private ResidentCard residentCard;
 
-    @Column(name = "quantity_residenrial_card")
+    @Column(name = "quantity_resident_card")
     private Integer quantity;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "vehicle_card_id", referencedColumnName = "id")
     private VehicleCard vehicleCard;
 
-    @Column(name = "vechicle_name")
+    @Column(name = "vehicle_name")
     private String vehicleName;
 
-    @Column(name = "vechicle_price")
+    @Column(name = "vehicle_price")
     private String vehiclePrice;
 
     @Column(name = "billing_month")

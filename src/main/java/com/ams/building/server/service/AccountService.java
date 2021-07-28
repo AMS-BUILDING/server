@@ -20,23 +20,9 @@ public interface AccountService {
 
     void update(LoginResponse loginResponse);
 
-    void changePassword(LoginResponse loginResponse);
-
     void updateProfile(LoginResponse loginResponse);
 
-    void delete(Long id);
-
-    List<LoginResponse> find();
-
     LoginResponse getById(Long id);
-
-    LoginResponse getByEmail(String email);
-
-    Long count();
-
-    void changeAccountLock(long id);
-
-    void forwardPassword(String email);
 
     AccountAppResponse detailAccountApp(Long id);
 

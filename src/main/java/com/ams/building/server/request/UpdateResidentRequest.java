@@ -16,5 +16,7 @@ public class UpdateResidentRequest {
     private String phone;
     private String email;
     private String identifyCard;
+    private String homeTown;
+    private String currentAddress;
 
 }

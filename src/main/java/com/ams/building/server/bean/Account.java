@@ -79,8 +79,4 @@ public class Account implements Serializable {
     @Column(name = "enabled_token")
     private Boolean enabledToken;
 
-    public Account(@NonNull Long id) {
-        this.id = id;
-    }
-
 }

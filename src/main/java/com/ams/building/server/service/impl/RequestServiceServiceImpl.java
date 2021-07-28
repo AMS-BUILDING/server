@@ -4,7 +4,6 @@ import com.ams.building.server.bean.Account;
 import com.ams.building.server.bean.Apartment;
 import com.ams.building.server.bean.RequestService;
 import com.ams.building.server.bean.StatusServiceRequest;
-import com.ams.building.server.constant.RoleEnum;
 import com.ams.building.server.constant.StatusCode;
 import com.ams.building.server.dao.AccountDAO;
 import com.ams.building.server.dao.ApartmentDAO;

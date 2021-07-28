@@ -167,52 +167,6 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
     }
 
     @Override
-    public void changePassword(LoginResponse loginResponse) {
-        if (Objects.isNull(loginResponse)) {
-            throw new RestApiException(StatusCode.DATA_EMPTY);
-        }
-        if (StringUtils.isEmpty(loginResponse.getEmail())) {
-            throw new RestApiException(StatusCode.EMAIL_EMPTY);
-        }
-        if (StringUtils.isEmpty(loginResponse.getName())) {
-            throw new RestApiException(StatusCode.NAME_EMPTY);
-        }
-        if (StringUtils.isEmpty(loginResponse.getHomeTown())) {
-            throw new RestApiException(StatusCode.HOME_TOWN_EMPTY);
-        }
-        if (StringUtils.isEmpty(loginResponse.getPassword())) {
-            throw new RestApiException(StatusCode.PASSWORD_EMPTY);
-        }
-        if (StringUtils.isEmpty(loginResponse.getPhone())) {
-            throw new RestApiException(StatusCode.PHONE_EMPTY);
-        }
-        if (StringUtils.isEmpty(loginResponse.getIdentifyCard())) {
-            throw new RestApiException(StatusCode.IDENTIFY_CARD_EMPTY);
-        }
-        if (StringUtils.isEmpty(loginResponse.getCurrentAddress())) {
-            throw new RestApiException(StatusCode.CURRENT_ADDRESS_EMPTY);
-        }
-        if (!isEmail(loginResponse.getEmail())) {
-            throw new RestApiException(StatusCode.EMAIL_NOT_RIGHT_FORMAT);
-        }
-        if (!isIdentifyCard(loginResponse.getIdentifyCard())) {
-            throw new RestApiException(StatusCode.IDENTIFY_CARD_EMPTY);
-        }
-        if (!isPhoneNumber(loginResponse.getPhone())) {
-            throw new RestApiException(StatusCode.PHONE_NUMBER_NOT_RIGHT_FORMAT);
-        }
-        Account account = accountDao.getAccountById(loginResponse.getId());
-        if (Objects.isNull(account)) {
-            throw new RestApiException(StatusCode.ACCOUNT_NOT_EXIST);
-        }
-        if (!PasswordGenerator.checkHashStrings(loginResponse.getPassword(), account.getPassword())) {
-            throw new RestApiException(StatusCode.PASSWORD_NOT_MATCH);
-        }
-        account.setPassword(PasswordGenerator.getHashString(loginResponse.getPassword()));
-        accountDao.save(account);
-    }
-
-    @Override
     public void updateProfile(LoginResponse loginResponse) {
         Account account = accountDao.getAccountById(loginResponse.getId());
         if (Objects.isNull(account)) {
@@ -222,28 +176,6 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
         account.setPhone(loginResponse.getPhone());
         account.setImage(loginResponse.getImage());
         accountDao.save(account);
-    }
-
-    @Override
-    public void delete(Long id) {
-        if (StringUtils.isEmpty(id)) {
-            throw new RestApiException(StatusCode.DATA_EMPTY);
-        }
-        Account account = accountDao.getAccountById(id);
-        if (Objects.isNull(account)) {
-            throw new RestApiException(StatusCode.ACCOUNT_NOT_EXIST);
-        }
-        accountDao.deleteById(id);
-    }
-
-    @Override
-    public List<LoginResponse> find() {
-        List<Account> accountList = accountDao.findAll();
-        List<LoginResponse> loginResponse = new ArrayList<>();
-        accountList.forEach(account -> {
-            loginResponse.add(convertToAccountResponse(account));
-        });
-        return loginResponse;
     }
 
     @Override
@@ -257,42 +189,6 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
         }
         LoginResponse response = convertToAccountResponse(account);
         return response;
-    }
-
-    @Override
-    public LoginResponse getByEmail(String email) {
-        if (StringUtils.isEmpty(email)) {
-            throw new RestApiException(StatusCode.EMAIL_EMPTY);
-        }
-        if (!isEmail(email)) {
-            throw new RestApiException(StatusCode.EMAIL_NOT_RIGHT_FORMAT);
-        }
-        List<String> emails = new ArrayList<>();
-        emails.add(email);
-        Account account = accountDao.getAccountByListEmail(emails).get(0);
-        if (Objects.isNull(account)) {
-            throw new RestApiException(StatusCode.ACCOUNT_NOT_EXIST);
-        }
-        LoginResponse response = convertToAccountResponse(account);
-        return response;
-    }
-
-    @Override
-    public Long count() {
-        return accountDao.count();
-    }
-
-    @Override
-    public void changeAccountLock(long id) {
-        if (StringUtils.isEmpty(id)) {
-            throw new RestApiException(StatusCode.DATA_EMPTY);
-        }
-        Account account = accountDao.getAccountById(id);
-        if (Objects.isNull(account)) {
-            throw new RestApiException(StatusCode.ACCOUNT_NOT_EXIST);
-        }
-        account.setEnabled(!account.getEnabled());
-        accountDao.save(account);
     }
 
     @Override
@@ -432,10 +328,6 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
         account.setEmail(residentRequest.getEmail());
         account.setIdentifyCard(residentRequest.getIdentifyCard());
         accountDao.save(account);
-    }
-
-    @Override
-    public void forwardPassword(String email) {
     }
 
     @Override
