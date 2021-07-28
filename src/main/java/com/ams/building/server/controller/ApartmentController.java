@@ -94,11 +94,11 @@ public class ApartmentController {
         ResponseEntity<String> response = new ResponseEntity<>("Add apartment owner success", HttpStatus.CREATED);
         //send email
         StringBuilder content = new StringBuilder();
-        content.append("Chào mừng bạn đến với trung cư của chúng tôi!");
-        content.append(" <p>Dưới đây là tên đăng nhập và mật khẩu của bạn </p>");
-        content.append("<p>  Tên tài khoản :  \"" + ownerRequest.getEmail() + "\"   </p>");
-        content.append("<p>  Mật khẩu :  \"" + Constants.DEFAULT_PASSWORD_ENCODE + "\"   </p>");
-        content.append("<p> Chúng tôi hy vọng bạn có 1 ngày tuyệt vời! </p>");
+        content.append("\"Hello and welcome new resident!");
+        content.append(" <p>Here is the password for your first login </p>");
+        content.append("<p>  Username :  \"" + ownerRequest.getEmail() + "\"   </p>");
+        content.append("<p>  Password :  \"" + Constants.DEFAULT_PASSWORD_ENCODE + "\"   </p>");
+        content.append("<p> We hope you have a nice day! </p>");
         emailService.sendSimpleMessage(ownerRequest.getEmail(), PropertiesReader.getProperty(PropertyKeys.SEND_EMAIL_ADD_APARTMENT), content.toString());
         logger.debug("Add apartmentOwner response : " + new Gson().toJson(response));
         return response;
@@ -125,11 +125,11 @@ public class ApartmentController {
 
     private void sendResidentEmail(ResidentRequest residentRequest) throws MessagingException {
         StringBuilder content = new StringBuilder();
-        content.append("Chào mừng bạn đến với trung cư của chúng tôi!");
-        content.append(" <p>Dưới đây là tên đăng nhập và mật khẩu của bạn </p>");
-        content.append("<p>  Tên tài khoản :  \"" + residentRequest.getEmail() + "\"   </p>");
-        content.append("<p>  Mật khẩu :  \"" + Constants.DEFAULT_PASSWORD_ENCODE + "\"   </p>");
-        content.append("<p> Chúng tôi hy vọng bạn có 1 ngày tuyệt vời! </p>");
+        content.append("\"Hello and welcome new resident!");
+        content.append(" <p>Here is the password for your first login </p>");
+        content.append("<p>  Username :  \"" + residentRequest.getEmail() + "\"   </p>");
+        content.append("<p>  Password :  \"" + Constants.DEFAULT_PASSWORD_ENCODE + "\"   </p>");
+        content.append("<p> We hope you have a nice day! </p>");
         emailService.sendSimpleMessage(residentRequest.getEmail(), PropertiesReader.getProperty(PropertyKeys.SEND_EMAIL_ADD_APARTMENT), content.toString());
     }
 
@@ -173,11 +173,11 @@ public class ApartmentController {
         //send email
         if (!request.getRequest().getEmail().isEmpty()) {
             StringBuilder content = new StringBuilder();
-            content.append("Chào mừng bạn đến với trung cư của chúng tôi!");
-            content.append(" <p>Dưới đây là tên đăng nhập và mật khẩu của bạn </p>");
-            content.append("<p>  Tên tài khoản :  \"" + request.getRequest().getEmail() + "\"   </p>");
-            content.append("<p>  Mật khẩu :  \"" + Constants.DEFAULT_PASSWORD_ENCODE + "\"   </p>");
-            content.append("<p> Chúng tôi hy vọng bạn có 1 ngày tuyệt vời! </p>");
+            content.append("\"Hello and welcome new resident!");
+            content.append(" <p>Here is the password for your first login </p>");
+            content.append("<p>  Username :  \"" + request.getRequest().getEmail() + "\"   </p>");
+            content.append("<p>  Password :  \"" + Constants.DEFAULT_PASSWORD_ENCODE + "\"   </p>");
+            content.append("<p> We hope you have a nice day! </p>");
             emailService.sendSimpleMessage(request.getRequest().getEmail(), PropertiesReader.getProperty(PropertyKeys.SEND_EMAIL_ADD_APARTMENT), content.toString());
         }
         logger.debug("Add apartmentOwner response : " + new Gson().toJson(response));

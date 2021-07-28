@@ -154,15 +154,11 @@ public class EmployeeServiceImpl implements EmployeeService {
         if (!isIdentifyCard(request.getIdentifyCard())) {
             throw new RestApiException(StatusCode.IDENTIFY_CARD_NOT_RIGHT);
         }
-        List<String> identifyCard = new ArrayList<>();
-        identifyCard.add(request.getIdentifyCard());
-        Account searchAccountByIdentify = accountDao.getAccountByListIdentifyCard(identifyCard).get(0);
+        Account searchAccountByIdentify = accountDao.getAccountByIdentify(request.getIdentifyCard());
         if (Objects.nonNull(searchAccountByIdentify)) {
             throw new RestApiException(StatusCode.IDENTIFY_CARD_DUPLICATE);
         }
-        List<String> emails = new ArrayList<>();
-        emails.add(request.getEmail());
-        Account searchAccountByEmail = accountDao.getAccountByListEmail(emails).get(0);
+        Account searchAccountByEmail = accountDao.getAccountByEmail(request.getEmail());
         if (Objects.nonNull(searchAccountByEmail)) {
             throw new RestApiException(StatusCode.ACCOUNT_REGISTER);
         }

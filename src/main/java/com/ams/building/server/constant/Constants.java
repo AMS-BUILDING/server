@@ -106,7 +106,7 @@ public class Constants {
         private AccountGender() {
         }
 
-        public static final String GENDER_MALE = "Name";
+        public static final String GENDER_MALE = "Nam";
         public static final String GENDER_FEMALE = "Nữ";
     }
 

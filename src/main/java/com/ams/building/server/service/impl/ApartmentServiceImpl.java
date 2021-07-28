@@ -251,9 +251,7 @@ public class ApartmentServiceImpl implements ApartmentService {
             if (!isIdentifyCard(request.getIdentifyCard())) {
                 throw new RestApiException(StatusCode.IDENTIFY_CARD_NOT_RIGHT);
             }
-            List<String> identifyCards = new ArrayList<>();
-            identifyCards.add(request.getIdentifyCard());
-            Account currentAccount = accountDAO.getAccountByListIdentifyCard(identifyCards).get(0);
+            Account currentAccount = accountDAO.getAccountByIdentify(request.getIdentifyCard());
             if (Objects.nonNull(currentAccount)) {
                 throw new RestApiException(StatusCode.IDENTIFY_CARD_DUPLICATE);
             }
@@ -270,9 +268,7 @@ public class ApartmentServiceImpl implements ApartmentService {
             if (!isEmail(request.getEmail())) {
                 throw new RestApiException(StatusCode.EMAIL_NOT_RIGHT_FORMAT);
             }
-            List<String> emails = new ArrayList<>();
-            emails.add(request.getEmail());
-            Account currentAccount = accountDAO.getAccountByListEmail(emails).get(0);
+            Account currentAccount = accountDAO.getAccountByEmail(request.getEmail());
             if (Objects.nonNull(currentAccount)) {
                 throw new RestApiException(StatusCode.EMAIL_REGISTER_BEFORE);
             }

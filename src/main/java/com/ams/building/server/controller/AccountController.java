@@ -66,10 +66,11 @@ public class AccountController {
         String token = RandomNumber.getRandomNumberString();
         emailService.updateResetPasswordToken(token, email);
         StringBuilder content = new StringBuilder();
-        content.append("Xin chào");
-        content.append(" <p>Bạn đã yêu cầu đặt lại mật khẩu của mình </p>");
-        content.append("<p> Bỏ qua email này nếu bạn nhớ mật khẩu của mình hoặc bạn chưa thực hiện yêu cầu</p>");
-        content.append("<p>   Mã xác nhận  là :   \"" + token + "\"   </p>");
+        content.append("Hello");
+        content.append(" <p>You have requested to reset your password </p>");
+        content.append(" <p>Click the link below to change your password </p>");
+        content.append("<p> Ignore this email if you do remember your password , or you have not made the request</p>");
+        content.append("<p>   your code  is :   \"" + token + "\"   </p>");
         emailService.sendSimpleMessage(email, PropertiesReader.getProperty(PropertyKeys.SEND_EMAIL), content.toString());
         ResponseEntity<String> response = new ResponseEntity<>("Send Link  Forward Password Success", HttpStatus.OK);
         return response;

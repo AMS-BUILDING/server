@@ -55,9 +55,7 @@ public class JwtTokenProvider {
             throw new RestApiException(StatusCode.NAME_EMPTY);
         }
         Claims claims = Jwts.claims().setSubject(username);
-        List<String> emails = new ArrayList<>();
-        emails.add(username);
-        Account account = accountDAO.getAccountByListEmail(emails).get(0);
+        Account account = accountDAO.getAccountByEmail(username);
         if (Objects.isNull(account)) {
             throw new RestApiException(StatusCode.ACCOUNT_NOT_EXIST);
         }

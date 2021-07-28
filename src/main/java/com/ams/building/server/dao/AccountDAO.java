@@ -28,6 +28,12 @@ public interface AccountDAO extends JpaRepository<Account, Long> {
     @Query("DELETE FROM Account a WHERE a.id=?1")
     void removeAccount(Long id);
 
+    @Query("SELECT a FROM Account  a WHERE a.identifyCard =?1")
+    Account getAccountByIdentify(String identifyCard);
+
+    @Query("SELECT a FROM Account  a WHERE a.email =?1")
+    Account getAccountByEmail(String email);
+
     @Query("SELECT a FROM Account  a WHERE a.id =?1")
     Account getAccountById(Long id);
 

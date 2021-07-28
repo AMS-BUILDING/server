@@ -84,9 +84,7 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
         if (!isPhoneNumber(loginResponse.getPhone())) {
             throw new RestApiException(StatusCode.PHONE_NUMBER_NOT_RIGHT_FORMAT);
         }
-        List<String> emails = new ArrayList<>();
-        emails.add(loginResponse.getEmail());
-        Account currentAccount = accountDao.getAccountByListEmail(emails).get(0);
+        Account currentAccount = accountDao.getAccountByEmail(loginResponse.getEmail());
         if (Objects.nonNull(currentAccount)) {
             throw new RestApiException(StatusCode.IDENTIFY_CARD_DUPLICATE);
         }
@@ -196,9 +194,7 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
         if (!isIdentifyCard(loginResponse.getIdentifyCard())) {
             throw new RestApiException(StatusCode.IDENTIFY_CARD_NOT_RIGHT);
         }
-        List<String> identifyCards = new ArrayList<>();
-        identifyCards.add(loginResponse.getIdentifyCard());
-        Account currentAccount = accountDao.getAccountByListIdentifyCard(identifyCards).get(0);
+        Account currentAccount = accountDao.getAccountByIdentify(loginResponse.getIdentifyCard());
         if (!account.getIdentifyCard().equalsIgnoreCase(loginResponse.getIdentifyCard()) && Objects.nonNull(currentAccount)) {
             throw new RestApiException(StatusCode.IDENTIFY_CARD_DUPLICATE);
         }
@@ -231,9 +227,7 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
         if (!isEmail(email)) {
             throw new RestApiException(StatusCode.EMAIL_NOT_RIGHT_FORMAT);
         }
-        List<String> emails = new ArrayList<>();
-        emails.add(email);
-        Account account = accountDao.getAccountByListEmail(emails).get(0);
+        Account account = accountDao.getAccountByEmail(email);
         if (Objects.isNull(account)) {
             throw new UsernameNotFoundException(StatusCode.ACCOUNT_NOT_EXIST.getMessage());
         }
@@ -477,15 +471,11 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
         }
 
         // Validate exist email or identify card in DB
-        List<String> emails = new ArrayList<>();
-        emails.add(ownerRequest.getEmail());
-        Account currentAccount = accountDao.getAccountByListEmail(emails).get(0);
+        Account currentAccount = accountDao.getAccountByEmail(ownerRequest.getEmail());
         if (Objects.nonNull(currentAccount)) {
             throw new RestApiException(StatusCode.EMAIL_REGISTER_BEFORE);
         }
-        List<String> identifyCards = new ArrayList<>();
-        identifyCards.add(ownerRequest.getIdentifyCard());
-        Account currentAccountDuplicate = accountDao.getAccountByListIdentifyCard(identifyCards).get(0);
+        Account currentAccountDuplicate = accountDao.getAccountByIdentify(ownerRequest.getIdentifyCard());
         if (Objects.nonNull(currentAccountDuplicate)) {
             throw new RestApiException(StatusCode.IDENTIFY_CARD_DUPLICATE);
         }

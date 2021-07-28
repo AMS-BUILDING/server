@@ -85,9 +85,7 @@ public class ResidentCardServiceImpl implements ResidentCardService {
         if (!isEmail(email)) {
             throw new RestApiException(StatusCode.EMAIL_NOT_RIGHT_FORMAT);
         }
-        List<String> emails = new ArrayList<>();
-        emails.add(email);
-        Account account = accountDAO.getAccountByListEmail(emails).get(0);
+        Account account = accountDAO.getAccountByEmail(email);
         if (Objects.isNull(account)) {
             throw new RestApiException(StatusCode.ACCOUNT_NOT_EXIST);
         }
