@@ -7,9 +7,9 @@ import lombok.Setter;
 @Builder
 @Getter
 @Setter
-public class LoginRequest {
+public class AResidentRequest {
 
-    private String username;
-    private String password;
+    private Long apartmentId;
+    private ResidentRequest request;
 
 }

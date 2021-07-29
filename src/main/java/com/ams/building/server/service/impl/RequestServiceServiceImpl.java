@@ -4,7 +4,6 @@ import com.ams.building.server.bean.Account;
 import com.ams.building.server.bean.Apartment;
 import com.ams.building.server.bean.RequestService;
 import com.ams.building.server.bean.StatusServiceRequest;
-import com.ams.building.server.constant.RoleEnum;
 import com.ams.building.server.constant.StatusCode;
 import com.ams.building.server.dao.AccountDAO;
 import com.ams.building.server.dao.ApartmentDAO;
@@ -125,7 +124,7 @@ public class RequestServiceServiceImpl implements RequestServiceService {
     private RequestServiceResponse covertToRequestResponse(RequestService requestService) {
         RequestServiceResponse response = RequestServiceResponse.builder().build();
         if (Objects.isNull(requestService.getAccount())) throw new RestApiException(StatusCode.ACCOUNT_NOT_EXIST);
-        Apartment apartment = apartmentDAO.getApartmentByAccountId(requestService.getAccount().getId(), String.valueOf(RoleEnum.ROLE_LANDLORD));
+        Apartment apartment = apartmentDAO.getApartmentByAccountId(requestService.getAccount().getId());
         if (Objects.isNull(apartment)) throw new RestApiException(StatusCode.APARTMENT_NOT_EXIST);
         response.setId(requestService.getId());
         response.setBlock(apartment.getRoomNumber().getFloorBlock().getBlock().getBlockName());

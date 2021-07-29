@@ -13,6 +13,7 @@ import com.ams.building.server.request.EmployeeRequest;
 import com.ams.building.server.response.ApiResponse;
 import com.ams.building.server.response.EmployeeResponse;
 import com.ams.building.server.service.EmployeeService;
+import com.ams.building.server.utils.FileStore;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -171,11 +172,11 @@ public class EmployeeServiceImpl implements EmployeeService {
         account.setCurrentAddress(request.getCurrentAddress());
         account.setName(request.getName());
         account.setPassword(Constants.DEFAULT_PASSWORD);
-        account.setImage(Constants.DEFAULT_AVATAR);
+        account.setImage(FileStore.getDefaultAvatar());
         account.setEnabled(true);
         Position position = positionDAO.getOne(request.getPosition());
         account.setPosition(position);
-        Role role = roleDAO.getOne(4L);
+        Role role = roleDAO.getById(4L);
         account.setRole(role);
         accountDao.save(account);
     }
@@ -236,9 +237,9 @@ public class EmployeeServiceImpl implements EmployeeService {
         response.setCurrentAddress(account.getCurrentAddress());
         response.setDob(account.getDob());
         response.setHomeTown(account.getHomeTown());
-        response.setIdentityCard(account.getIdentifyCard());
+        response.setIdentifyCard(account.getIdentifyCard());
         String gender;
-        if (account.getGender() == true) {
+        if (account.getGender()) {
             gender = Constants.AccountGender.GENDER_MALE;
         } else {
             gender = Constants.AccountGender.GENDER_FEMALE;

@@ -15,11 +15,11 @@ import java.io.Serializable;
 
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Entity
-@Table(name = "status_service_request")
-public class StatusServiceRequest implements Serializable {
+@Table(name = "status_apartment_billing")
+public class StatusApartmentBilling implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -28,7 +28,7 @@ public class StatusServiceRequest implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "status_service_request_name")
-    private String requestName;
+    @Column(name = "status_name")
+    private String statusName;
 
 }

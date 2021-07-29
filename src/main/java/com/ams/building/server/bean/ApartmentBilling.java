@@ -15,15 +15,14 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import java.io.Serializable;
-import java.util.Date;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "service_request")
-public class RequestService implements Serializable {
+@Table(name = "apartment_billing")
+public class ApartmentBilling implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -33,24 +32,17 @@ public class RequestService implements Serializable {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "reason_detail_sub_service_id", referencedColumnName = "id")
-    private ReasonDetailSubService reasonDetailSubService;
+    @JoinColumn(name = "apartment_id", referencedColumnName = "id")
+    private Apartment apartment;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "status_service_request_id", referencedColumnName = "id")
-    private StatusServiceRequest statusServiceRequest;
+    @JoinColumn(name = "status_apartment_billing_id", referencedColumnName = "id")
+    private StatusApartmentBilling statusApartmentBilling;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "account_id", referencedColumnName = "id")
-    private Account account;
+    @Column(name = "total_price")
+    private Double totalPrice;
 
-    @Column(name = "description")
-    private String description;
-
-    @Column(name = "start_date")
-    private Date startDate;
-
-    @Column(name = "end_date")
-    private Date endDate;
+    @Column(name = "billing_month")
+    private String billingMonth;
 
 }

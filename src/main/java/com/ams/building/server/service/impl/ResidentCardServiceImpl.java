@@ -6,7 +6,6 @@ import com.ams.building.server.bean.ResidentCard;
 import com.ams.building.server.bean.RoomNumber;
 import com.ams.building.server.bean.StatusResidentCard;
 import com.ams.building.server.constant.Constants;
-import com.ams.building.server.constant.RoleEnum;
 import com.ams.building.server.constant.StatusCode;
 import com.ams.building.server.dao.AccountDAO;
 import com.ams.building.server.dao.ApartmentDAO;
@@ -90,7 +89,7 @@ public class ResidentCardServiceImpl implements ResidentCardService {
         if (Objects.isNull(account)) {
             throw new RestApiException(StatusCode.ACCOUNT_NOT_EXIST);
         }
-        Apartment apartment = apartmentDAO.getApartmentByAccountId(account.getId(), String.valueOf(RoleEnum.ROLE_LANDLORD));
+        Apartment apartment = apartmentDAO.getApartmentByAccountId(account.getId());
         if (Objects.isNull(apartment)) {
             throw new RestApiException(StatusCode.APARTMENT_NOT_EXIST);
         }

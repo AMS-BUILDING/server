@@ -17,6 +17,6 @@ public interface AbsentDetailDAO extends JpaRepository<AbsentDetail, Long> {
     Page<AbsentDetail> absentListNotByAbsentType(String name, String identifyCard, Pageable pageable);
 
     @Query("SELECT ad FROM AbsentDetail ad WHERE  ad.identifyCard =?1 AND ad.absentType.id =?2")
-    AbsentDetail getAbsentDetailByIdentityCardAndAbsentType(String identifyCard, Long absentType);
+    AbsentDetail getAbsentDetailByIdentifyCardAndAbsentType(String identifyCard, Long absentType);
 
 }

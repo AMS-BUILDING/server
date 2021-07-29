@@ -12,7 +12,7 @@ import java.nio.file.Files;
 @Controller
 public class DownLoadController {
 
-    public static String UPLOAD_FOLDER = "F:\\abc\\";
+    public static String UPLOAD_FOLDER = "./image/";
 
     @GetMapping(value = "/download") // avatar=?
     public void download(HttpServletResponse response, @RequestParam("image") String image) {
@@ -25,4 +25,5 @@ public class DownLoadController {
             }
         }
     }
+
 }

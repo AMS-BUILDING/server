@@ -1,7 +1,7 @@
 package com.ams.building.server.service;
 
 import com.ams.building.server.request.ApartmentOwnerRequest;
-import com.ams.building.server.request.PasswordRequest;
+import com.ams.building.server.request.ChangePasswordRequest;
 import com.ams.building.server.request.ResidentRequest;
 import com.ams.building.server.request.UpdateResidentRequest;
 import com.ams.building.server.response.AccountAppResponse;
@@ -21,23 +21,9 @@ public interface AccountService {
 
     void update(LoginResponse loginResponse);
 
-    void changePassword(LoginResponse loginResponse);
-
     void updateProfile(LoginResponse loginResponse);
 
-    void delete(Long id);
-
-    List<LoginResponse> find();
-
     LoginResponse getById(Long id);
-
-    LoginResponse getByEmail(String email);
-
-    Long count();
-
-    void changeAccountLock(long id);
-
-    void forwardPassword(String email);
 
     AccountAppResponse detailAccountApp(Long id);
 
@@ -51,7 +37,9 @@ public interface AccountService {
 
     void updateAccountAppByCurrentAddress(String currentAddress, Long id);
 
-    void changePassword(Long id, PasswordRequest request);
+    void changePassword(Long id, String password);
+
+    void changePassword(ChangePasswordRequest changePasswordRequest);
 
     void validateApartmentOwner(ApartmentOwnerRequest ownerRequest);
 

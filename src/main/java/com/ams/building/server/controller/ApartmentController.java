@@ -2,12 +2,14 @@ package com.ams.building.server.controller;
 
 import com.ams.building.server.constant.Constants;
 import com.ams.building.server.constant.PropertyKeys;
+import com.ams.building.server.request.AResidentRequest;
 import com.ams.building.server.request.ApartmentOwnerRequest;
 import com.ams.building.server.request.ResidentRequest;
 import com.ams.building.server.request.ResidentRequestWrap;
 import com.ams.building.server.request.UpdateResidentRequest;
 import com.ams.building.server.response.AccountResponse;
 import com.ams.building.server.response.ApiResponse;
+import com.ams.building.server.response.UserPrincipal;
 import com.ams.building.server.service.AccountService;
 import com.ams.building.server.service.ApartmentService;
 import com.ams.building.server.service.EmailService;
@@ -17,9 +19,9 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -131,14 +133,6 @@ public class ApartmentController {
         emailService.sendSimpleMessage(residentRequest.getEmail(), PropertiesReader.getProperty(PropertyKeys.SEND_EMAIL_ADD_APARTMENT), content.toString());
     }
 
-//    @PostMapping(value = Constants.UrlPath.URL_API_DISABLE_APARTMENT)
-//    public ResponseEntity<?> disableOwner(@RequestParam(name = "roomNumberId") Long roomNumberId) {
-//        logger.debug("disableOwner Request : " + new Gson().toJson(roomNumberId));
-//        apartmentService.disableApartment(roomNumberId);
-//        ResponseEntity<String> response = new ResponseEntity<>("disableOwner success", HttpStatus.CREATED);
-//        return response;
-//    }
-
     @GetMapping(value = Constants.UrlPath.URL_API_SEARCH_APARTMENT_RESIDENT)
     public ResponseEntity<?> residentOfApartment(@RequestParam(name = "pageNo", required = false, defaultValue = "0") Integer pageNo,
                                                  @RequestParam(name = "name", required = false, defaultValue = "") String name,
@@ -159,12 +153,34 @@ public class ApartmentController {
         return response;
     }
 
-    @GetMapping(value = Constants.UrlPath.URL_API_DEPENDENT_PERSON_APP + "/{id}")
-    public ResponseEntity<?> dependentPersonByRoomNumber(@PathVariable("id") Long id) {
+    @GetMapping(value = Constants.UrlPath.URL_API_DEPENDENT_PERSON_APP)
+    public ResponseEntity<?> dependentPersonByRoomNumber() {
+        UserPrincipal currentUser = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication()
+                .getPrincipal();
+        Long id = currentUser.getId();
         logger.debug("dependentPersonByRoomNumber request : " + id);
         List<AccountResponse> dependentPerson = apartmentService.dependentPerson(id);
         ResponseEntity<List<AccountResponse>> response = new ResponseEntity<>(dependentPerson, HttpStatus.OK);
         logger.debug("dependentPersonByRoomNumber response: " + new Gson().toJson(response));
+        return response;
+    }
+
+    @PostMapping(value = Constants.UrlPath.URL_API_ADD_A_APARTMENT)
+    public ResponseEntity<?> addAResident(@RequestBody AResidentRequest request) throws MessagingException {
+        logger.debug("addOwner Request : " + new Gson().toJson(request));
+        apartmentService.addResidentToApartment(request.getApartmentId(), request.getRequest());
+        ResponseEntity<String> response = new ResponseEntity<>("Add apartment success", HttpStatus.CREATED);
+        //send email
+        if (!request.getRequest().getEmail().isEmpty()) {
+            StringBuilder content = new StringBuilder();
+            content.append("\"Hello and welcome new resident!");
+            content.append(" <p>Here is the password for your first login </p>");
+            content.append("<p>  Username :  \"" + request.getRequest().getEmail() + "\"   </p>");
+            content.append("<p>  Password :  \"" + Constants.DEFAULT_PASSWORD_ENCODE + "\"   </p>");
+            content.append("<p> We hope you have a nice day! </p>");
+            emailService.sendSimpleMessage(request.getRequest().getEmail(), PropertiesReader.getProperty(PropertyKeys.SEND_EMAIL_ADD_APARTMENT), content.toString());
+        }
+        logger.debug("Add apartmentOwner response : " + new Gson().toJson(response));
         return response;
     }
 

@@ -7,9 +7,9 @@ import lombok.Setter;
 @Builder
 @Getter
 @Setter
-public class LoginRequest {
+public class ForwardPasswordRequest {
 
-    private String username;
+    private String token;
     private String password;
 
 }

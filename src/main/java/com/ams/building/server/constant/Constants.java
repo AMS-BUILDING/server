@@ -15,8 +15,6 @@ public class Constants {
 
     public static final String DEFAULT_PASSWORD_ENCODE = "123456";
 
-    public static final String DEFAULT_AVATAR = "avatar_default.png";
-
     public class UrlPath {
 
         private UrlPath() {
@@ -74,13 +72,15 @@ public class Constants {
         public static final String URL_API_UPDATE_RESIDENT = "/admin/resident/update";
         public static final String URL_API_VALIDATE_OWNER = "/admin/validate/owner";
         public static final String URL_API_VALIDATE_RESIDENT = "/admin/validate/resident";
+        public static final String URL_API_ADD_A_APARTMENT = "/admin/a/apartment/add";
 
         public static final String URL_API_LOGIN = "/login";
         public static final String URL_API_PROFILE = "/member/account/profile";
         public static final String URL_API_UPDATE_PROFILE_ACCOUNT = "/tenant/update/profile";
         public static final String URL_API_FORWARD_PASSWORD = "/forward-password";
         public static final String URL_API_RESET_PASSWORD = "/reset-password";
-        public static final String URL_API_CHANGE_PASSWORD = "/change-password";
+        public static final String URL_API_CHANGE_PASSWORD_APP = "/tenant/change-password";
+        public static final String URL_API_CHANGE_PASSWORD = "/tenant/change-password-web";
 
         public static final String URL_API_DETAIL_ACCOUNT = "/tenant/detail/account";
         public static final String URL_API_UPDATE_ACCOUNT_APP_BY_NAME = "/tenant/update/by-name";
@@ -88,7 +88,6 @@ public class Constants {
         public static final String URL_API_UPDATE_ACCOUNT_APP_BY_IDENTIFY_CARD = "/tenant/update/by-identify-card";
         public static final String URL_API_UPDATE_ACCOUNT_APP_BY_CURRENT_ADDRESS = "/tenant/update/by-current-address";
         public static final String URL_API_UPDATE_ACCOUNT_APP_BY_PHONE_NUMBER = "/tenant/update/by-phone";
-        public static final String URL_API_CHANGE_PASSWORD_APP = "/tenant/change-password";
         public static final String URL_API_DEPENDENT_PERSON_APP = "/tenant/dependent-person";
         public static final String URL_API_MANAGEMENT_PERSON_APP = "/tenant/management-person";
         public static final String URL_API_DETAIL_BUILDING_APP = "/tenant/detail-building";
@@ -108,7 +107,7 @@ public class Constants {
         private AccountGender() {
         }
 
-        public static final String GENDER_MALE = "Name";
+        public static final String GENDER_MALE = "Nam";
         public static final String GENDER_FEMALE = "Nữ";
     }
 
