@@ -92,7 +92,7 @@ public class Constants {
         public static final String URL_API_MANAGEMENT_PERSON_APP = "/tenant/management-person";
         public static final String URL_API_DETAIL_BUILDING_APP = "/tenant/detail-building";
         public static final String URL_API_REQUEST_SERVICE_REGISTER_APP = "/landlord/request-service/list";
-        public static final String URL_API_VEHICLE_APP = "/tenant/vehicle-by-account-id";
+        public static final String URL_API_VEHICLE_APP = "/tenant/vehicle-by-account";
     }
 
     public class FileProperties {

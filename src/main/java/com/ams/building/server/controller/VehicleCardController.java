@@ -3,6 +3,7 @@ package com.ams.building.server.controller;
 import com.ams.building.server.constant.Constants;
 import com.ams.building.server.response.ApiResponse;
 import com.ams.building.server.response.StatusVehicleCardResponse;
+import com.ams.building.server.response.UserPrincipal;
 import com.ams.building.server.response.VehicleCardResponse;
 import com.ams.building.server.response.VehicleTypeResponse;
 import com.ams.building.server.service.StatusVehicleCardService;
@@ -12,6 +13,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -84,10 +86,11 @@ public class VehicleCardController {
         return response;
     }
 
-    @GetMapping(value = Constants.UrlPath.URL_API_VEHICLE_APP + "/{id}")
-    public ResponseEntity<?> listStatusVehicleApp(@PathVariable("id") Long id, @RequestParam Long typeId) {
-        logger.debug("listStatusVehicleApp response : " + id + "-" + typeId);
-        List<VehicleTypeResponse> vehicleResponse = vehicleCardService.listVehicleByTypeAndByAccountId(id, typeId);
+    @GetMapping(Constants.UrlPath.URL_API_VEHICLE_APP)
+    public ResponseEntity<?> listStatusVehicleApp(@RequestParam Long typeId) {
+        UserPrincipal currentUser = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication()
+                .getPrincipal();
+        List<VehicleTypeResponse> vehicleResponse = vehicleCardService.listVehicleByTypeAndByAccountId(currentUser.getId(), typeId);
         ResponseEntity<List<VehicleTypeResponse>> response = new ResponseEntity<>(vehicleResponse, HttpStatus.OK);
         logger.debug("listStatusVehicleApp response : " + new Gson().toJson(response));
         return response;
