@@ -83,8 +83,9 @@ public class EmployeeServiceImpl implements EmployeeService {
         if (Objects.isNull(request)) {
             throw new RestApiException(StatusCode.DATA_EMPTY);
         }
-        if (StringUtils.isEmpty(request.getIdentifyCard())) {
-            throw new RestApiException(StatusCode.IDENTIFY_CARD_EMPTY);
+        Account currentAccount = accountDao.getAccountById(accountId);
+        if (Objects.isNull(currentAccount)) {
+            throw new RestApiException(StatusCode.ACCOUNT_NOT_EXIST);
         }
         if (StringUtils.isEmpty(request.getDob())) {
             throw new RestApiException(StatusCode.DOB_EMPTY);
@@ -101,12 +102,17 @@ public class EmployeeServiceImpl implements EmployeeService {
         if (!isPhoneNumber(request.getPhoneNumber())) {
             throw new RestApiException(StatusCode.PHONE_NUMBER_NOT_RIGHT_FORMAT);
         }
+        if (StringUtils.isEmpty(request.getIdentifyCard())) {
+            throw new RestApiException(StatusCode.IDENTIFY_CARD_EMPTY);
+        }
         if (!isIdentifyCard(request.getIdentifyCard())) {
             throw new RestApiException(StatusCode.IDENTIFY_CARD_NOT_RIGHT);
         }
-        Account currentAccount = accountDao.getAccountById(accountId);
-        if (Objects.isNull(currentAccount)) {
-            throw new RestApiException(StatusCode.ACCOUNT_NOT_EXIST);
+        Account accountByIdentifyCard = accountDao.getAccountByIdentify(request.getIdentifyCard());
+        if (Objects.nonNull(accountByIdentifyCard)) {
+            if (!accountByIdentifyCard.getIdentifyCard().equalsIgnoreCase(currentAccount.getIdentifyCard())) {
+                throw new RestApiException(StatusCode.IDENTIFY_CARD_DUPLICATE);
+            }
         }
         currentAccount.setDob(request.getDob());
         currentAccount.setGender(request.getGender());

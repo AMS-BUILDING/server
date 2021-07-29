@@ -48,7 +48,7 @@ public class FileStore {
             String fileName = "avatar" + RandomStringUtils.random(10, true, true);
             BufferedImage image = ImageIO.read(new File("./image/avatar_default.png"));
             ImageIO.write(image, "png", new File("./image/" + fileName + ".png"));
-            return fileName;
+            return fileName + ".png";
         } catch (Exception e) {
             return null;
         }
