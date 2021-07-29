@@ -292,6 +292,7 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
             if (!isPhoneNumber(residentRequest.getPhone())) {
                 throw new RestApiException(StatusCode.PHONE_NUMBER_NOT_RIGHT_FORMAT);
             }
+            account.setPhone(residentRequest.getPhone());
         } else {
             account.setPhone(null);
         }
@@ -299,8 +300,11 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
             if (!isEmail(residentRequest.getEmail())) {
                 throw new RestApiException(StatusCode.EMAIL_NOT_RIGHT_FORMAT);
             }
-            if (residentRequest.getEmail().equalsIgnoreCase(account.getEmail())) {
-                throw new RestApiException(StatusCode.EMAIL_REGISTER_BEFORE);
+            Account currentAccount = accountDao.getAccountByEmail(residentRequest.getEmail());
+            if (Objects.nonNull(currentAccount)) {
+                if (!residentRequest.getEmail().equalsIgnoreCase(account.getEmail())) {
+                    throw new RestApiException(StatusCode.EMAIL_REGISTER_BEFORE);
+                }
             }
             account.setEmail(residentRequest.getEmail());
         } else {
@@ -310,8 +314,11 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
             if (!isIdentifyCard(residentRequest.getIdentifyCard())) {
                 throw new RestApiException(StatusCode.IDENTIFY_CARD_NOT_RIGHT);
             }
-            if (account.getIdentifyCard().equalsIgnoreCase(residentRequest.getIdentifyCard())) {
-                throw new RestApiException(StatusCode.IDENTIFY_CARD_DUPLICATE);
+            Account currentAccount = accountDao.getAccountByIdentify(residentRequest.getIdentifyCard());
+            if (Objects.nonNull(currentAccount)) {
+                if (!account.getIdentifyCard().equalsIgnoreCase(residentRequest.getIdentifyCard())) {
+                    throw new RestApiException(StatusCode.IDENTIFY_CARD_DUPLICATE);
+                }
             }
             account.setIdentifyCard(residentRequest.getIdentifyCard());
         } else {

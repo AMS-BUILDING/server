@@ -7,7 +7,7 @@ public class ValidateUtil {
 
     private static final String PHONE_NUMBER_PATTERN = "^0[0-9]{9}";
     private static final String EMAIL_PATTERN = "^(.+)@(\\S+)$";
-    private static final String IDENTIFY_CARD_PATTERN = "[0-9]{9,12}";
+    private static final String IDENTIFY_CARD_PATTERN = "[0-9]{9}|[0-9]{12}";
     /**
      * ^                 # start-of-string
      * (?=.*[0-9])       # a digit must occur at least once
