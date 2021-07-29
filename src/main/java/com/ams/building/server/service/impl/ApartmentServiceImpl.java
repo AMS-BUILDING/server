@@ -322,6 +322,8 @@ public class ApartmentServiceImpl implements ApartmentService {
         Block block = floorBlock.getBlock();
 
         ApartmentResponse response = ApartmentResponse.builder()
+                .apartmentId(apartment.getId())
+                .roomNumberId(roomNumber.getId())
                 .accountId(account.getId())
                 .ownerName(account.getName())
                 .blockName(block.getBlockName())

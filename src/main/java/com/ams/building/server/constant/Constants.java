@@ -79,7 +79,8 @@ public class Constants {
         public static final String URL_API_UPDATE_PROFILE_ACCOUNT = "/tenant/update/profile";
         public static final String URL_API_FORWARD_PASSWORD = "/forward-password";
         public static final String URL_API_RESET_PASSWORD = "/reset-password";
-        public static final String URL_API_CHANGE_PASSWORD= "/tenant/change-password";
+        public static final String URL_API_CHANGE_PASSWORD_APP = "/tenant/change-password";
+        public static final String URL_API_CHANGE_PASSWORD = "/tenant/change-password-web";
 
         public static final String URL_API_DETAIL_ACCOUNT = "/tenant/detail/account";
         public static final String URL_API_UPDATE_ACCOUNT_APP_BY_NAME = "/tenant/update/by-name";

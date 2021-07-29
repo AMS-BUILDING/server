@@ -6,6 +6,7 @@ import com.ams.building.server.constant.PropertyKeys;
 import com.ams.building.server.constant.StatusCode;
 import com.ams.building.server.dao.SendEmailAccountDAO;
 import com.ams.building.server.exception.RestApiException;
+import com.ams.building.server.request.ChangePasswordRequest;
 import com.ams.building.server.request.ForwardPasswordRequest;
 import com.ams.building.server.response.AccountAppResponse;
 import com.ams.building.server.response.LoginResponse;
@@ -161,6 +162,16 @@ public class AccountController {
     }
 
     @PostMapping(Constants.UrlPath.URL_API_CHANGE_PASSWORD)
+    public ResponseEntity<?> changePassword(@RequestBody ChangePasswordRequest changePasswordRequest) {
+        UserPrincipal currentUser = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication()
+                .getPrincipal();
+        changePasswordRequest.setId(currentUser.getId());
+        accountService.changePassword(changePasswordRequest);
+        ResponseEntity<String> response = new ResponseEntity<>("Success", HttpStatus.OK);
+        return response;
+    }
+
+    @PostMapping(Constants.UrlPath.URL_API_CHANGE_PASSWORD_APP)
     public ResponseEntity<?> changePassword(@RequestBody String password) {
         logger.debug("changePassword request: " + password);
         UserPrincipal currentUser = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication()

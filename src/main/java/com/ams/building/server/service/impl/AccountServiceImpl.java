@@ -11,6 +11,7 @@ import com.ams.building.server.dao.AccountDAO;
 import com.ams.building.server.dao.ApartmentDAO;
 import com.ams.building.server.exception.RestApiException;
 import com.ams.building.server.request.ApartmentOwnerRequest;
+import com.ams.building.server.request.ChangePasswordRequest;
 import com.ams.building.server.request.ResidentRequest;
 import com.ams.building.server.request.UpdateResidentRequest;
 import com.ams.building.server.response.AccountAppResponse;
@@ -431,6 +432,19 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
         }
         currenAccount.setPassword(PasswordGenerator.getHashString(password));
         accountDao.save(currenAccount);
+    }
+
+    @Override
+    public void changePassword(ChangePasswordRequest changePasswordRequest) {
+        Account account = accountDao.getAccountById(changePasswordRequest.getId());
+
+
+        if (account != null && PasswordGenerator.checkHashStrings(changePasswordRequest.getPassword(), account.getPassword())) {
+            account.setPassword(PasswordGenerator.getHashString(changePasswordRequest.getNewPassword()));
+            accountDao.save(account);
+        } else {
+            throw new RestApiException("sai mật khẩu vui lòng nhập lại");
+        }
     }
 
     @Override
