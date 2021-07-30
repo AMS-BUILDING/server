@@ -11,14 +11,13 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class VehicleCardResponse {
+public class BillingServiceResponse {
 
-    private String vehicleOwner;
-    private String phoneNumber;
-    private String vehicleName;
-    private String licensePlates;
-    private String type;
-    private String color;
-    private String status;
+    private Long id;
+    private String blockName;
+    private String roomNumber;
+    private String subServiceName;
+    private Double subServicePrice;
+    private String billingMonth;
 
 }

@@ -18,4 +18,6 @@ public interface VehicleCardService {
 
     List<VehicleTypeResponse> listVehicleByTypeAndByAccountId(Long id, Long vehicleTypeId);
 
+    ApiResponse searchVehicleCardByRoomNumber(Integer page, Integer size, Long accountId, Long vehicleId);
+
 }

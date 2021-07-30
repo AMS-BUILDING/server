@@ -16,7 +16,7 @@ public class AuditorAwareImpl implements AuditorAware<Account> {
                 && !(SecurityContextHolder.getContext().getAuthentication() instanceof AnonymousAuthenticationToken)) {
             UserPrincipal currentUser = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication()
                     .getPrincipal();
-            Account account= new Account();
+            Account account = new Account();
             account.setId(currentUser.getId());
             return Optional.of(account);
         }

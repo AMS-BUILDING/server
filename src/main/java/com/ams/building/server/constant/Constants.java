@@ -74,6 +74,13 @@ public class Constants {
         public static final String URL_API_VALIDATE_RESIDENT = "/admin/validate/resident";
         public static final String URL_API_ADD_A_APARTMENT = "/admin/a/apartment/add";
 
+        public static final String URL_API_FEE_SERVICE = "/admin/fee-apartment/service";
+        public static final String URL_API_FEE_TOTAL_CARD = "/admin/fee-apartment/total-card";
+        public static final String URL_API_FEE_APARTMENT_TOTAL = "/admin/fee-apartment/total";
+        public static final String URL_API_VEHICLE_BY_ACCOUNT_ID_AND_VEHICLE_TYPE = "/manager-service/vehicle-card/search/account-id/vehicle-id";
+        public static final String URL_API_FEE_APARTMENT_SEARCH_RESIDENT_CARD = "/admin/fee-apartment/search/resident-card";
+        public static final String URL_API_FEE_APARTMENT_SEARCH_VEHICLE_CARD = "/admin/fee-apartment/search/vehicle-card";
+
         public static final String URL_API_LOGIN = "/login";
         public static final String URL_API_PROFILE = "/member/account/profile";
         public static final String URL_API_UPDATE_PROFILE_ACCOUNT = "/tenant/update/profile";

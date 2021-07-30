@@ -31,7 +31,10 @@ public class Vehicle implements Serializable {
     @Column(name = "vehicle_name")
     private String vehicleName;
 
-    @Column(name = "price")
+    @Column(name = "price_month")
     private Double price;
+
+    @Column(name = "price_day")
+    private Double priceDay;
 
 }

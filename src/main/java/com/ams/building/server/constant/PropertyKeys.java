@@ -53,5 +53,8 @@ public class PropertyKeys {
     public static final String DUPLICATE_EMAIL_IN_LIST_RESIDENT = "duplicate.email.in.list.resident";
     public static final String DUPLICATE_IDENTIFY_CARD_IN_LIST_RESIDENT = "duplicate.identify.card.in.list.resident";
     public static final String CODE_NOT_RIGHT = "code.not.right";
+    public static final String STATUS_NOT_EXIST = "status.not.exist";
+    public static final String APARTMENT_BILLING_NOT_EXIST = "apartment.billing.not.exist";
+    public static final String REASON_DETAIL_SUB_SERVICE_NOT_EXIST = "reason.detail.sub.service.not.exist";
 
 }

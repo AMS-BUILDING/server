@@ -56,10 +56,10 @@ public class VehicleCard implements Serializable {
     @Column(name = "vehicle_color")
     private String vehicleColor;
 
+    @Column(name = "billing_month")
+    private String billingMonth;
+
     @Column(name = "start_date")
     private Date startDate;
-
-    @Column(name = "end_date")
-    private Date endDate;
 
 }

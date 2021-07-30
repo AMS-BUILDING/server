@@ -36,8 +36,8 @@ public class DetailApartmentBilling implements Serializable {
     private ApartmentBilling apartmentBilling;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "subservice_id", referencedColumnName = "id")
-    private SubService subService;
+    @JoinColumn(name = "reason_detail_sub_service_id", referencedColumnName = "id")
+    private ReasonDetailSubService reasonDetailSubService;
 
     @Column(name = "sub_service_name")
     private String subServiceName;
@@ -46,11 +46,8 @@ public class DetailApartmentBilling implements Serializable {
     private Double subServicePrice;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "resident_card_id", referencedColumnName = "id")
-    private ResidentCard residentCard;
-
-    @Column(name = "quantity_resident_card")
-    private Integer quantity;
+    @JoinColumn(name = "account_id", referencedColumnName = "id")
+    private Account account;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "vehicle_card_id", referencedColumnName = "id")
@@ -60,7 +57,17 @@ public class DetailApartmentBilling implements Serializable {
     private String vehicleName;
 
     @Column(name = "vehicle_price")
-    private String vehiclePrice;
+    private Double vehiclePrice;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "resident_id", referencedColumnName = "id")
+    private ResidentCard residentCard;
+
+    @Column(name = "resident_code")
+    private String residentCode;
+
+    @Column(name = "resident_price")
+    private Double residentPrice;
 
     @Column(name = "billing_month")
     private String billingMonth;

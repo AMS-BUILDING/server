@@ -86,6 +86,18 @@ public class VehicleCardController {
         return response;
     }
 
+    @GetMapping(value = Constants.UrlPath.URL_API_VEHICLE_BY_ACCOUNT_ID_AND_VEHICLE_TYPE)
+    public ResponseEntity<?> searchVehicleCardByAccountIdAndVehicleType(@RequestParam(name = "pageNo", required = false, defaultValue = "0") Integer pageNo,
+                                                                        @RequestParam(value = "accountId") Long accountId,
+                                                                        @RequestParam(value = "vehicleId") Long vehicleId) {
+        logger.debug("searchVehicleCardByAccountIdAndVehicleType request : " + accountId + " - " + vehicleId);
+        Integer pageSize = 5;
+        ApiResponse apiResponse = vehicleCardService.searchVehicleCardByRoomNumber(pageNo, pageSize, accountId, vehicleId);
+        ResponseEntity<ApiResponse> response = new ResponseEntity<>(apiResponse, HttpStatus.OK);
+        logger.debug("searchVehicleCardByAccountIdAndVehicleType response : " + new Gson().toJson(response));
+        return response;
+    }
+
     @GetMapping(Constants.UrlPath.URL_API_VEHICLE_APP)
     public ResponseEntity<?> listStatusVehicleApp(@RequestParam Long typeId) {
         UserPrincipal currentUser = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication()
