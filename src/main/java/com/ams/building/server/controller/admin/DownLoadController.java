@@ -1,4 +1,4 @@
-package com.ams.building.server.controller;
+package com.ams.building.server.controller.admin;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;

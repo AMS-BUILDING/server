@@ -1,7 +1,6 @@
 package com.ams.building.server.bean;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -18,7 +17,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import java.io.Serializable;
 
-@Builder
 @Getter
 @Setter
 @AllArgsConstructor
@@ -67,11 +65,11 @@ public class Account implements Serializable {
     @Column(name = "current_address")
     private String currentAddress;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "role_id", referencedColumnName = "id")
     private Role role;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "position_id", referencedColumnName = "id")
     private Position position;
 
@@ -80,9 +78,5 @@ public class Account implements Serializable {
 
     @Column(name = "enabled_token")
     private Boolean enabledToken;
-
-    public Account(@NonNull Long id) {
-        this.id = id;
-    }
 
 }

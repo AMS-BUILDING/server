@@ -1,4 +1,4 @@
-package com.ams.building.server.controller;
+package com.ams.building.server.controller.app;
 
 import com.ams.building.server.constant.Constants;
 import com.ams.building.server.response.ManagerPersonResponse;

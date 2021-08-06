@@ -1,7 +1,6 @@
 package com.ams.building.server.bean;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -18,7 +17,6 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import java.io.Serializable;
 
-@Builder
 @Getter
 @Setter
 @AllArgsConstructor
@@ -42,7 +40,7 @@ public class Apartment implements Serializable {
     @JoinColumn(name = "building_id", referencedColumnName = "id")
     private Building building;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "room_number_id", referencedColumnName = "id")
     private RoomNumber roomNumber;
 

@@ -1,7 +1,6 @@
 package com.ams.building.server.bean;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -20,7 +19,6 @@ import javax.persistence.UniqueConstraint;
 import java.io.Serializable;
 import java.util.Date;
 
-@Builder
 @Getter
 @Setter
 @AllArgsConstructor

@@ -1,7 +1,6 @@
 package com.ams.building.server.bean;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -14,11 +13,11 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import java.io.Serializable;
 import java.util.Date;
 
-@Builder
 @Getter
 @Setter
 @AllArgsConstructor
@@ -34,15 +33,15 @@ public class RequestService implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "reason_detail_sub_service_id", referencedColumnName = "id")
     private ReasonDetailSubService reasonDetailSubService;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "status_service_request_id", referencedColumnName = "id")
     private StatusServiceRequest statusServiceRequest;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "account_id", referencedColumnName = "id")
     private Account account;
 
@@ -54,5 +53,15 @@ public class RequestService implements Serializable {
 
     @Column(name = "end_date")
     private Date endDate;
+
+    @Column(name = "date_register")
+    private Date dateRequest;
+
+    @PrePersist
+    public void prePersist() {
+        if (dateRequest == null) {
+            dateRequest = new Date(System.currentTimeMillis());
+        }
+    }
 
 }
