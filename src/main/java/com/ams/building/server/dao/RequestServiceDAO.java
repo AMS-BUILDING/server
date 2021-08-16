@@ -37,4 +37,6 @@ public interface RequestServiceDAO extends JpaRepository<RequestService, Long> {
 
     @Query("SELECT r FROM RequestService r WHERE r.account.id=?1 AND r.statusServiceRequest.id=?2 AND r.statusServiceRequest.id < 4 ORDER BY r.startDate desc ")
     List<RequestService> requestServiceByAccountId(Long accountId, Long statusId);
+
+
 }
