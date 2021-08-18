@@ -13,4 +13,5 @@ public interface SubServiceService {
     ApiResponse searchService(Integer page, Integer size, Long serviceId, String subServiceName);
 
     List<DetailSubServiceResponse> reasonDetailServiceBySubServiceId(Long subServiceId);
+
 }

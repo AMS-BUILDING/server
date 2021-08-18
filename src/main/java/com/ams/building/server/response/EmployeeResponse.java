@@ -14,7 +14,7 @@ public class EmployeeResponse {
     private String phone;
     private String email;
     private String dob;
-    private String identityCard;
+    private String identifyCard;
     private String homeTown;
     private String currentAddress;
     private String gender;

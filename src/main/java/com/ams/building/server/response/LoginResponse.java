@@ -24,6 +24,7 @@ public class LoginResponse {
     private String homeTown;
     private Long roleId;
     private String currentAddress;
+    private Boolean gender;
 
     @JsonIgnore
     private MultipartFile multipartFile;

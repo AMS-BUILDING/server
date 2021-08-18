@@ -1,5 +1,6 @@
 package com.ams.building.server.service;
 
+import com.ams.building.server.request.VehicleCardClientRequest;
 import com.ams.building.server.response.ApiResponse;
 import com.ams.building.server.response.VehicleCardResponse;
 import com.ams.building.server.response.VehicleTypeResponse;
@@ -17,5 +18,7 @@ public interface VehicleCardService {
     void removeVehicleCard(Long id);
 
     List<VehicleTypeResponse> listVehicleByTypeAndByAccountId(Long id, Long vehicleTypeId);
+
+    void addVehicleCard(List<VehicleCardClientRequest> requests, Long accountId);
 
 }

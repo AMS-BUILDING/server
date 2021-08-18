@@ -1,7 +1,11 @@
 package com.ams.building.server.service;
 
+import com.ams.building.server.request.RequestServiceRequest;
 import com.ams.building.server.response.ApiResponse;
-import com.ams.building.server.response.HistoryRequestServiceResponse;
+import com.ams.building.server.response.DetailServiceRequestResponse;
+import com.ams.building.server.response.DetailSubServiceClientResponse;
+import com.ams.building.server.response.ReasonDetailSubServiceResponse;
+import com.ams.building.server.response.RequestServiceClientResponse;
 import com.ams.building.server.response.RequestServiceResponse;
 import com.ams.building.server.response.StatusServiceResponse;
 
@@ -17,6 +21,18 @@ public interface RequestServiceService {
 
     void updateStatusRequest(Long statusId, Long requestId);
 
-    List<HistoryRequestServiceResponse> historyServiceResponse(Long id, Long statusId);
+    Long addRequestServiceSuccessStatus(RequestServiceRequest requestServiceRequest);
+
+    Double getPriceByReasonDetailSubServiceId(Long id);
+
+    List<ReasonDetailSubServiceResponse> getListReasonByDetailSubServiceId(Long id);
+
+    List<RequestServiceClientResponse> findRequestServiceByAccountId(Long accountId);
+
+    List<DetailSubServiceClientResponse> getDetailSubServiceBySubServiceId(Long subServiceId);
+
+    List<RequestServiceClientResponse> historyServiceResponse(Long id, Long statusId);
+
+    DetailServiceRequestResponse detailServiceRequest(Long serviceRequestId);
 
 }

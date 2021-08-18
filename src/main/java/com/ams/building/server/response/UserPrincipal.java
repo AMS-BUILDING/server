@@ -25,5 +25,4 @@ public class UserPrincipal extends User implements Serializable {
                          Collection<? extends GrantedAuthority> authorities) {
         super(username, password, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked, authorities);
     }
-
 }

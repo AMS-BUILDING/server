@@ -1,7 +1,6 @@
 package com.ams.building.server.service.impl;
 
 import com.ams.building.server.bean.Account;
-import com.ams.building.server.constant.RoleEnum;
 import com.ams.building.server.dao.AccountDAO;
 import com.ams.building.server.response.ManagerPersonResponse;
 import com.ams.building.server.service.ManagementPersonService;

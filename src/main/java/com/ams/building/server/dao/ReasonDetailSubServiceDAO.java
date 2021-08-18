@@ -13,4 +13,9 @@ public interface ReasonDetailSubServiceDAO extends JpaRepository<ReasonDetailSub
     @Query("SELECT r FROM ReasonDetailSubService r WHERE r.detailSubService.service.id =?1")
     List<ReasonDetailSubService> getListReasonBySubServiceId(Long subServiceId);
 
+    @Query("SELECT r FROM  ReasonDetailSubService r WHERE r.id = ?1 ")
+    ReasonDetailSubService getReasonDetailSubServiceById(Long id);
+
+    @Query("SELECT r FROM  ReasonDetailSubService r WHERE r.detailSubService.id = ?1")
+    List<ReasonDetailSubService> getListReasonByDetailSubServiceId(Long id);
 }

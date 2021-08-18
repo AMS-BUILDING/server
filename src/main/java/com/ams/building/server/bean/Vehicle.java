@@ -1,7 +1,6 @@
 package com.ams.building.server.bean;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -14,7 +13,6 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import java.io.Serializable;
 
-@Builder
 @Getter
 @Setter
 @AllArgsConstructor
@@ -33,7 +31,10 @@ public class Vehicle implements Serializable {
     @Column(name = "vehicle_name")
     private String vehicleName;
 
-    @Column(name = "price")
+    @Column(name = "price_month")
     private Double price;
+
+    @Column(name = "price_day")
+    private Double priceDay;
 
 }
