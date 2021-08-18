@@ -14,7 +14,7 @@ public interface ApartmentBuildingDAO extends JpaRepository<Apartment, Long> {
     @Query("SELECT a FROM ApartmentBilling a WHERE a.apartment.id =?1")
     List<ApartmentBilling> detailApartmentBuildingByMonth(Long apartmentId);
 
-    @Query("SELECT a FROM ApartmentBilling a WHERE a.billingMonth =?1")
-    ApartmentBilling getDetailByMonth(String billingMonth);
+    @Query("SELECT a FROM ApartmentBilling a WHERE a.billingMonth =?1 AND a.apartment.account.id =?2 ")
+    ApartmentBilling getDetailByMonth(String billingMonth, Long accountId);
 
 }
