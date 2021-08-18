@@ -8,7 +8,6 @@ import com.ams.building.server.service.ApartmentService;
 import com.google.gson.Gson;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -30,7 +29,7 @@ public class BlockFloorController {
     private ApartmentService apartmentService;
 
     @GetMapping(value = Constants.UrlPath.URL_API_FLOOR_LIST)
-    public ResponseEntity<?> floorList(@Param("blockId") Long blockId) {
+    public ResponseEntity<?> floorList(@RequestParam("blockId") Long blockId) {
         List<FloorResponse> responseList = apartmentService.floorList(blockId);
         ResponseEntity<List<FloorResponse>> response = new ResponseEntity<>(responseList, HttpStatus.OK);
         logger.debug("floorList response : " + new Gson().toJson(response));

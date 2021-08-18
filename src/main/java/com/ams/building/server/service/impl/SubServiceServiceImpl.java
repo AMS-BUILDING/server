@@ -13,6 +13,7 @@ import com.ams.building.server.response.DetailSubServiceResponse;
 import com.ams.building.server.response.ServiceResponse;
 import com.ams.building.server.response.SubServiceResponse;
 import com.ams.building.server.service.SubServiceService;
+import com.ams.building.server.utils.HelperUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -24,8 +25,6 @@ import org.springframework.util.StringUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-
-import static com.ams.building.server.utils.HelperUtils.formatDoubleNUmber;
 
 @Service
 public class SubServiceServiceImpl implements SubServiceService {
@@ -106,9 +105,8 @@ public class SubServiceServiceImpl implements SubServiceService {
         response.setDetailSubServiceName(service.getDetailSubService().getDetailSubServiceName());
         response.setReasonName(service.getReasonName());
         if (!StringUtils.isEmpty(service.getPrice())) {
-            response.setPrice(formatDoubleNUmber(service.getPrice()));
+            response.setPrice(HelperUtils.formatDoubleNUmber(service.getPrice()));
         }
         return response;
     }
-
 }

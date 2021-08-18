@@ -31,11 +31,11 @@ public class ResidentCard implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "account_id", columnDefinition = "id")
     private Account account;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "status_resident_card_id", columnDefinition = "id")
     private StatusResidentCard statusResidentCard;
 

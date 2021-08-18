@@ -33,17 +33,16 @@ import java.util.Objects;
 @RequestMapping("/api")
 @CrossOrigin(origins = "*", maxAge = -1)
 public class AccountController {
-
     private static final Logger logger = Logger.getLogger(AccountController.class);
+
+    @Autowired
+    private AccountService accountService;
 
     @Autowired
     private SendEmailAccountDAO sendEmailAccountDao;
 
     @Autowired
     private EmailService emailService;
-
-    @Autowired
-    private AccountService accountService;
 
     @PostMapping(Constants.UrlPath.URL_API_UPDATE_PROFILE_ACCOUNT)
     public ResponseEntity<?> updateAccountProfile(@RequestBody LoginResponse accountDTO) {

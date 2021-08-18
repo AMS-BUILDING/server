@@ -40,7 +40,7 @@ public class Apartment implements Serializable {
     @JoinColumn(name = "building_id", referencedColumnName = "id")
     private Building building;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "room_number_id", referencedColumnName = "id")
     private RoomNumber roomNumber;
 

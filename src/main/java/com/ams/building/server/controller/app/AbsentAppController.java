@@ -1,9 +1,9 @@
 package com.ams.building.server.controller.app;
 
+import com.ams.building.server.constant.Constants;
+import com.ams.building.server.request.AbsentRequest;
+import com.ams.building.server.service.AbsentService;
 import com.google.gson.Gson;
-import com.quan_ly_toa_nha.fpt.constant.Constants;
-import com.quan_ly_toa_nha.fpt.request.AbsentRequest;
-import com.quan_ly_toa_nha.fpt.service.AbsentService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

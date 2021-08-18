@@ -12,12 +12,12 @@ import java.util.TimeZone;
 
 public class DateTimeUtils {
 
+    private static final Logger logger = Logger.getLogger(DateTimeUtils.class);
     public static String DD_MM_YYYY_HH_MM = "dd/MM/yyyy HH:mm";
     public static String DD_MM_YYYY = "dd/MM/yyyy";
     public static String MM_YYYY = "MM/yyyy";
     public static String HH_MM = "HH:mm";
-
-    private static final Logger logger = Logger.getLogger(DateTimeUtils.class);
+    public static String YYYY_MM_DD_HH_MM = "yyyy/MM/dd HH:mm";
 
     public static Date parseDate(String date, String pattern) {
         SimpleDateFormat sdf = new SimpleDateFormat(pattern);

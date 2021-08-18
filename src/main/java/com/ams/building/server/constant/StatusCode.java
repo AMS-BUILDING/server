@@ -50,7 +50,14 @@ public enum StatusCode {
     BUILDING_NOT_EXIST(443, PropertiesReader.getProperty(PropertyKeys.BUILDING_NOT_EXIST)),
     EMAIL_REGISTER_BEFORE(444, PropertiesReader.getProperty(PropertyKeys.EMAIL_REGISTER_BEFORE)),
     DUPLICATE_EMAIL_IN_LIST_RESIDENT(445, PropertiesReader.getProperty(PropertyKeys.DUPLICATE_EMAIL_IN_LIST_RESIDENT)),
-    DUPLICATE_IDENTIFY_CARD_IN_LIST_RESIDENT(446, PropertiesReader.getProperty(PropertyKeys.DUPLICATE_IDENTIFY_CARD_IN_LIST_RESIDENT));
+    DUPLICATE_IDENTIFY_CARD_IN_LIST_RESIDENT(446, PropertiesReader.getProperty(PropertyKeys.DUPLICATE_IDENTIFY_CARD_IN_LIST_RESIDENT)),
+    REQUEST_SERVICE_REGISTER_BEFORE(447, PropertiesReader.getProperty(PropertyKeys.REQUEST_SERVICE_REGISTER_BEFORE)),
+    REASON_DETAIL_SUB_SERVICE_NOT_EXIST(448, PropertiesReader.getProperty(PropertyKeys.REASON_DETAIL_SUB_SERVICE_NOT_EXIST)),
+    ACCOUNT_NOT_RIGHT_ROLE(449, PropertiesReader.getProperty(PropertyKeys.ACCOUNT_NOT_RIGHT_ROLE)),
+    TYPE_APARTMENT_NOT_EXIST(450, PropertiesReader.getProperty(PropertyKeys.TYPE_APARTMENT_NOT_EXIST)),
+    NOTIFICATION_NOT_EXIST(451, PropertiesReader.getProperty(PropertyKeys.NOTIFICATION_NOT_EXIST)),
+    BILLING_MONTH_NOT_RIGHT(452, PropertiesReader.getProperty(PropertyKeys.BILLING_MONTH_NOT_RIGHT)),
+    PASSWORD_NOT_RIGHT(453, PropertiesReader.getProperty(PropertyKeys.PASSWORD_NOT_RIGHT));
 
     private Integer status;
 
@@ -76,5 +83,4 @@ public enum StatusCode {
     public void setMessage(String message) {
         this.message = message;
     }
-
 }

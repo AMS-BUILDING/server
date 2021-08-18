@@ -108,6 +108,34 @@ public class ResidentCardServiceImpl implements ResidentCardService {
         residentCardDAO.save(newCard);
     }
 
+    @Override
+    public void addResidentCard(Long amount, Long accountId) {
+        if (StringUtils.isEmpty(accountId) || StringUtils.isEmpty(amount)) {
+            throw new RestApiException(StatusCode.DATA_EMPTY);
+        }
+        Apartment apartment = apartmentDAO.getApartmentByAccountId(accountId, String.valueOf(RoleEnum.ROLE_LANDLORD));
+        if (Objects.isNull(apartment)) {
+            throw new RestApiException(StatusCode.APARTMENT_NOT_EXIST);
+        }
+        RoomNumber roomNumber = apartment.getRoomNumber();
+        if (Objects.isNull(roomNumber)) {
+            throw new RestApiException(StatusCode.ROOM_NUMBER_NOT_EXIST);
+        }
+        Account account = new Account();
+        for (Long i = 0L; i < amount; i++) {
+            ResidentCard residentCard = new ResidentCard();
+            StatusResidentCard status = new StatusResidentCard();
+            status.setId(1L);
+            residentCard.setStatusResidentCard(status);
+            String cardCode = genCardCode(roomNumber.getRoomName());
+            residentCard.setCardCode(cardCode);
+            account.setId(accountId);
+            residentCard.setAccount(account);
+            residentCard.setPrice(Double.valueOf(50000));
+            residentCardDAO.save(residentCard);
+        }
+    }
+
     private String genCardCode(String apartmentName) {
         String cardCode = apartmentName;
         Random rand = new Random();
@@ -145,5 +173,4 @@ public class ResidentCardServiceImpl implements ResidentCardService {
         response.setStatus(card.getStatusResidentCard().getStatusName());
         return response;
     }
-
 }

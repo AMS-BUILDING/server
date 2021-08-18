@@ -32,15 +32,15 @@ public class VehicleCard implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "vehicle_id", columnDefinition = "id")
     private Vehicle vehicle;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "account_id", columnDefinition = "id")
     private Account account;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "status_vehicle_card_id", columnDefinition = "id")
     private StatusVehicleCard statusVehicleCard;
 
@@ -56,10 +56,10 @@ public class VehicleCard implements Serializable {
     @Column(name = "vehicle_color")
     private String vehicleColor;
 
+    @Column(name = "billing_month")
+    private String billingMonth;
+
     @Column(name = "start_date")
     private Date startDate;
-
-    @Column(name = "end_date")
-    private Date endDate;
 
 }

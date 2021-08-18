@@ -4,12 +4,12 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
-@Builder
 @Getter
 @Setter
+@Builder
 public class PasswordRequest {
 
+    private String oldPassword;
     private String newPassword;
-    private String confirmPassword;
 
 }

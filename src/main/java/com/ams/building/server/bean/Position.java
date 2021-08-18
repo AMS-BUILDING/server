@@ -34,8 +34,4 @@ public class Position implements Serializable {
     @Column(name = "show", columnDefinition = "false")
     private Boolean show;
 
-    public Position(Long id) {
-        this.id = id;
-    }
-
 }

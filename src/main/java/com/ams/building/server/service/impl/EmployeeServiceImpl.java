@@ -13,6 +13,7 @@ import com.ams.building.server.request.EmployeeRequest;
 import com.ams.building.server.response.ApiResponse;
 import com.ams.building.server.response.EmployeeResponse;
 import com.ams.building.server.service.EmployeeService;
+import com.ams.building.server.utils.FileStore;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -82,8 +83,9 @@ public class EmployeeServiceImpl implements EmployeeService {
         if (Objects.isNull(request)) {
             throw new RestApiException(StatusCode.DATA_EMPTY);
         }
-        if (StringUtils.isEmpty(request.getIdentifyCard())) {
-            throw new RestApiException(StatusCode.IDENTIFY_CARD_EMPTY);
+        Account currentAccount = accountDao.getAccountById(accountId);
+        if (Objects.isNull(currentAccount)) {
+            throw new RestApiException(StatusCode.ACCOUNT_NOT_EXIST);
         }
         if (StringUtils.isEmpty(request.getDob())) {
             throw new RestApiException(StatusCode.DOB_EMPTY);
@@ -100,12 +102,17 @@ public class EmployeeServiceImpl implements EmployeeService {
         if (!isPhoneNumber(request.getPhoneNumber())) {
             throw new RestApiException(StatusCode.PHONE_NUMBER_NOT_RIGHT_FORMAT);
         }
+        if (StringUtils.isEmpty(request.getIdentifyCard())) {
+            throw new RestApiException(StatusCode.IDENTIFY_CARD_EMPTY);
+        }
         if (!isIdentifyCard(request.getIdentifyCard())) {
             throw new RestApiException(StatusCode.IDENTIFY_CARD_NOT_RIGHT);
         }
-        Account currentAccount = accountDao.getAccountById(accountId);
-        if (Objects.isNull(currentAccount)) {
-            throw new RestApiException(StatusCode.ACCOUNT_NOT_EXIST);
+        Account accountByIdentifyCard = accountDao.getAccountByIdentify(request.getIdentifyCard());
+        if (Objects.nonNull(accountByIdentifyCard)) {
+            if (!accountByIdentifyCard.getIdentifyCard().equalsIgnoreCase(currentAccount.getIdentifyCard())) {
+                throw new RestApiException(StatusCode.IDENTIFY_CARD_DUPLICATE);
+            }
         }
         currentAccount.setDob(request.getDob());
         currentAccount.setGender(request.getGender());
@@ -171,7 +178,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         account.setCurrentAddress(request.getCurrentAddress());
         account.setName(request.getName());
         account.setPassword(Constants.DEFAULT_PASSWORD);
-        account.setImage(Constants.DEFAULT_AVATAR);
+        account.setImage(FileStore.getDefaultAvatar());
         account.setEnabled(true);
         Position position = positionDAO.getOne(request.getPosition());
         account.setPosition(position);
@@ -236,9 +243,9 @@ public class EmployeeServiceImpl implements EmployeeService {
         response.setCurrentAddress(account.getCurrentAddress());
         response.setDob(account.getDob());
         response.setHomeTown(account.getHomeTown());
-        response.setIdentityCard(account.getIdentifyCard());
+        response.setIdentifyCard(account.getIdentifyCard());
         String gender;
-        if (account.getGender() == true) {
+        if (account.getGender()) {
             gender = Constants.AccountGender.GENDER_MALE;
         } else {
             gender = Constants.AccountGender.GENDER_FEMALE;
@@ -283,5 +290,4 @@ public class EmployeeServiceImpl implements EmployeeService {
         }
         return content;
     }
-
 }

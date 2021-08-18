@@ -30,4 +30,5 @@ public class ServiceBean implements Serializable {
 
     @Column(name = "name")
     private String name;
+
 }

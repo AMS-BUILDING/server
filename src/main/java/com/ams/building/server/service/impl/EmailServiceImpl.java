@@ -18,27 +18,23 @@ import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import java.util.Objects;
 
-import static com.ams.building.server.utils.ValidateUtil.isEmail;
-
 @Component
 public class EmailServiceImpl implements EmailService {
 
     @Autowired
-    private SendEmailAccountDAO sendEmailAccountDao;
-
-    @Autowired
     JavaMailSender javaMailSender;
-
     @Autowired
     Configuration configuration;
+    @Autowired
+    private SendEmailAccountDAO sendEmailAccountDao;
 
     @Override
     @Async
     public void sendSimpleMessage(String email, String subject, String text) throws MessagingException {
-        if (email.isEmpty()) return;
+        if (StringUtils.isEmpty(email)) return;
         MimeMessage message = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message);
-        helper.setFrom("tuan.nguyen@ekoios.vn");
+        helper.setFrom("manha2cvp@gmail.com");
         helper.setTo(email);
         helper.setSubject(subject);
         helper.setText(text, true);
@@ -47,15 +43,6 @@ public class EmailServiceImpl implements EmailService {
 
     @Override
     public void updateResetPasswordToken(String token, String email) {
-        if (StringUtils.isEmpty(token)) {
-            throw new RestApiException(StatusCode.DATA_EMPTY);
-        }
-        if (StringUtils.isEmpty(email)) {
-            throw new RestApiException(StatusCode.EMAIL_EMPTY);
-        }
-        if (!isEmail(email)) {
-            throw new RestApiException(StatusCode.EMAIL_NOT_RIGHT_FORMAT);
-        }
         Account account = sendEmailAccountDao.findAccountByEmail(email);
         if (Objects.isNull(account)) {
             throw new RestApiException(StatusCode.ACCOUNT_NOT_EXIST);
@@ -77,5 +64,4 @@ public class EmailServiceImpl implements EmailService {
         account.setResetPasswordToken(null);
         sendEmailAccountDao.save(account);
     }
-
 }

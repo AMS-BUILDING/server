@@ -1,11 +1,11 @@
 package com.ams.building.server.controller.app;
 
+import com.ams.building.server.constant.Constants;
+import com.ams.building.server.request.PasswordRequest;
+import com.ams.building.server.response.AccountAppResponse;
+import com.ams.building.server.response.UserPrincipal;
+import com.ams.building.server.service.AccountService;
 import com.google.gson.Gson;
-import com.quan_ly_toa_nha.fpt.constant.Constants;
-import com.quan_ly_toa_nha.fpt.request.PasswordRequest;
-import com.quan_ly_toa_nha.fpt.response.AccountAppResponse;
-import com.quan_ly_toa_nha.fpt.response.UserPrincipal;
-import com.quan_ly_toa_nha.fpt.service.AccountService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

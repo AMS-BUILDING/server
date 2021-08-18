@@ -2,20 +2,30 @@ package com.ams.building.server.service.impl;
 
 import com.ams.building.server.bean.Account;
 import com.ams.building.server.bean.Apartment;
+import com.ams.building.server.bean.DetailSubService;
+import com.ams.building.server.bean.ReasonDetailSubService;
 import com.ams.building.server.bean.RequestService;
+import com.ams.building.server.bean.RoomNumber;
 import com.ams.building.server.bean.StatusServiceRequest;
 import com.ams.building.server.constant.RoleEnum;
 import com.ams.building.server.constant.StatusCode;
 import com.ams.building.server.dao.AccountDAO;
 import com.ams.building.server.dao.ApartmentDAO;
+import com.ams.building.server.dao.DetailSubServiceDAO;
+import com.ams.building.server.dao.ReasonDetailSubServiceDAO;
 import com.ams.building.server.dao.RequestServiceDAO;
 import com.ams.building.server.dao.StatusRequestServiceDAO;
 import com.ams.building.server.exception.RestApiException;
+import com.ams.building.server.request.RequestServiceRequest;
 import com.ams.building.server.response.ApiResponse;
-import com.ams.building.server.response.HistoryRequestServiceResponse;
+import com.ams.building.server.response.DetailServiceRequestResponse;
+import com.ams.building.server.response.DetailSubServiceClientResponse;
+import com.ams.building.server.response.ReasonDetailSubServiceResponse;
+import com.ams.building.server.response.RequestServiceClientResponse;
 import com.ams.building.server.response.RequestServiceResponse;
 import com.ams.building.server.response.StatusServiceResponse;
 import com.ams.building.server.service.RequestServiceService;
+import com.ams.building.server.utils.DateTimeUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -26,12 +36,15 @@ import org.springframework.util.StringUtils;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 import static com.ams.building.server.utils.DateTimeUtils.DD_MM_YYYY;
 import static com.ams.building.server.utils.DateTimeUtils.HH_MM;
 import static com.ams.building.server.utils.DateTimeUtils.convertDateToStringWithTimezone;
+import static com.ams.building.server.utils.DateTimeUtils.convertStringToDate;
 
 @Transactional
 @Service
@@ -47,6 +60,12 @@ public class RequestServiceServiceImpl implements RequestServiceService {
 
     @Autowired
     private ApartmentDAO apartmentDAO;
+
+    @Autowired
+    private ReasonDetailSubServiceDAO reasonDetailSubServiceDAO;
+
+    @Autowired
+    private DetailSubServiceDAO detailSubServiceDAO;
 
     @Autowired
     private AccountDAO accountDAO;
@@ -77,9 +96,7 @@ public class RequestServiceServiceImpl implements RequestServiceService {
 
     @Override
     public RequestServiceResponse getRequestServiceById(Long id) {
-        if (StringUtils.isEmpty(id)) {
-            throw new RestApiException(StatusCode.DATA_EMPTY);
-        }
+        if (StringUtils.isEmpty(id)) throw new RestApiException(StatusCode.DATA_EMPTY);
         RequestService service = requestServiceDAO.findRequestServiceById(id);
         if (Objects.isNull(service)) {
             throw new RestApiException(StatusCode.REQUEST_SERVICE_NOT_EXIST);
@@ -90,18 +107,15 @@ public class RequestServiceServiceImpl implements RequestServiceService {
 
     @Override
     public void updateStatusRequest(Long statusId, Long requestId) {
-        if (StringUtils.isEmpty(requestId) || StringUtils.isEmpty(statusId)) {
+        if (StringUtils.isEmpty(requestId) || StringUtils.isEmpty(statusId))
             throw new RestApiException(StatusCode.DATA_EMPTY);
-        }
         RequestService service = requestServiceDAO.findRequestServiceById(requestId);
-        if (Objects.isNull(service)) {
-            throw new RestApiException(StatusCode.REQUEST_SERVICE_NOT_EXIST);
-        }
+        if (Objects.isNull(service)) throw new RestApiException(StatusCode.REQUEST_SERVICE_NOT_EXIST);
         requestServiceDAO.updateStatus(statusId, requestId);
     }
 
     @Override
-    public List<HistoryRequestServiceResponse> historyServiceResponse(Long id, Long statusId) {
+    public List<RequestServiceClientResponse> historyServiceResponse(Long id, Long statusId) {
         if (StringUtils.isEmpty(id) || StringUtils.isEmpty(statusId)) {
             throw new RestApiException(StatusCode.DATA_EMPTY);
         }
@@ -110,9 +124,185 @@ public class RequestServiceServiceImpl implements RequestServiceService {
             throw new RestApiException(StatusCode.ACCOUNT_NOT_EXIST);
         }
         List<RequestService> requestServiceByAccountId = requestServiceDAO.requestServiceByAccountId(id, statusId);
-        List<HistoryRequestServiceResponse> responses = new ArrayList<>();
+        List<RequestServiceClientResponse> responses = new ArrayList<>();
         requestServiceByAccountId.forEach(s -> responses.add(convertToHistoryResponse(s)));
         return responses;
+    }
+
+    @Override
+    public DetailServiceRequestResponse detailServiceRequest(Long serviceRequestId) {
+        if (StringUtils.isEmpty(serviceRequestId)) {
+            throw new RestApiException(StatusCode.DATA_EMPTY);
+        }
+        RequestService request = requestServiceDAO.getById(serviceRequestId);
+        if (Objects.isNull(request)) {
+            throw new RestApiException(StatusCode.REQUEST_SERVICE_NOT_EXIST);
+        }
+        String message = request.getReasonDetailSubService().getDetailSubService().getService().getSubServiceName();
+        if (request.getReasonDetailSubService().getDetailSubService().getService().getId() == 9) {
+            message += request.getReasonDetailSubService().getDetailSubService().getDetailSubServiceName().toLowerCase() + " vì  " + request.getReasonDetailSubService().getReasonName().toLowerCase();
+        }
+        DetailServiceRequestResponse response = DetailServiceRequestResponse.builder().build();
+        response.setStatusId(request.getStatusServiceRequest().getId());
+        response.setServiceName(message);
+        return response;
+    }
+
+    @Override
+    public Long addRequestServiceSuccessStatus(RequestServiceRequest requestServiceRequest) {
+        Long id;
+        if (Objects.isNull(requestServiceRequest)) {
+            throw new RestApiException(StatusCode.DATA_EMPTY);
+        }
+        RequestService requestService = new RequestService();
+        Long requestId = requestServiceRequest.getReasonDetailSubServiceId();
+        ReasonDetailSubService reason = new ReasonDetailSubService();
+        reason.setId(requestServiceRequest.getReasonDetailSubServiceId());
+
+        StatusServiceRequest status = new StatusServiceRequest();
+        status.setId(3L);
+
+        Account account = new Account();
+        account.setId(requestServiceRequest.getAccountId());
+        if (requestId <= 4L) {
+            RequestService currentRequestService = requestServiceDAO.findRequestServiceByStartDateAndReasonDetailSubServiceId(convertStringToDate(requestServiceRequest.getStartDate(), DateTimeUtils.YYYY_MM_DD_HH_MM), requestServiceRequest.getReasonDetailSubServiceId());
+            if (Objects.nonNull(currentRequestService)) {
+                throw new RestApiException(StatusCode.REQUEST_SERVICE_REGISTER_BEFORE);
+            }
+            requestService.setReasonDetailSubService(reason);
+            requestService.setStatusServiceRequest(status);
+            requestService.setAccount(account);
+            requestService.setStartDate(convertStringToDate(requestServiceRequest.getStartDate(), DateTimeUtils.YYYY_MM_DD_HH_MM));
+            requestService.setDescription(requestServiceRequest.getDescription());
+            requestService.setEndDate(convertStringToDate(requestServiceRequest.getEndDate(), DateTimeUtils.YYYY_MM_DD_HH_MM));
+            requestServiceDAO.save(requestService);
+        } else if (requestId == 5L) {
+            requestService.setReasonDetailSubService(reason);
+            requestService.setStatusServiceRequest(status);
+            requestService.setAccount(account);
+            requestService.setStartDate(convertStringToDate(requestServiceRequest.getStartDate(), DateTimeUtils.YYYY_MM_DD_HH_MM));
+            requestService.setDescription(requestServiceRequest.getDescription());
+            requestService.setEndDate(convertStringToDate(requestServiceRequest.getEndDate(), DateTimeUtils.YYYY_MM_DD_HH_MM));
+            requestServiceDAO.save(requestService);
+        } else {
+            requestService.setReasonDetailSubService(reason);
+            status.setId(1L);
+            requestService.setStatusServiceRequest(status);
+            requestService.setAccount(account);
+            requestService.setStartDate(convertStringToDate(requestServiceRequest.getStartDate(), DateTimeUtils.YYYY_MM_DD_HH_MM));
+            requestService.setDescription(requestServiceRequest.getDescription());
+            requestService.setEndDate(convertStringToDate(requestServiceRequest.getEndDate(), DateTimeUtils.YYYY_MM_DD_HH_MM));
+            requestServiceDAO.save(requestService);
+        }
+        id = requestService.getId();
+        return id;
+    }
+
+    @Override
+    public Double getPriceByReasonDetailSubServiceId(Long id) {
+        if (Objects.isNull(id)) {
+            throw new RestApiException(StatusCode.DATA_EMPTY);
+        }
+        ReasonDetailSubService reasonDetailSubService = reasonDetailSubServiceDAO.getReasonDetailSubServiceById(id);
+        if (Objects.isNull(reasonDetailSubService)) {
+            throw new RestApiException(StatusCode.REASON_DETAIL_SUB_SERVICE_NOT_EXIST);
+        }
+        Double price = reasonDetailSubService.getPrice();
+        return price;
+    }
+
+    @Override
+    public List<ReasonDetailSubServiceResponse> getListReasonByDetailSubServiceId(Long id) {
+        if (Objects.isNull(id)) {
+            throw new RestApiException(StatusCode.DATA_EMPTY);
+        }
+        List<ReasonDetailSubService> reasonDetailSubServices = reasonDetailSubServiceDAO.getListReasonByDetailSubServiceId(id);
+        List<ReasonDetailSubServiceResponse> responses = new ArrayList<>();
+        reasonDetailSubServices.forEach(r -> responses.add(convertReasonDetailSubService(r)));
+        return responses;
+    }
+
+    @Override
+    public List<RequestServiceClientResponse> findRequestServiceByAccountId(Long accountId) {
+        List<RequestServiceClientResponse> response = new ArrayList<>();
+        List<RequestService> requestServices = requestServiceDAO.findRequestServiceByAccountId(accountId);
+        for (RequestService requestService : requestServices) {
+            RequestServiceClientResponse requestServiceClientResponse = convertRequestServiceToRequestServiceClientResponse(requestService);
+            response.add(requestServiceClientResponse);
+        }
+        return response;
+    }
+
+    @Override
+    public List<DetailSubServiceClientResponse> getDetailSubServiceBySubServiceId(Long subServiceId) {
+        if (Objects.isNull(subServiceId)) {
+            throw new RestApiException(StatusCode.DATA_EMPTY);
+        }
+        List<DetailSubService> detailSubServices = detailSubServiceDAO.getDetailSubServiceBySubServiceId(subServiceId);
+        List<DetailSubServiceClientResponse> responses = new ArrayList<>();
+        detailSubServices.forEach(detailSubService -> responses.add(convertDetailSubServiceToDetailSubServiceClientResponse(detailSubService)));
+        return responses;
+    }
+
+    private DetailSubServiceClientResponse convertDetailSubServiceToDetailSubServiceClientResponse(DetailSubService detailSubService) {
+        DetailSubServiceClientResponse response = DetailSubServiceClientResponse.builder()
+                .id(detailSubService.getId())
+                .detailSubServiceName(detailSubService.getDetailSubServiceName())
+                .build();
+        return response;
+    }
+
+    private RequestServiceClientResponse convertRequestServiceToRequestServiceClientResponse(RequestService requestService) {
+        String serviceName = requestService.getReasonDetailSubService().getDetailSubService().getService().getSubServiceName();
+        Date currentTime = new Date();
+        Account account = requestService.getAccount();
+        if (Objects.isNull(account)) {
+            throw new RestApiException(StatusCode.ACCOUNT_NOT_EXIST);
+        }
+        Apartment apartment = apartmentDAO.getApartmentByAccountId(account.getId());
+        if (Objects.isNull(apartment)) {
+            throw new RestApiException(StatusCode.APARTMENT_NOT_EXIST);
+        }
+        RoomNumber roomNumber = apartment.getRoomNumber();
+        if (Objects.isNull(roomNumber)) {
+            throw new RestApiException(StatusCode.ROOM_NUMBER_NOT_EXIST);
+        }
+        Long reasonRequestId = requestService.getReasonDetailSubService().getId();
+        String serviceNameStr = "Yêu cầu sử dụng dịch vụ " + serviceName.toLowerCase();
+        String description;
+        if (reasonRequestId >= 21 && reasonRequestId <= 29) {
+            description = serviceNameStr + requestService.getReasonDetailSubService().getDetailSubService().getDetailSubServiceName().toLowerCase() + " " + requestService.getReasonDetailSubService().getReasonName().toLowerCase() + " tại căn hộ " + roomNumber.getRoomName() + " lúc " + convertDateToStringWithTimezone(requestService.getStartDate(), HH_MM, null);
+        } else {
+            description = serviceNameStr + " tại căn hộ " + roomNumber.getRoomName() + " lúc " + convertDateToStringWithTimezone(requestService.getStartDate(), HH_MM, null);
+        }
+        Long diff = currentTime.getTime() - requestService.getDateRequest().getTime();
+        long minutes
+                = TimeUnit.MILLISECONDS.toMinutes(diff);
+        String time = "";
+        if (minutes >= 0 && minutes < 60) {
+            time = minutes + " phút trước";
+        } else if (minutes >= 60 && minutes < 1440) {
+            time = Long.valueOf(minutes / 60) + " giờ trước";
+        } else {
+            time = convertDateToStringWithTimezone(requestService.getDateRequest(), DD_MM_YYYY, null);
+        }
+        RequestServiceClientResponse response = RequestServiceClientResponse.builder()
+                .id(requestService.getId())
+                .serviceName(serviceNameStr + " - " + convertDateToStringWithTimezone(requestService.getStartDate(), DD_MM_YYYY, null))
+                .description(description)
+                .time(time)
+                .statusId(requestService.getStatusServiceRequest().getId())
+                .build();
+        return response;
+    }
+
+    private ReasonDetailSubServiceResponse convertReasonDetailSubService(ReasonDetailSubService reasonDetailSubService) {
+        ReasonDetailSubServiceResponse resp = ReasonDetailSubServiceResponse.builder()
+                .reasonName(reasonDetailSubService.getReasonName())
+                .id(reasonDetailSubService.getId())
+                .price(reasonDetailSubService.getPrice())
+                .build();
+        return resp;
     }
 
     private StatusServiceResponse covertToStatusRequestResponse(StatusServiceRequest request) {
@@ -124,9 +314,13 @@ public class RequestServiceServiceImpl implements RequestServiceService {
 
     private RequestServiceResponse covertToRequestResponse(RequestService requestService) {
         RequestServiceResponse response = RequestServiceResponse.builder().build();
-        if (Objects.isNull(requestService.getAccount())) throw new RestApiException(StatusCode.ACCOUNT_NOT_EXIST);
+        if (Objects.isNull(requestService.getAccount())) {
+            throw new RestApiException(StatusCode.ACCOUNT_NOT_EXIST);
+        }
         Apartment apartment = apartmentDAO.getApartmentByAccountId(requestService.getAccount().getId(), String.valueOf(RoleEnum.ROLE_LANDLORD));
-        if (Objects.isNull(apartment)) throw new RestApiException(StatusCode.APARTMENT_NOT_EXIST);
+        if (Objects.isNull(apartment)) {
+            throw new RestApiException(StatusCode.APARTMENT_NOT_EXIST);
+        }
         response.setId(requestService.getId());
         response.setBlock(apartment.getRoomNumber().getFloorBlock().getBlock().getBlockName());
         response.setServiceName(requestService.getReasonDetailSubService().getReasonName());
@@ -136,17 +330,26 @@ public class RequestServiceServiceImpl implements RequestServiceService {
         return response;
     }
 
-    private HistoryRequestServiceResponse convertToHistoryResponse(RequestService requestService) {
-        HistoryRequestServiceResponse response = HistoryRequestServiceResponse.builder().build();
+    private RequestServiceClientResponse convertToHistoryResponse(RequestService requestService) {
+        Date currentTime = new Date();
+        Long diff;
+        if (requestService.getEndDate() == null) {
+            diff = currentTime.getTime() - requestService.getStartDate().getTime();
+        } else {
+            diff = currentTime.getTime() - requestService.getEndDate().getTime();
+        }
+        long minutes
+                = TimeUnit.MILLISECONDS.toMinutes(diff);
+        RequestServiceClientResponse response = RequestServiceClientResponse.builder().build();
         String serviceName = requestService.getReasonDetailSubService().getDetailSubService().getService().getSubServiceName();
-        String firstDescription = requestService.getStatusServiceRequest().getId() == 3 ? "Đã đăng kí thành công dịch vụ " : "Yêu cầu dịch vụ ";
-        String serviceNameFirst = requestService.getStatusServiceRequest().getId() == 3 ? "Sử dụng dịch vụ " : "Yêu cầu dịch vụ ";
+        String firstDescription = "Đã đăng kí thành công dịch vụ ";
+        String serviceNameFirst = "Sử dụng dịch vụ ";
         String date = convertDateToStringWithTimezone(requestService.getStartDate(), DD_MM_YYYY, null);
         String time = convertDateToStringWithTimezone(requestService.getStartDate(), HH_MM, null);
         response.setId(requestService.getId());
-        response.setServiceName(serviceNameFirst + serviceName + " - " + date);
-        response.setDescription(firstDescription + serviceName + " vào lúc " + time + " ngày " + date);
+        response.setServiceName(serviceNameFirst + serviceName.toLowerCase() + " - " + date);
+        response.setDescription(firstDescription + serviceName.toLowerCase() + " vào lúc " + time + " ngày " + date);
+        response.setTime(minutes + " phút trước");
         return response;
     }
-
 }

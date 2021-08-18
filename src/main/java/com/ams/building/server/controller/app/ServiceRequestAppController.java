@@ -1,15 +1,14 @@
 package com.ams.building.server.controller.app;
 
-
+import com.ams.building.server.constant.Constants;
+import com.ams.building.server.request.RequestServiceRequest;
+import com.ams.building.server.response.DetailServiceRequestResponse;
+import com.ams.building.server.response.ReasonDetailSubServiceResponse;
+import com.ams.building.server.response.RequestServiceClientResponse;
+import com.ams.building.server.response.UserPrincipal;
+import com.ams.building.server.service.ApartmentService;
+import com.ams.building.server.service.RequestServiceService;
 import com.google.gson.Gson;
-import com.quan_ly_toa_nha.fpt.constant.Constants;
-import com.quan_ly_toa_nha.fpt.request.RequestServiceRequest;
-import com.quan_ly_toa_nha.fpt.response.ApiResponse;
-import com.quan_ly_toa_nha.fpt.response.DetailServiceRequestResponse;
-import com.quan_ly_toa_nha.fpt.response.ReasonDetailSubServiceResponse;
-import com.quan_ly_toa_nha.fpt.response.UserPrincipal;
-import com.quan_ly_toa_nha.fpt.service.ApartmentService;
-import com.quan_ly_toa_nha.fpt.service.RequestServiceService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -74,14 +73,13 @@ public class ServiceRequestAppController {
     }
 
     @GetMapping(Constants.UrlPath.URL_API_LIST_SERVICE_REQUEST)
-    public ResponseEntity<?> findRequestServiceByAccountId(@RequestParam(name = "pageNo", required = false, defaultValue = "0") Integer pageNo) {
+    public ResponseEntity<?> findRequestServiceByAccountId() {
         UserPrincipal currentUser = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication()
                 .getPrincipal();
         Long accountId = currentUser.getId();
         logger.debug("findRequestServiceByAccountId request : " + accountId);
-        Integer pageSize = 5;
-        ApiResponse apiResponse = requestServiceService.findRequestServiceByAccountId(accountId, pageSize, pageNo);
-        ResponseEntity<ApiResponse> response = new ResponseEntity<>(apiResponse, HttpStatus.OK);
+        List<RequestServiceClientResponse> apiResponse = requestServiceService.findRequestServiceByAccountId(accountId);
+        ResponseEntity<List<RequestServiceClientResponse>> response = new ResponseEntity<>(apiResponse, HttpStatus.OK);
         logger.debug("findRequestServiceByAccountId response : " + new Gson().toJson(response));
         return response;
     }

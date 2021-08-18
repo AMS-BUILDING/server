@@ -1,7 +1,6 @@
 package com.ams.building.server.bean;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -21,7 +20,6 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Data
 @Table(name = "notification")
 public class Notification implements Serializable {
 
@@ -38,8 +36,8 @@ public class Notification implements Serializable {
     @Column(name = "description ")
     private String description;
 
-    @Column(name = "idRead ")
-    private Boolean idRead;
+    @Column(name = "is_Read ")
+    private Boolean isRead;
 
     @Column(name = "createdDate")
     private Date createdDate;

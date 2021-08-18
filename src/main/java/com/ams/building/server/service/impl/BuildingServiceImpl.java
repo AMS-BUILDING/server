@@ -36,7 +36,10 @@ public class BuildingServiceImpl implements BuildingService {
 
     @Override
     public BuildingResponse detailBuilding(Long id) {
-        Building building = buildingDAO.getById(1L);
+        Building building = buildingDAO.getDetailById(1L);
+        if (Objects.isNull(building)) {
+            throw new RestApiException(StatusCode.BUILDING_NOT_EXIST);
+        }
         Account account = accountDAO.getAccountById(id);
         if (Objects.isNull(account)) {
             throw new RestApiException(StatusCode.ACCOUNT_NOT_EXIST);

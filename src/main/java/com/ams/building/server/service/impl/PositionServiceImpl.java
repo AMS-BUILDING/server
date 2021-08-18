@@ -28,5 +28,4 @@ public class PositionServiceImpl implements PositionService {
         PositionResponse response = PositionResponse.builder().id(position.getId()).name(position.getName()).build();
         return response;
     }
-
 }

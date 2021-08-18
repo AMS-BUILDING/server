@@ -96,7 +96,8 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
         account.setPhone(loginResponse.getPhone());
         account.setCurrentAddress(loginResponse.getCurrentAddress());
         account.setName(loginResponse.getName());
-        Role role = Role.builder().id(loginResponse.getId()).build();
+        Role role = new Role();
+        role.setId(loginResponse.getId());
         account.setRole(role);
         account.setDob(loginResponse.getDob());
         account.setHomeTown(loginResponse.getHomeTown());
@@ -150,7 +151,8 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
         account.setPhone(loginResponse.getPhone());
         account.setCurrentAddress(loginResponse.getCurrentAddress());
         account.setName(loginResponse.getName());
-        Role role = Role.builder().id(loginResponse.getId()).build();
+        Role role = new Role();
+        role.setId(loginResponse.getId());
         account.setRole(role);
         account.setDob(loginResponse.getDob());
         account.setHomeTown(loginResponse.getHomeTown());
@@ -550,20 +552,22 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
         if (StringUtils.isEmpty(id)) {
             throw new RestApiException(StatusCode.DATA_EMPTY);
         }
-        if (StringUtils.isEmpty(request.getNewPassword())) {
+        if (StringUtils.isEmpty(request.getNewPassword()) || StringUtils.isEmpty(request.getOldPassword())) {
             throw new RestApiException(StatusCode.PASSWORD_EMPTY);
         }
         if (!isPassword(request.getNewPassword())) {
             throw new RestApiException(StatusCode.PASSWORD_NOT_RIGHT_FORMAT);
         }
-        if (!request.getNewPassword().equals(request.getConfirmPassword())) {
-            throw new RestApiException(StatusCode.PASSWORD_AND_CONFIRM_PASSWORD_NOT_MATCH);
-        }
         Account currenAccount = accountDao.getAccountById(id);
         if (Objects.isNull(currenAccount)) {
             throw new RestApiException(StatusCode.ACCOUNT_NOT_EXIST);
         }
-        if (PasswordGenerator.checkHashStrings(currenAccount.getPassword(), request.getNewPassword())) {
+        // kiem tra mk cu co dung k
+        if (!PasswordGenerator.checkHashStrings(currenAccount.getPassword(), request.getOldPassword())) {
+            throw new RestApiException(StatusCode.PASSWORD_NOT_RIGHT);
+        }
+        // CHECK MK CUX K DC TRUNG MK MOI
+        if (!PasswordGenerator.checkHashStrings(currenAccount.getPassword(), request.getNewPassword())) {
             throw new RestApiException(StatusCode.PASSWORD_USED);
         }
         currenAccount.setPassword(PasswordGenerator.getHashString(request.getNewPassword()));

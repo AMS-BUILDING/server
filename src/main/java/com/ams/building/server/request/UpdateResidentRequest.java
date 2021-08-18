@@ -4,9 +4,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
-@Builder
 @Setter
 @Getter
+@Builder
 public class UpdateResidentRequest {
 
     private Long accountId;
@@ -16,5 +16,6 @@ public class UpdateResidentRequest {
     private String phone;
     private String email;
     private String identifyCard;
-
+    private String homeTown;
+    private String currentAddress;
 }

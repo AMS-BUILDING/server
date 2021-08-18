@@ -26,7 +26,7 @@ public interface VehicleCardDAO extends JpaRepository<VehicleCard, Long> {
 
     @Transactional
     @Modifying
-    @Query(" UPDATE VehicleCard r SET r.statusVehicleCard.id =:statusId WHERE r.id =:id ")
+    @Query("UPDATE VehicleCard r SET r.statusVehicleCard.id =:statusId WHERE r.id =:id ")
     void updateStatus(@Param("statusId") Long statusId, @Param("id") Long id);
 
     @Query("SELECT v FROM VehicleCard v WHERE v.account.id =?1 AND v.vehicle.id=?2 ORDER BY v.id ")
