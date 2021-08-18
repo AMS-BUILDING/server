@@ -2,6 +2,7 @@ package com.ams.building.server.controller.admin;
 
 import com.ams.building.server.constant.Constants;
 import com.ams.building.server.response.ApiResponse;
+import com.ams.building.server.service.BillingApartmentService;
 import com.ams.building.server.service.BillingDetailApartmentService;
 import com.google.gson.Gson;
 import org.apache.log4j.Logger;
@@ -22,7 +23,7 @@ public class BillingApartmentController {
     private static final Logger logger = Logger.getLogger(BillingApartmentController.class);
 
     @Autowired
-    private AA billingApartmentService;
+    private BillingApartmentService billingApartmentService;
 
     @Autowired
     private BillingDetailApartmentService billingDetailApartmentService;

@@ -14,7 +14,6 @@ import com.ams.building.server.response.ApiResponse;
 import com.ams.building.server.response.VehicleCardResponse;
 import com.ams.building.server.response.VehicleTypeResponse;
 import com.ams.building.server.service.VehicleCardService;
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -31,8 +30,6 @@ import static com.ams.building.server.utils.DateTimeUtils.convertDateToString;
 
 @Service
 public class VehicleCardServiceImpl implements VehicleCardService {
-
-    private static final Logger logger = Logger.getLogger(VehicleCardServiceImpl.class);
 
     @Autowired
     private VehicleCardDAO vehicleCardDAO;
@@ -140,6 +137,20 @@ public class VehicleCardServiceImpl implements VehicleCardService {
             vehicleCard.setVehicleColor(request.getVehicleColor());
             vehicleCardDAO.save(vehicleCard);
         }
+    }
+
+    @Override
+    public ApiResponse searchVehicleCardByRoomNumber(Integer page, Integer size, Long accountId, Long vehicleId) {
+        List<VehicleCardResponse> vehicleCardResponses = new ArrayList<>();
+        Pageable pageable = PageRequest.of(page, size);
+        Page<VehicleCard> vehicleCards = vehicleCardDAO.searchVehicleCardByRoomNumber(accountId, vehicleId, pageable);
+        for (VehicleCard ad : vehicleCards) {
+            VehicleCardResponse response = convertToCardResponse(ad);
+            vehicleCardResponses.add(response);
+        }
+        Long totalElement = vehicleCards.getTotalElements();
+        ApiResponse response = ApiResponse.builder().data(vehicleCardResponses).totalElement(totalElement).build();
+        return response;
     }
 
     private VehicleCardResponse convertToCardResponse(VehicleCard card) {

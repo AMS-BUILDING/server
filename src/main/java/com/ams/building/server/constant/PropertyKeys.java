@@ -57,4 +57,10 @@ public class PropertyKeys {
     public static final String CODE_NOT_RIGHT = "code.not.right";
     public static final String STATUS_NOT_EXIST = "status.not.exist";
     public static final String APARTMENT_BILLING_NOT_EXIST = "apartment.billing.not.exist";
+    public static final String ACCOUNT_NOT_RIGHT_ROLE = "account.not.right.role";
+    public static final String TYPE_APARTMENT_NOT_EXIST = "type.apartment.not.exist";
+    public static final String NOTIFICATION_NOT_EXIST = "notification.not.exist";
+    public static final String BILLING_MONTH_NOT_RIGHT = "billing.month.not.right";
+    public static final String PASSWORD_NOT_RIGHT = "password.not.right";
+
 }

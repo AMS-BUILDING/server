@@ -1,6 +1,10 @@
 package com.ams.building.server.dao;
 
 import com.ams.building.server.bean.DetailApartmentBilling;
+import com.ams.building.server.response.BillingCardTotalResponse;
+import com.ams.building.server.response.BillingResidentCardResponse;
+import com.ams.building.server.response.BillingServiceResponse;
+import com.ams.building.server.response.BillingVehicleCardResponse;
 import com.ams.building.server.response.ServiceNameFeeApartmentResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
