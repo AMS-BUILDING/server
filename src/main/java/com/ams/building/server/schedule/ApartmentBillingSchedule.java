@@ -29,7 +29,8 @@ public class ApartmentBillingSchedule {
      * Send Mail To Resident About Fee Service In Month.
      * Mail will send 2rd in month.
      */
-    @Scheduled(cron = "0 9 2 * * ?")
+//    @Scheduled(cron = "0 9 2 * * ?")
+    @Scheduled(cron = "1 * * * * ?")
     public void sendEmailToNotificationForResidentAboutFeeServiceInMonth() {
         try {
             service.sendEmailToNotificationForResidentAboutFeeServiceInMonth();
