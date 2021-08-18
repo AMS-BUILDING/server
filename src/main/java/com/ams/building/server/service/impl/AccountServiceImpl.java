@@ -22,6 +22,7 @@ import com.ams.building.server.utils.FileStore;
 import com.ams.building.server.utils.PasswordGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -212,46 +213,34 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
     }
 
     @Override
-    public void updateProfile(LoginResponse loginResponse) {
-        if (Objects.isNull(loginResponse)) {
-            throw new RestApiException(StatusCode.DATA_EMPTY);
+    public void updateProfile(LoginResponse accountDTO) {
+        UserPrincipal currentUser = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication()
+                .getPrincipal();
+
+        Account account = accountDao.getAccountById(currentUser.getId());
+
+        String image1 = FileStore.getFilePath(accountDTO.getMultipartFile(), "-user");
+        if (image1 != null) {
+            accountDTO.setImage(image1);
         }
-        if (StringUtils.isEmpty(loginResponse.getEmail())) {
-            throw new RestApiException(StatusCode.EMAIL_EMPTY);
+
+        if (account != null) {
+            account.setName(accountDTO.getName());
+            account.setPhone(accountDTO.getPhone());
+            account.setIdentifyCard(accountDTO.getIdentifyCard());
+            account.setDob(accountDTO.getDob());
+            account.setGender(accountDTO.getGender());
+            account.setCurrentAddress(accountDTO.getCurrentAddress());
+            account.setHomeTown(accountDTO.getHomeTown());
+            if (image1 != null) {
+                if (account.getImage() != null) {
+                    String image = account.getImage();
+                    FileStore.deleteFile(image);
+                }
+                account.setImage(accountDTO.getImage());
+            }
+            accountDao.save(account);
         }
-        if (StringUtils.isEmpty(loginResponse.getName())) {
-            throw new RestApiException(StatusCode.NAME_EMPTY);
-        }
-        if (StringUtils.isEmpty(loginResponse.getHomeTown())) {
-            throw new RestApiException(StatusCode.HOME_TOWN_EMPTY);
-        }
-        if (StringUtils.isEmpty(loginResponse.getPassword())) {
-            throw new RestApiException(StatusCode.PASSWORD_EMPTY);
-        }
-        if (StringUtils.isEmpty(loginResponse.getPhone())) {
-            throw new RestApiException(StatusCode.PHONE_EMPTY);
-        }
-        if (StringUtils.isEmpty(loginResponse.getIdentifyCard())) {
-            throw new RestApiException(StatusCode.IDENTIFY_CARD_EMPTY);
-        }
-        if (StringUtils.isEmpty(loginResponse.getCurrentAddress())) {
-            throw new RestApiException(StatusCode.CURRENT_ADDRESS_EMPTY);
-        }
-        if (!isEmail(loginResponse.getEmail())) {
-            throw new RestApiException(StatusCode.EMAIL_NOT_RIGHT_FORMAT);
-        }
-        if (!isIdentifyCard(loginResponse.getIdentifyCard())) {
-            throw new RestApiException(StatusCode.IDENTIFY_CARD_EMPTY);
-        }
-        if (!isPhoneNumber(loginResponse.getPhone())) {
-            throw new RestApiException(StatusCode.PHONE_NUMBER_NOT_RIGHT_FORMAT);
-        }
-        Account account = accountDao.getAccountById(loginResponse.getId());
-        if (Objects.isNull(account)) {
-            throw new RestApiException(StatusCode.ACCOUNT_NOT_EXIST);
-        }
-        account.setName(loginResponse.getName());
-        account.setPhone(loginResponse.getPhone());
     }
 
     @Override

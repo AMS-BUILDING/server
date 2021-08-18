@@ -4,7 +4,6 @@ import com.ams.building.server.constant.Constants;
 import com.ams.building.server.response.ApiResponse;
 import com.ams.building.server.response.StatusVehicleCardResponse;
 import com.ams.building.server.response.VehicleCardResponse;
-import com.ams.building.server.response.VehicleTypeResponse;
 import com.ams.building.server.service.StatusVehicleCardService;
 import com.ams.building.server.service.VehicleCardService;
 import com.google.gson.Gson;

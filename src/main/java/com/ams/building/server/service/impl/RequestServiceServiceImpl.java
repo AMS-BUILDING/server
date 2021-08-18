@@ -134,7 +134,7 @@ public class RequestServiceServiceImpl implements RequestServiceService {
         if (StringUtils.isEmpty(serviceRequestId)) {
             throw new RestApiException(StatusCode.DATA_EMPTY);
         }
-        RequestService request = requestServiceDAO.getById(serviceRequestId);
+        RequestService request = requestServiceDAO.findRequestServiceById(serviceRequestId);
         if (Objects.isNull(request)) {
             throw new RestApiException(StatusCode.REQUEST_SERVICE_NOT_EXIST);
         }

@@ -20,6 +20,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -45,7 +46,7 @@ public class AccountController {
     private EmailService emailService;
 
     @PostMapping(Constants.UrlPath.URL_API_UPDATE_PROFILE_ACCOUNT)
-    public ResponseEntity<?> updateAccountProfile(@RequestBody LoginResponse accountDTO) {
+    public ResponseEntity<?> updateAccountProfile(@ModelAttribute LoginResponse accountDTO) {
         logger.debug(" updateAccountProfile: request " + new Gson().toJson(accountDTO));
         accountDTO.setImage(FileStore.getFilePath(accountDTO.getMultipartFile(), "-user"));
         accountService.updateProfile(accountDTO);

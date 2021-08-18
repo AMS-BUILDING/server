@@ -53,7 +53,7 @@ public class ApartmentBillingServiceImpl implements ApartmentBillingService {
             throw new RestApiException(StatusCode.ACCOUNT_NOT_EXIST);
         }
 
-        ApartmentBilling billing = apartmentBuildingDAO.getDetailByMonth(billingMonth,accountId);
+        ApartmentBilling billing = apartmentBuildingDAO.getDetailByMonth(billingMonth, accountId);
 
         if (Objects.isNull(billing)) {
             throw new RestApiException(StatusCode.BILLING_MONTH_NOT_RIGHT);
