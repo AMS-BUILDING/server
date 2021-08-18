@@ -115,17 +115,7 @@ public class ApartmentBillingServiceImpl implements ApartmentBillingService {
 
     @Override
     public void checkAndInsertBillingInMonth() {
-//        try {
-//            StringBuilder content = new StringBuilder();
-//            content.append("<p style=`color:red;`><b> THÔNG BÁO PHÍ CĂN HỘ THÁNG 07 NĂM 2021 </b></p>");
-//
-//            content.append("<br/>");
-//            content.append("<p> Thân gửi quý cư dân: <b> Nguyễn Thúy Hằng </b></p>");
-//            content.append("<p>Mã căn hộ: <b> A102 </b></p>");
-//            emailService.sendSimpleMessage("thuyhangnknd@gmail.com", PropertiesReader.getProperty(PropertyKeys.SEND_EMAIL_ADD_APARTMENT), content.toString());
-//        } catch (MessagingException e) {
-//            logger.error(e);
-//        }
+
     }
 
     @Override
@@ -235,7 +225,7 @@ public class ApartmentBillingServiceImpl implements ApartmentBillingService {
         }
         content.append("<p> Tổng phí: <b style=`color:red;`>" +
                 formatCurrentMoney(totalFee) + "</b></p>");
-        content.append("<p> Thời hạn nộp tiền: <b style=`color:red;>10/" + monthNext + "/" + year + "</b></p>");
+        content.append("<p> Thời hạn nộp tiền: <b style=`color:red;`>10/" + monthNext + "/" + year + "</b></p>");
         content.append("<p> <b>Hình thức nộp tiền </b></p>");
         content.append("&nbsp;&nbsp;&nbsp;&nbsp; + Chuyển khoản qua STK:");
         content.append("<br/>");

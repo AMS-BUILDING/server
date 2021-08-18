@@ -16,14 +16,14 @@ public class ApartmentBillingSchedule {
     @Autowired
     private ApartmentBillingService service;
 
-//    @Scheduled(cron = "1 * * * * ?")
-//    public void checkAndInsertBillingInMonth() {
-//        try {
-//            service.checkAndInsertBillingInMonth();
-//        } catch (Exception e) {
-//            logger.error("checkAndInsertBillingInMonth Error : ", e);
-//        }
-//    }
+    @Scheduled(cron = "1 * * * * ?")
+    public void checkAndInsertBillingInMonth() {
+        try {
+            service.checkAndInsertBillingInMonth();
+        } catch (Exception e) {
+            logger.error("checkAndInsertBillingInMonth Error : ", e);
+        }
+    }
 
     /**
      * Send Mail To Resident About Fee Service In Month.
