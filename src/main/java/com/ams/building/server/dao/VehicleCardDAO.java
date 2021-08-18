@@ -32,4 +32,7 @@ public interface VehicleCardDAO extends JpaRepository<VehicleCard, Long> {
     @Query("SELECT v FROM VehicleCard v WHERE v.account.id =?1 AND v.vehicle.id=?2 ORDER BY v.id ")
     List<VehicleCard> vehicleListByAccountIdAndTypeId(Long accountId, Long vehicleTypeId);
 
+    @Query("SELECT v FROM VehicleCard v WHERE v.account.id=?1 AND v.vehicle.id=?2  ORDER BY v.id")
+    Page<VehicleCard> searchVehicleCardByRoomNumber(Long accountId, Long vehicleId, Pageable pageable);
+
 }

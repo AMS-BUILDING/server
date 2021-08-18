@@ -57,7 +57,10 @@ public enum StatusCode {
     TYPE_APARTMENT_NOT_EXIST(450, PropertiesReader.getProperty(PropertyKeys.TYPE_APARTMENT_NOT_EXIST)),
     NOTIFICATION_NOT_EXIST(451, PropertiesReader.getProperty(PropertyKeys.NOTIFICATION_NOT_EXIST)),
     BILLING_MONTH_NOT_RIGHT(452, PropertiesReader.getProperty(PropertyKeys.BILLING_MONTH_NOT_RIGHT)),
-    PASSWORD_NOT_RIGHT(453, PropertiesReader.getProperty(PropertyKeys.PASSWORD_NOT_RIGHT));
+    PASSWORD_NOT_RIGHT(453, PropertiesReader.getProperty(PropertyKeys.PASSWORD_NOT_RIGHT)),
+    CODE_NOT_RIGHT(454, PropertiesReader.getProperty(PropertyKeys.CODE_NOT_RIGHT)),
+    STATUS_NOT_EXIST(455, PropertiesReader.getProperty(PropertyKeys.STATUS_NOT_EXIST)),
+    APARTMENT_BILLING_NOT_EXIST(456, PropertiesReader.getProperty(PropertyKeys.APARTMENT_BILLING_NOT_EXIST));
 
     private Integer status;
 
@@ -83,4 +86,5 @@ public enum StatusCode {
     public void setMessage(String message) {
         this.message = message;
     }
+
 }

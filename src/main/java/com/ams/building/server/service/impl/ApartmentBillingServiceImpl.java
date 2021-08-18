@@ -7,9 +7,9 @@ import com.ams.building.server.bean.DetailApartmentBilling;
 import com.ams.building.server.constant.Constants;
 import com.ams.building.server.constant.StatusCode;
 import com.ams.building.server.dao.AccountDAO;
-import com.ams.building.server.dao.ApartmentBuildingDAO;
+import com.ams.building.server.dao.ApartmentBillingDAO;
 import com.ams.building.server.dao.ApartmentDAO;
-import com.ams.building.server.dao.DetailApartmentBuildingDAO;
+import com.ams.building.server.dao.DetailApartmentBillingDAO;
 import com.ams.building.server.exception.RestApiException;
 import com.ams.building.server.response.NotificationFeeApartmentResponse;
 import com.ams.building.server.response.ServiceNameFeeApartmentResponse;
@@ -31,7 +31,7 @@ public class ApartmentBillingServiceImpl implements ApartmentBillingService {
     private static final Logger logger = Logger.getLogger(ApartmentBillingServiceImpl.class);
 
     @Autowired
-    private DetailApartmentBuildingDAO detailApartmentBuildingDAO;
+    private DetailApartmentBillingDAO detailApartmentBillingDAO;
 
     @Autowired
     private AccountDAO accountDAO;
@@ -40,7 +40,7 @@ public class ApartmentBillingServiceImpl implements ApartmentBillingService {
     private ApartmentDAO apartmentDAO;
 
     @Autowired
-    private ApartmentBuildingDAO apartmentBuildingDAO;
+    private ApartmentBillingDAO apartmentBillingDAO;
 
     @Override
     public NotificationFeeApartmentResponse getListFeeBillingByMonthAndAccount(Long accountId, String billingMonth) {
@@ -53,16 +53,16 @@ public class ApartmentBillingServiceImpl implements ApartmentBillingService {
             throw new RestApiException(StatusCode.ACCOUNT_NOT_EXIST);
         }
 
-        ApartmentBilling billing = apartmentBuildingDAO.getDetailByMonth(billingMonth, accountId);
+        ApartmentBilling billing = apartmentBillingDAO.getDetailByMonth(billingMonth, accountId);
 
         if (Objects.isNull(billing)) {
             throw new RestApiException(StatusCode.BILLING_MONTH_NOT_RIGHT);
         }
 
-        Double feeVehicle = detailApartmentBuildingDAO.feeVehicleCardByAccountIdAndMonth(accountId, billingMonth);
-        Double feeApartment = detailApartmentBuildingDAO.feeResidentCardByAccountIdAndMonth(accountId, billingMonth);
-        List<ServiceNameFeeApartmentResponse> services = detailApartmentBuildingDAO.feeServiceNameByAccountIdAndMonth(accountId, billingMonth);
-        List<DetailApartmentBilling> billings = detailApartmentBuildingDAO.detailApartmentBillingByAccountIdAndMonth(accountId, billingMonth);
+        Double feeVehicle = detailApartmentBillingDAO.feeVehicleCardByAccountIdAndMonth(accountId, billingMonth);
+        Double feeApartment = detailApartmentBillingDAO.feeResidentCardByAccountIdAndMonth(accountId, billingMonth);
+        List<ServiceNameFeeApartmentResponse> services = detailApartmentBillingDAO.feeServiceNameByAccountIdAndMonth(accountId, billingMonth);
+        List<DetailApartmentBilling> billings = detailApartmentBillingDAO.detailApartmentBillingByAccountIdAndMonth(accountId, billingMonth);
 
         Apartment apartment = apartmentDAO.getApartmentByAccountId(account.getId());
         String apartmentSquarMetter = apartment.getRoomNumber().getTypeApartment().getTypeName();

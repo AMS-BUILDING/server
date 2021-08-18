@@ -5,7 +5,7 @@ import com.ams.building.server.bean.ApartmentBilling;
 import com.ams.building.server.bean.Notification;
 import com.ams.building.server.constant.Constants;
 import com.ams.building.server.constant.StatusCode;
-import com.ams.building.server.dao.ApartmentBuildingDAO;
+import com.ams.building.server.dao.ApartmentBillingDAO;
 import com.ams.building.server.dao.ApartmentDAO;
 import com.ams.building.server.dao.NotificationDAO;
 import com.ams.building.server.exception.RestApiException;
@@ -39,7 +39,7 @@ public class NotificationSeviceImpl implements NotificationService {
     private NotificationDAO notificationDAO;
 
     @Autowired
-    private ApartmentBuildingDAO apartmentBuildingDAO;
+    private ApartmentBillingDAO apartmentBillingDAO;
 
     @Autowired
     private ApartmentDAO apartmentDAO;
@@ -102,7 +102,7 @@ public class NotificationSeviceImpl implements NotificationService {
         if (Objects.isNull(apartment)) {
             throw new RestApiException(StatusCode.APARTMENT_NOT_EXIST);
         }
-        List<ApartmentBilling> apartmentBillings = apartmentBuildingDAO.detailApartmentBuildingByMonth(apartment.getId());
+        List<ApartmentBilling> apartmentBillings = apartmentBillingDAO.detailApartmentBuildingByMonth(apartment.getId());
         String apartmentSquarMetter = apartment.getRoomNumber().getTypeApartment().getTypeName();
         Long squarMetter = Long.valueOf(apartmentSquarMetter);
         Long fee = Long.valueOf(Constants.GeneralSerivce.FEE_GENERAL_SERVICE) * squarMetter;

@@ -2,6 +2,9 @@ package com.ams.building.server.constant;
 
 public class PropertyKeys {
 
+    private PropertyKeys() {
+    }
+
     public static final String ABSENT_DETAIL_NOT_EXIST = "absent.detail.not.exist";
     public static final String APARTMENT_NOT_EXIST = "apartment.not.exist";
     public static final String ROOM_NUMBER_NOT_EXIST = "room.number.not.exist";
@@ -51,13 +54,7 @@ public class PropertyKeys {
     public static final String DUPLICATE_IDENTIFY_CARD_IN_LIST_RESIDENT = "duplicate.identify.card.in.list.resident";
     public static final String REQUEST_SERVICE_REGISTER_BEFORE = "request.service.register.before";
     public static final String REASON_DETAIL_SUB_SERVICE_NOT_EXIST = "reason.detail.sub.service.not.exist";
-    public static final String ACCOUNT_NOT_RIGHT_ROLE = "account.not.right.role";
-    public static final String TYPE_APARTMENT_NOT_EXIST = "type.apartment.not.exist";
-    public static final String NOTIFICATION_NOT_EXIST = "notification.not.exist";
-    public static final String BILLING_MONTH_NOT_RIGHT = "billing.month.not.right";
-    public static final String PASSWORD_NOT_RIGHT = "password.not.right";
-
-    private PropertyKeys() {
-    }
-
+    public static final String CODE_NOT_RIGHT = "code.not.right";
+    public static final String STATUS_NOT_EXIST = "status.not.exist";
+    public static final String APARTMENT_BILLING_NOT_EXIST = "apartment.billing.not.exist";
 }
