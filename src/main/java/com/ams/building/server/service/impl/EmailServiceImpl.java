@@ -33,7 +33,7 @@ public class EmailServiceImpl implements EmailService {
     public void sendSimpleMessage(String email, String subject, String text) throws MessagingException {
         if (StringUtils.isEmpty(email)) return;
         MimeMessage message = javaMailSender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(message);
+        MimeMessageHelper helper = new MimeMessageHelper(message,"utf-8");
         helper.setFrom("manha2cvp@gmail.com");
         helper.setTo(email);
         helper.setSubject(subject);

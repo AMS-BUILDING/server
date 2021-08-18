@@ -31,7 +31,7 @@ public class RoomNumber implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "type_apartment_id", referencedColumnName = "id")
     private TypeApartment typeApartment;
 

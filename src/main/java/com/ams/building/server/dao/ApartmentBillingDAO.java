@@ -21,4 +21,7 @@ public interface ApartmentBillingDAO extends JpaRepository<ApartmentBilling, Lon
     @Query("SELECT ab FROM ApartmentBilling ab WHERE ab.billingMonth=?1 ORDER BY ab.id")
     Page<ApartmentBilling> searchApartmentBillingByMonth(String month, Pageable pageable);
 
+    @Query("SELECT a FROM ApartmentBilling a WHERE a.billingMonth =?1")
+    List<ApartmentBilling> listApartmentBillingByMonth(String billingMonth);
+
 }

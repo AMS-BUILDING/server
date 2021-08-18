@@ -7,4 +7,8 @@ public interface ApartmentBillingService {
 
     NotificationFeeApartmentResponse getListFeeBillingByMonthAndAccount(Long accountId, String billingMonth);
 
+    void checkAndInsertBillingInMonth();
+
+    void sendEmailToNotificationForResidentAboutFeeServiceInMonth();
+
 }
