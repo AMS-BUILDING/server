@@ -13,4 +13,5 @@ public class TokenResponse {
     private Long expirationTime;
     private Long roleId;
     private Long accountId;
+
 }

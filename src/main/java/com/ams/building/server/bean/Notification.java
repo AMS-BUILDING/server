@@ -1,8 +1,6 @@
 package com.ams.building.server.bean;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -12,16 +10,16 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import java.io.Serializable;
+import java.util.Date;
 
-@Builder
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Data
 @Table(name = "notification")
 public class Notification implements Serializable {
 
@@ -37,5 +35,18 @@ public class Notification implements Serializable {
 
     @Column(name = "description ")
     private String description;
+
+    @Column(name = "is_Read ")
+    private Boolean isRead;
+
+    @Column(name = "createdDate")
+    private Date createdDate;
+
+    @PrePersist
+    public void prePersist() {
+        if (createdDate == null) {
+            createdDate = new Date(System.currentTimeMillis());
+        }
+    }
 
 }

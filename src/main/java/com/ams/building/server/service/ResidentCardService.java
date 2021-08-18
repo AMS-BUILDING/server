@@ -12,4 +12,6 @@ public interface ResidentCardService {
 
     void addResidentCard(String email);
 
+    void addResidentCard(Long amount, Long accountId);
+
 }

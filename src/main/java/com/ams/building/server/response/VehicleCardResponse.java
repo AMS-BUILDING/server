@@ -9,6 +9,7 @@ import lombok.Setter;
 @Setter
 public class VehicleCardResponse {
 
+    private Long id;
     private String vehicleOwner;
     private String phoneNumber;
     private String vehicleName;

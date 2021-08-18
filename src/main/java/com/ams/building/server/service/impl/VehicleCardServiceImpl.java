@@ -1,6 +1,7 @@
 package com.ams.building.server.service.impl;
 
 import com.ams.building.server.bean.Account;
+import com.ams.building.server.bean.StatusVehicleCard;
 import com.ams.building.server.bean.Vehicle;
 import com.ams.building.server.bean.VehicleCard;
 import com.ams.building.server.constant.StatusCode;
@@ -8,6 +9,7 @@ import com.ams.building.server.dao.AccountDAO;
 import com.ams.building.server.dao.VehicleCardDAO;
 import com.ams.building.server.dao.VehicleDAO;
 import com.ams.building.server.exception.RestApiException;
+import com.ams.building.server.request.VehicleCardClientRequest;
 import com.ams.building.server.response.ApiResponse;
 import com.ams.building.server.response.VehicleCardResponse;
 import com.ams.building.server.response.VehicleTypeResponse;
@@ -116,8 +118,33 @@ public class VehicleCardServiceImpl implements VehicleCardService {
         return responses;
     }
 
+    @Override
+    public void addVehicleCard(List<VehicleCardClientRequest> requests, Long accountId) {
+        if (requests.isEmpty()) {
+            throw new RestApiException(StatusCode.DATA_EMPTY);
+        }
+        Account account = new Account();
+        Vehicle vehicle = new Vehicle();
+        StatusVehicleCard status = new StatusVehicleCard();
+        status.setId(1L);
+        for (VehicleCardClientRequest request : requests) {
+            VehicleCard vehicleCard = new VehicleCard();
+            vehicle.setId(request.getVehicleId());
+            vehicleCard.setVehicle(vehicle);
+            account.setId(accountId);
+            vehicleCard.setAccount(account);
+            vehicleCard.setStatusVehicleCard(status);
+            vehicleCard.setVehicleName(request.getVehicleName());
+            vehicleCard.setVehicleBranch(request.getVehicleBranch());
+            vehicleCard.setLicensePlate(request.getLicensePlate());
+            vehicleCard.setVehicleColor(request.getVehicleColor());
+            vehicleCardDAO.save(vehicleCard);
+        }
+    }
+
     private VehicleCardResponse convertToCardResponse(VehicleCard card) {
         VehicleCardResponse response = VehicleCardResponse.builder().build();
+        response.setId(card.getId());
         response.setVehicleOwner(card.getAccount().getName());
         response.setPhoneNumber(card.getAccount().getPhone());
         response.setVehicleName(card.getVehicleName());

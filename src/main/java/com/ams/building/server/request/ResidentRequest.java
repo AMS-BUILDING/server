@@ -16,5 +16,7 @@ public class ResidentRequest {
     private Boolean gender;
     private String dob;
     private Long positionId;
+    private String currentAddress;
+    private String homeTown;
 
 }
