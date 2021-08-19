@@ -61,6 +61,7 @@ public class PropertyKeys {
     public static final String POSITION_MUST_BE_IN_HOME = "position.must.be.in.home";
     public static final String PHONE_REGISTER_BEFORE = "phone.register.before";
     public static final String STAR_FROM_ONE_TO_FIVE = "star.from.one.to.five";
+    public static final String POSITION_NOT_RIGHT_WITH_EMPLOYEE = "position.not.right.with.employee";
 
     private PropertyKeys() {
     }
