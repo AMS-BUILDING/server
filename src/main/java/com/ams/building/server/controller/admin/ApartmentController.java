@@ -93,11 +93,11 @@ public class ApartmentController {
         ResponseEntity<String> response = new ResponseEntity<>("Add apartment owner success", HttpStatus.CREATED);
         //send email
         StringBuilder content = new StringBuilder();
-        content.append("\"Hello and welcome new resident!");
-        content.append(" <p>Here is the password for your first login </p>");
-        content.append("<p>  Username :  \"" + ownerRequest.getEmail() + "\"   </p>");
-        content.append("<p>  Password :  \"" + Constants.DEFAULT_PASSWORD_ENCODE + "\"   </p>");
-        content.append("<p> We hope you have a nice day! </p>");
+        content.append("\"Xin chào cư dân");
+        content.append(" <p>Dưới đây là tài khoản và mật khẩu để bạn đăng nhập vào app </p>");
+        content.append("<p>  Tên đăng nhập :  \"" + ownerRequest.getEmail() + "\"   </p>");
+        content.append("<p>  Mật khẩu :  \"" + Constants.DEFAULT_PASSWORD_ENCODE + "\"   </p>");
+        content.append("<p> Chúng tôi hi vọng bạn có một ngày tuyệt vời! </p>");
         emailService.sendSimpleMessage(ownerRequest.getEmail(), PropertiesReader.getProperty(PropertyKeys.SEND_EMAIL_ADD_APARTMENT), content.toString());
         logger.debug("Add apartmentOwner response : " + new Gson().toJson(response));
         return response;
@@ -124,11 +124,11 @@ public class ApartmentController {
 
     private void sendResidentEmail(ResidentRequest residentRequest) throws MessagingException {
         StringBuilder content = new StringBuilder();
-        content.append("\"Hello and welcome new resident!");
-        content.append(" <p>Here is the password for your first login </p>");
-        content.append("<p>  Username :  \"" + residentRequest.getEmail() + "\"   </p>");
-        content.append("<p>  Password :  \"" + Constants.DEFAULT_PASSWORD_ENCODE + "\"   </p>");
-        content.append("<p> We hope you have a nice day! </p>");
+        content.append("\"Xin chào cư dân!");
+        content.append(" <p> Dưới đây là tài khoản và mật khẩu của bạn để đăng nhập vào app </p>");
+        content.append("<p>  Tên đăng nhập :  \"" + residentRequest.getEmail() + "\"   </p>");
+        content.append("<p>  Mật khẩu :  \"" + Constants.DEFAULT_PASSWORD_ENCODE + "\"   </p>");
+        content.append("<p> Chúng tôi hi vọng bạn có một ngày tuyệt vời! </p>");
         emailService.sendSimpleMessage(residentRequest.getEmail(), PropertiesReader.getProperty(PropertyKeys.SEND_EMAIL_ADD_APARTMENT), content.toString());
     }
 
