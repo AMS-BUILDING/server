@@ -219,28 +219,67 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
 
         Account account = accountDao.getAccountById(currentUser.getId());
 
+        if (Objects.isNull(accountDTO)) {
+            throw new RestApiException(StatusCode.DATA_EMPTY);
+        }
+        if (StringUtils.isEmpty(accountDTO.getName())) {
+            throw new RestApiException(StatusCode.NAME_EMPTY);
+        }
+        if (StringUtils.isEmpty(accountDTO.getCurrentAddress())) {
+            throw new RestApiException(StatusCode.CURRENT_ADDRESS_EMPTY);
+        }
+        if (StringUtils.isEmpty(accountDTO.getHomeTown())) {
+            throw new RestApiException(StatusCode.HOME_TOWN_EMPTY);
+        }
+        if (StringUtils.isEmpty(accountDTO.getDob())) {
+            throw new RestApiException(StatusCode.DOB_EMPTY);
+        }
+        if (!StringUtils.isEmpty(accountDTO.getIdentifyCard())) {
+            if (!isIdentifyCard(accountDTO.getIdentifyCard())) {
+                throw new RestApiException(StatusCode.IDENTIFY_CARD_NOT_RIGHT);
+            }
+            if (!account.getIdentifyCard().equalsIgnoreCase(accountDTO.getIdentifyCard())) {
+                Account currentAccount = accountDao.getAccountByIdentify(accountDTO.getIdentifyCard());
+                if (Objects.nonNull(currentAccount)) {
+                    throw new RestApiException(StatusCode.IDENTIFY_CARD_DUPLICATE);
+                }
+            }
+        }
+        if (!StringUtils.isEmpty(accountDTO.getPhone())) {
+            if (!isPhoneNumber(accountDTO.getPhone())) {
+                throw new RestApiException(StatusCode.PHONE_NUMBER_NOT_RIGHT_FORMAT);
+            }
+            if (!account.getPhone().equalsIgnoreCase(accountDTO.getPhone())) {
+                List<String> currentAccount = accountDao.getAccountByPhoneNumber(accountDTO.getPhone());
+                if (!currentAccount.isEmpty()) {
+                    throw new RestApiException(StatusCode.PHONE_REGISTER_BEFORE);
+                }
+            }
+        }
         String image1 = FileStore.getFilePath(accountDTO.getMultipartFile(), "-user");
         if (image1 != null) {
             accountDTO.setImage(image1);
         }
 
-        if (account != null) {
-            account.setName(accountDTO.getName());
-            account.setPhone(accountDTO.getPhone());
-            account.setIdentifyCard(accountDTO.getIdentifyCard());
-            account.setDob(accountDTO.getDob());
-            account.setGender(accountDTO.getGender());
-            account.setCurrentAddress(accountDTO.getCurrentAddress());
-            account.setHomeTown(accountDTO.getHomeTown());
-            if (image1 != null) {
-                if (account.getImage() != null) {
-                    String image = account.getImage();
-                    FileStore.deleteFile(image);
-                }
-                account.setImage(accountDTO.getImage());
-            }
-            accountDao.save(account);
+        if (Objects.isNull(account)) {
+            throw new RestApiException(StatusCode.ACCOUNT_NOT_EXIST);
         }
+        account.setName(accountDTO.getName());
+        account.setPhone(accountDTO.getPhone());
+        account.setIdentifyCard(accountDTO.getIdentifyCard());
+        account.setDob(accountDTO.getDob());
+        account.setGender(accountDTO.getGender());
+        account.setCurrentAddress(accountDTO.getCurrentAddress());
+        account.setHomeTown(accountDTO.getHomeTown());
+        if (image1 != null) {
+            if (account.getImage() != null) {
+                String image = account.getImage();
+                FileStore.deleteFile(image);
+            }
+            account.setImage(accountDTO.getImage());
+        }
+        accountDao.save(account);
+
     }
 
     @Override
@@ -461,16 +500,14 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
         if (Objects.isNull(currenAccount)) {
             throw new RestApiException(StatusCode.ACCOUNT_NOT_EXIST);
         }
-        // kiem tra mk cu co dung k
-        if (!PasswordGenerator.checkHashStrings(currenAccount.getPassword(), request.getOldPassword())) {
-            throw new RestApiException(StatusCode.PASSWORD_NOT_RIGHT);
+
+        if (PasswordGenerator.checkHashStrings(request.getOldPassword(), currenAccount.getPassword())) {
+            if (PasswordGenerator.checkHashStrings(request.getNewPassword(), currenAccount.getPassword())) {
+                throw new RestApiException(StatusCode.PASSWORD_USED);
+            }
+            currenAccount.setPassword(PasswordGenerator.getHashString(request.getNewPassword()));
+            accountDao.save(currenAccount);
         }
-        // CHECK MK CUX K DC TRUNG MK MOI
-        if (!PasswordGenerator.checkHashStrings(currenAccount.getPassword(), request.getNewPassword())) {
-            throw new RestApiException(StatusCode.PASSWORD_USED);
-        }
-        currenAccount.setPassword(PasswordGenerator.getHashString(request.getNewPassword()));
-        accountDao.save(currenAccount);
     }
 
     @Override
@@ -649,6 +686,7 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
     private LoginResponse convertToAccountResponse(Account account) {
         LoginResponse response = LoginResponse.builder().build();
         response.setId(account.getId());
+        response.setName(account.getName());
         response.setEnabled(account.getEnabled());
         response.setEmail(account.getEmail());
         response.setPassword(account.getPassword());
