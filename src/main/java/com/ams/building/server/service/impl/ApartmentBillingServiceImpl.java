@@ -237,7 +237,7 @@ public class ApartmentBillingServiceImpl implements ApartmentBillingService {
         content.append("<br/>");
         content.append("&nbsp;&nbsp;&nbsp;&nbsp; + Chuyển khoản qua ví điện tử: Momo, Viettel Pay <b><0964600609></b>");
         content.append("<p> <b>Nội dung thanh toán </b></p>");
-        content.append("&nbsp;&nbsp;&nbsp;&nbsp; +[Mã căn hô],[Số điện thoại],Nộp phí hàng tháng");
+        content.append("&nbsp;&nbsp;&nbsp;&nbsp; +[Mã căn hô],[Số điện thoại],Nộp phí hàng tháng.....");
         List<String> result = new ArrayList<>();
         result.add(title.toString());
         result.add(content.toString());
