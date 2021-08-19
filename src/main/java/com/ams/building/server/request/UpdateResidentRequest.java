@@ -18,4 +18,6 @@ public class UpdateResidentRequest {
     private String identifyCard;
     private String homeTown;
     private String currentAddress;
+    private Long positionId;
+
 }

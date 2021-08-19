@@ -57,7 +57,12 @@ public enum StatusCode {
     TYPE_APARTMENT_NOT_EXIST(450, PropertiesReader.getProperty(PropertyKeys.TYPE_APARTMENT_NOT_EXIST)),
     NOTIFICATION_NOT_EXIST(451, PropertiesReader.getProperty(PropertyKeys.NOTIFICATION_NOT_EXIST)),
     BILLING_MONTH_NOT_RIGHT(452, PropertiesReader.getProperty(PropertyKeys.BILLING_MONTH_NOT_RIGHT)),
-    PASSWORD_NOT_RIGHT(453, PropertiesReader.getProperty(PropertyKeys.PASSWORD_NOT_RIGHT));
+    PASSWORD_NOT_RIGHT(453, PropertiesReader.getProperty(PropertyKeys.PASSWORD_NOT_RIGHT)),
+    USER_NAME_EMPTY(454, PropertiesReader.getProperty(PropertyKeys.USER_NAME_EMPTY)),
+    POSITION_EMPTY(455, PropertiesReader.getProperty(PropertyKeys.POSITION_EMPTY)),
+    PHONE_REGISTER_BEFORE(456, PropertiesReader.getProperty(PropertyKeys.PHONE_REGISTER_BEFORE)),
+    POSITION_MUST_BE_IN_HOME(457, PropertiesReader.getProperty(PropertyKeys.POSITION_MUST_BE_IN_HOME)),
+    STAR_FROM_ONE_TO_FIVE(458, PropertiesReader.getProperty(PropertyKeys.STAR_FROM_ONE_TO_FIVE));
 
     private Integer status;
 
