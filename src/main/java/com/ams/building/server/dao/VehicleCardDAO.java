@@ -15,11 +15,11 @@ import java.util.List;
 @Repository
 public interface VehicleCardDAO extends JpaRepository<VehicleCard, Long> {
 
-    @Query("SELECT v FROM VehicleCard v WHERE v.account.name LIKE CONCAT('%',:vehicleName,'%') AND v.account.phone LIKE CONCAT('%',:phoneNumber,'%') AND v.licensePlate LIKE CONCAT('%',:licensePlates,'%') ORDER BY v.id")
-    Page<VehicleCard> vehicleCardListWithoutStatus(@Param("vehicleName") String vehicleName, @Param("phoneNumber") String phoneNumber, @Param("licensePlates") String licensePlates, Pageable pageable);
+    @Query("SELECT v FROM VehicleCard v WHERE v.account.name LIKE CONCAT('%',:vehicleName,'%') AND v.account.phone LIKE CONCAT('%',:phoneNumber,'%') AND v.licensePlate LIKE CONCAT('%',:licensePlates,'%')  AND v.billingMonth =:billingMonth ORDER BY v.id")
+    Page<VehicleCard> vehicleCardListWithoutStatus(@Param("vehicleName") String vehicleName, @Param("phoneNumber") String phoneNumber, @Param("licensePlates") String licensePlates, @Param("billingMonth") String billingMonth, Pageable pageable);
 
-    @Query("SELECT v FROM VehicleCard v WHERE v.account.name LIKE CONCAT('%',:vehicleName,'%') AND v.account.phone LIKE CONCAT('%',:phoneNumber,'%') AND v.licensePlate LIKE CONCAT('%',:licensePlates,'%') AND v.statusVehicleCard.id =:status ORDER BY v.id")
-    Page<VehicleCard> vehicleCardListWithStatus(@Param("vehicleName") String vehicleName, @Param("phoneNumber") String phoneNumber, @Param("licensePlates") String licensePlates, @Param("status") Long status, Pageable pageable);
+    @Query("SELECT v FROM VehicleCard v WHERE v.account.name LIKE CONCAT('%',:vehicleName,'%') AND v.account.phone LIKE CONCAT('%',:phoneNumber,'%') AND v.licensePlate LIKE CONCAT('%',:licensePlates,'%') AND v.billingMonth =:billingMonth AND v.statusVehicleCard.id =:status ORDER BY v.id")
+    Page<VehicleCard> vehicleCardListWithStatus(@Param("vehicleName") String vehicleName, @Param("phoneNumber") String phoneNumber, @Param("licensePlates") String licensePlates, @Param("billingMonth") String billingMonth, @Param("status") Long status, Pageable pageable);
 
     @Query("SELECT v FROM VehicleCard v WHERE v.id=?1")
     VehicleCard getVehicleCardById(Long id);
