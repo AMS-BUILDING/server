@@ -144,7 +144,7 @@ public class RequestServiceServiceImpl implements RequestServiceService {
             RequestServiceClientResponse requestServiceClientResponse = convertResidentCardToResponse(residentCard);
             responses.add(requestServiceClientResponse);
         }
-        responses.sort(Comparator.comparing(RequestServiceClientResponse::getMinutes));
+//        responses.sort(Comparator.comparing(RequestServiceClientResponse::getMinutes));
         return responses;
     }
 
@@ -262,7 +262,7 @@ public class RequestServiceServiceImpl implements RequestServiceService {
             RequestServiceClientResponse requestServiceClientResponse = convertResidentCardToResponse(residentCard);
             response.add(requestServiceClientResponse);
         }
-        response.sort(Comparator.comparing(RequestServiceClientResponse::getMinutes));
+//        response.sort(Comparator.comparing(RequestServiceClientResponse::getMinutes));
         return response;
     }
 
