@@ -108,8 +108,12 @@ public class AbsentServiceImpl implements AbsentService {
 
     @Override
     public void addAbsentDetail(AbsentRequest request) {
-        if (Objects.isNull(request)) {
-            throw new RestApiException(StatusCode.ABSENT_DETAIL_NOT_EXIST);
+        if (Objects.isNull(request) || (StringUtils.isEmpty(request.getName()) && StringUtils.isEmpty(request.getDob())
+                && StringUtils.isEmpty(request.getIdentifyCard()) && StringUtils.isEmpty(request.getHomeTown())
+                && StringUtils.isEmpty(request.getReason()) && StringUtils.isEmpty(request.getStartDate())
+                && StringUtils.isEmpty(request.getEndDate()) && StringUtils.isEmpty(request.getAbsentType())
+                && StringUtils.isEmpty(request.getAccountId()))) {
+            throw new RestApiException(StatusCode.DATA_EMPTY);
         }
         if (StringUtils.isEmpty(request.getName())) {
             throw new RestApiException(StatusCode.NAME_EMPTY);
@@ -128,6 +132,9 @@ public class AbsentServiceImpl implements AbsentService {
         }
         if (StringUtils.isEmpty(request.getEndDate())) {
             throw new RestApiException(StatusCode.END_DATE_EMPTY);
+        }
+        if (StringUtils.isEmpty(request.getIdentifyCard())) {
+            throw new RestApiException(StatusCode.IDENTIFY_CARD_EMPTY);
         }
         AbsentType absentType = absentTypeDAO.findAbsentTypeById(request.getAbsentType());
         if (Objects.isNull(absentType)) {
