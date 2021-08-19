@@ -13,8 +13,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import java.io.Serializable;
+import java.util.Date;
 
 @Getter
 @Setter
@@ -44,5 +46,18 @@ public class ResidentCard implements Serializable {
 
     @Column(name = "price")
     private Double price;
+
+    @Column(name = "billing_month")
+    private String billingMonth;
+
+    @Column(name = "start_date")
+    private Date startDate;
+
+    @PrePersist
+    public void prePersist() {
+        if (startDate == null) {
+            startDate = new Date(System.currentTimeMillis());
+        }
+    }
 
 }

@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Objects;
 
@@ -47,11 +48,19 @@ public class VehicleCardServiceImpl implements VehicleCardService {
     public ApiResponse searchVehicleCard(Integer page, Integer size, String vehicleOwner, String phoneNumber, String licenesPlates, Long statusId) {
         List<VehicleCardResponse> vehicleCardResponses = new ArrayList<>();
         Pageable pageable = PageRequest.of(page, size);
+        Calendar cal = Calendar.getInstance();
+        int month = cal.get(Calendar.MONTH) + 1;
+        int year = cal.get(Calendar.YEAR);
+        String monthStr = String.valueOf(month);
+        if (month < 10) {
+            monthStr = "0" + month;
+        }
+        String billingMonth = monthStr + "/" + year;
         Page<VehicleCard> vehicleCards;
         if (statusId == -1) {
-            vehicleCards = vehicleCardDAO.vehicleCardListWithoutStatus(vehicleOwner, phoneNumber, licenesPlates, pageable);
+            vehicleCards = vehicleCardDAO.vehicleCardListWithoutStatus(vehicleOwner, phoneNumber, licenesPlates, billingMonth, pageable);
         } else {
-            vehicleCards = vehicleCardDAO.vehicleCardListWithStatus(vehicleOwner, phoneNumber, licenesPlates, statusId, pageable);
+            vehicleCards = vehicleCardDAO.vehicleCardListWithStatus(vehicleOwner, phoneNumber, licenesPlates, billingMonth, statusId, pageable);
         }
         for (VehicleCard ad : vehicleCards) {
             VehicleCardResponse response = convertToCardResponse(ad);
@@ -123,6 +132,14 @@ public class VehicleCardServiceImpl implements VehicleCardService {
         if (requests.isEmpty()) {
             throw new RestApiException(StatusCode.DATA_EMPTY);
         }
+        Calendar cal = Calendar.getInstance();
+        int month = cal.get(Calendar.MONTH) + 1;
+        int year = cal.get(Calendar.YEAR);
+        String monthStr = String.valueOf(month);
+        if (month < 10) {
+            monthStr = "0" + month;
+        }
+        String billingMonth = monthStr + "/" + year;
         Account account = new Account();
         Vehicle vehicle = new Vehicle();
         StatusVehicleCard status = new StatusVehicleCard();
@@ -134,10 +151,10 @@ public class VehicleCardServiceImpl implements VehicleCardService {
             account.setId(accountId);
             vehicleCard.setAccount(account);
             vehicleCard.setStatusVehicleCard(status);
-            vehicleCard.setVehicleName(request.getVehicleName());
             vehicleCard.setVehicleBranch(request.getVehicleBranch());
             vehicleCard.setLicensePlate(request.getLicensePlate());
             vehicleCard.setVehicleColor(request.getVehicleColor());
+            vehicleCard.setBillingMonth(billingMonth);
             vehicleCardDAO.save(vehicleCard);
         }
     }
@@ -147,7 +164,6 @@ public class VehicleCardServiceImpl implements VehicleCardService {
         response.setId(card.getId());
         response.setVehicleOwner(card.getAccount().getName());
         response.setPhoneNumber(card.getAccount().getPhone());
-        response.setVehicleName(card.getVehicleName());
         response.setLicensePlates(card.getLicensePlate());
         response.setType(card.getVehicle().getVehicleName());
         response.setColor(card.getVehicleColor());
@@ -157,7 +173,6 @@ public class VehicleCardServiceImpl implements VehicleCardService {
 
     private VehicleTypeResponse convertToVehicleTypeResponse(VehicleCard card) {
         VehicleTypeResponse response = VehicleTypeResponse.builder().build();
-        response.setVehicleName(card.getVehicleName());
         response.setVehicleBranch(card.getVehicleBranch());
         response.setColor(card.getVehicleColor());
         response.setLicensePlates(card.getLicensePlate());

@@ -13,6 +13,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import java.io.Serializable;
 import java.util.Date;
@@ -44,9 +45,6 @@ public class VehicleCard implements Serializable {
     @JoinColumn(name = "status_vehicle_card_id", columnDefinition = "id")
     private StatusVehicleCard statusVehicleCard;
 
-    @Column(name = "vehicle_type_name")
-    private String vehicleName;
-
     @Column(name = "vehicle_branch")
     private String vehicleBranch;
 
@@ -62,4 +60,10 @@ public class VehicleCard implements Serializable {
     @Column(name = "start_date")
     private Date startDate;
 
+    @PrePersist
+    public void prePersist() {
+        if (startDate == null) {
+            startDate = new Date(System.currentTimeMillis());
+        }
+    }
 }

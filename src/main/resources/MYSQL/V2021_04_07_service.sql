@@ -1,17 +1,17 @@
 CREATE TABLE `amsbuilding`.`service`
 (
-    `id`   BIGINT       NOT NULL AUTO_INCREMENT,
+    `id`   BIGINT NOT NULL AUTO_INCREMENT,
     `name` VARCHAR(100) NULL,
     PRIMARY KEY (`id`)
 );
 
 CREATE TABLE `amsbuilding`.`sub_service`
 (
-    `id`               BIGINT      NOT NULL AUTO_INCREMENT,
-    `service_id`       BIGINT      NULL,
+    `id`               BIGINT NOT NULL AUTO_INCREMENT,
+    `service_id`       BIGINT NULL,
     `sub_service_name` VARCHAR(45) NULL,
     PRIMARY KEY (`id`),
-    INDEX `sub_service_ibfk_!_idx` (`service_id` ASC) VISIBLE,
+    INDEX              `sub_service_ibfk_!_idx` (`service_id` ASC) VISIBLE,
     CONSTRAINT `sub_service_ibfk_!`
         FOREIGN KEY (`service_id`)
             REFERENCES `amsbuilding`.`service` (`id`)
@@ -21,11 +21,11 @@ CREATE TABLE `amsbuilding`.`sub_service`
 
 CREATE TABLE `amsbuilding`.`detail_sub_service`
 (
-    `id`                      BIGINT      NOT NULL AUTO_INCREMENT,
-    `sub_service_id`          BIGINT      NULL,
+    `id`                      BIGINT NOT NULL AUTO_INCREMENT,
+    `sub_service_id`          BIGINT NULL,
     `detail_sub_service_name` VARCHAR(45) NULL,
     PRIMARY KEY (`id`),
-    INDEX `detail_sub_service_ibfk_1_idx` (`sub_service_id` ASC) VISIBLE,
+    INDEX                     `detail_sub_service_ibfk_1_idx` (`sub_service_id` ASC) VISIBLE,
     CONSTRAINT `detail_sub_service_ibfk_1`
         FOREIGN KEY (`sub_service_id`)
             REFERENCES `amsbuilding`.`sub_service` (`id`)
@@ -35,12 +35,12 @@ CREATE TABLE `amsbuilding`.`detail_sub_service`
 
 CREATE TABLE `amsbuilding`.`reason_detail_sub_service`
 (
-    `id`                    BIGINT        NOT NULL AUTO_INCREMENT,
-    `detail_sub_service_id` BIGINT        NULL,
+    `id`                    BIGINT NOT NULL AUTO_INCREMENT,
+    `detail_sub_service_id` BIGINT NULL,
     `reason_name`           VARCHAR(1000) NULL,
-    `price`                 DOUBLE        NULL,
+    `price`                 DOUBLE NULL,
     PRIMARY KEY (`id`),
-    INDEX `reason_detail_sub_service_ibfk_1_idx` (`detail_sub_service_id` ASC) VISIBLE,
+    INDEX                   `reason_detail_sub_service_ibfk_1_idx` (`detail_sub_service_id` ASC) VISIBLE,
     CONSTRAINT `reason_detail_sub_service_ibfk_1`
         FOREIGN KEY (`detail_sub_service_id`)
             REFERENCES `amsbuilding`.`detail_sub_service` (`id`)

@@ -14,8 +14,8 @@ import javax.transaction.Transactional;
 @Repository
 public interface ResidentCardDAO extends JpaRepository<ResidentCard, Long> {
 
-    @Query("SELECT r FROM ResidentCard r WHERE r.account.id=?1 ORDER BY r.id")
-    Page<ResidentCard> searchResidentCardByAccountId(Long accountId, Pageable pageable);
+    @Query("SELECT r FROM ResidentCard r WHERE r.account.id=?1 AND r.billingMonth = ?2 ORDER BY r.id")
+    Page<ResidentCard> searchResidentCardByAccountId(Long accountId, String billingMonth, Pageable pageable);
 
     @Query("SELECT r FROM ResidentCard  r WHERE r.id=?1")
     ResidentCard getDetailResidentCardById(Long id);

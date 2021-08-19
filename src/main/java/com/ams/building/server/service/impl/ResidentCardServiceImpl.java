@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Objects;
 import java.util.Random;
@@ -52,7 +53,15 @@ public class ResidentCardServiceImpl implements ResidentCardService {
     public ApiResponse getResidentCardByAccountId(Integer page, Integer size, Long accountId) {
         List<ResidentCardResponse> cardResponses = new ArrayList<>();
         Pageable pageable = PageRequest.of(page, size);
-        Page<ResidentCard> residentCards = residentCardDAO.searchResidentCardByAccountId(accountId, pageable);
+        Calendar cal = Calendar.getInstance();
+        int month = cal.get(Calendar.MONTH) + 1;
+        int year = cal.get(Calendar.YEAR);
+        String monthStr = String.valueOf(month);
+        if (month < 10) {
+            monthStr = "0" + month;
+        }
+        String billingMonth = monthStr + "/" + year;
+        Page<ResidentCard> residentCards = residentCardDAO.searchResidentCardByAccountId(accountId, billingMonth, pageable);
         residentCards.forEach(s -> cardResponses.add(convertToCardResponse(s)));
         Long totalPage = residentCards.getTotalElements();
         ApiResponse response = ApiResponse.builder().data(cardResponses).totalElement(totalPage).build();
@@ -98,6 +107,14 @@ public class ResidentCardServiceImpl implements ResidentCardService {
         if (Objects.isNull(roomNumber)) {
             throw new RestApiException(StatusCode.ROOM_NUMBER_NOT_EXIST);
         }
+        Calendar cal = Calendar.getInstance();
+        int month = cal.get(Calendar.MONTH) + 1;
+        int year = cal.get(Calendar.YEAR);
+        String monthStr = String.valueOf(month);
+        if (month < 10) {
+            monthStr = "0" + month;
+        }
+        String billingMonth = monthStr + "/" + year;
         String roomName = roomNumber.getRoomName();
         ResidentCard newCard = new ResidentCard();
         newCard.setAccount(account);
@@ -105,6 +122,7 @@ public class ResidentCardServiceImpl implements ResidentCardService {
         newCard.setCardCode(genCardCode(roomName));
         StatusResidentCard statusResidentCard = statusResidentCardDAO.getOne(2L);
         newCard.setStatusResidentCard(statusResidentCard);
+        newCard.setBillingMonth(billingMonth);
         residentCardDAO.save(newCard);
     }
 
@@ -121,6 +139,14 @@ public class ResidentCardServiceImpl implements ResidentCardService {
         if (Objects.isNull(roomNumber)) {
             throw new RestApiException(StatusCode.ROOM_NUMBER_NOT_EXIST);
         }
+        Calendar cal = Calendar.getInstance();
+        int month = cal.get(Calendar.MONTH) + 1;
+        int year = cal.get(Calendar.YEAR);
+        String monthStr = String.valueOf(month);
+        if (month < 10) {
+            monthStr = "0" + month;
+        }
+        String billingMonth = monthStr + "/" + year;
         Account account = new Account();
         for (Long i = 0L; i < amount; i++) {
             ResidentCard residentCard = new ResidentCard();
@@ -132,6 +158,7 @@ public class ResidentCardServiceImpl implements ResidentCardService {
             account.setId(accountId);
             residentCard.setAccount(account);
             residentCard.setPrice(Double.valueOf(50000));
+            residentCard.setBillingMonth(billingMonth);
             residentCardDAO.save(residentCard);
         }
     }
