@@ -40,6 +40,7 @@ import org.springframework.util.StringUtils;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -143,6 +144,7 @@ public class RequestServiceServiceImpl implements RequestServiceService {
             RequestServiceClientResponse requestServiceClientResponse = convertResidentCardToResponse(residentCard);
             responses.add(requestServiceClientResponse);
         }
+        responses.sort(Comparator.comparing(RequestServiceClientResponse::getMinutes));
         return responses;
     }
 
@@ -260,6 +262,7 @@ public class RequestServiceServiceImpl implements RequestServiceService {
             RequestServiceClientResponse requestServiceClientResponse = convertResidentCardToResponse(residentCard);
             response.add(requestServiceClientResponse);
         }
+        response.sort(Comparator.comparing(RequestServiceClientResponse::getMinutes));
         return response;
     }
 
@@ -323,6 +326,7 @@ public class RequestServiceServiceImpl implements RequestServiceService {
                 .time(time)
                 .statusId(requestService.getStatusServiceRequest().getId())
                 .typeRequest(1L)
+                .minutes(minutes)
                 .build();
         return response;
     }
@@ -350,6 +354,7 @@ public class RequestServiceServiceImpl implements RequestServiceService {
         response.setTime(time);
         response.setStatusId(vehicleCard.getStatusVehicleCard().getId());
         response.setTypeRequest(2L);
+        response.setMinutes(minutes);
         return response;
 
     }
@@ -377,6 +382,7 @@ public class RequestServiceServiceImpl implements RequestServiceService {
         response.setTime(time);
         response.setStatusId(residentCard.getStatusResidentCard().getId());
         response.setTypeRequest(3L);
+        response.setMinutes(minutes);
         return response;
     }
 
