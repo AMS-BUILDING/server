@@ -21,4 +21,6 @@ public interface VehicleCardService {
 
     void addVehicleCard(List<VehicleCardClientRequest> requests, Long accountId);
 
+    ApiResponse searchVehicleCardByRoomNumber(Integer page, Integer size, Long accountId, Long vehicleId);
+
 }

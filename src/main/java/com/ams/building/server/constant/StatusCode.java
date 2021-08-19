@@ -63,7 +63,10 @@ public enum StatusCode {
     PHONE_REGISTER_BEFORE(456, PropertiesReader.getProperty(PropertyKeys.PHONE_REGISTER_BEFORE)),
     POSITION_MUST_BE_IN_HOME(457, PropertiesReader.getProperty(PropertyKeys.POSITION_MUST_BE_IN_HOME)),
     STAR_FROM_ONE_TO_FIVE(458, PropertiesReader.getProperty(PropertyKeys.STAR_FROM_ONE_TO_FIVE)),
-    POSITION_NOT_RIGHT_WITH_EMPLOYEE(459, PropertiesReader.getProperty(PropertyKeys.POSITION_NOT_RIGHT_WITH_EMPLOYEE));
+    POSITION_NOT_RIGHT_WITH_EMPLOYEE(459, PropertiesReader.getProperty(PropertyKeys.POSITION_NOT_RIGHT_WITH_EMPLOYEE)),
+    CODE_NOT_RIGHT(460, PropertiesReader.getProperty(PropertyKeys.CODE_NOT_RIGHT)),
+    STATUS_NOT_EXIST(461, PropertiesReader.getProperty(PropertyKeys.STATUS_NOT_EXIST)),
+    APARTMENT_BILLING_NOT_EXIST(462, PropertiesReader.getProperty(PropertyKeys.APARTMENT_BILLING_NOT_EXIST));
 
     private Integer status;
 
@@ -89,4 +92,5 @@ public enum StatusCode {
     public void setMessage(String message) {
         this.message = message;
     }
+
 }

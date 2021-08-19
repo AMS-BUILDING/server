@@ -31,7 +31,7 @@ public class DetailApartmentBilling implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "apartment_billing_id", referencedColumnName = "id")
     private ApartmentBilling apartmentBilling;
 

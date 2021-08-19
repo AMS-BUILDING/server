@@ -32,7 +32,7 @@ public class Apartment implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "account_id", referencedColumnName = "id")
     private Account account;
 
@@ -40,7 +40,7 @@ public class Apartment implements Serializable {
     @JoinColumn(name = "building_id", referencedColumnName = "id")
     private Building building;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "room_number_id", referencedColumnName = "id")
     private RoomNumber roomNumber;
 

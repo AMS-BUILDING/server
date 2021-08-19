@@ -3,6 +3,8 @@ package com.ams.building.server.utils;
 import org.apache.log4j.Logger;
 
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.util.Locale;
 
 public class HelperUtils {
 
@@ -13,4 +15,10 @@ public class HelperUtils {
         return format.format(d);
     }
 
+    public static String formatCurrentMoney(Long d) {
+        Locale localeVN = new Locale("vi", "VN");
+        NumberFormat currencyVN = NumberFormat.getCurrencyInstance(localeVN);
+        return currencyVN.format(d);
+
+    }
 }

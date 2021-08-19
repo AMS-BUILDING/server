@@ -174,11 +174,11 @@ public class ApartmentServiceImpl implements ApartmentService {
     @Override
     public List<FloorResponse> floorList(Long blockId) {
         List<FloorBlock> floors = floorBlockDAO.floorBlockByBlockId(blockId);
+        List<Long>floorBlockId=new ArrayList<>();
         List<FloorResponse> responses = new ArrayList<>();
         floors.forEach(s -> responses.add(convertFloor(s)));
         return responses;
     }
-
 
     @Override
     public String typeApartmentByAccountId(Long accountId) {

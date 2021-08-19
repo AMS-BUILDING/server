@@ -3,7 +3,9 @@ package com.ams.building.server.controller.admin;
 import com.ams.building.server.constant.Constants;
 import com.ams.building.server.response.ApiResponse;
 import com.ams.building.server.response.StatusVehicleCardResponse;
+import com.ams.building.server.response.UserPrincipal;
 import com.ams.building.server.response.VehicleCardResponse;
+import com.ams.building.server.response.VehicleTypeResponse;
 import com.ams.building.server.service.StatusVehicleCardService;
 import com.ams.building.server.service.VehicleCardService;
 import com.google.gson.Gson;
@@ -11,6 +13,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -80,6 +83,28 @@ public class VehicleCardController {
         List<StatusVehicleCardResponse> cardResponses = statusVehicleCardService.listStatus();
         ResponseEntity<List<StatusVehicleCardResponse>> response = new ResponseEntity<>(cardResponses, HttpStatus.OK);
         logger.debug("listStatusVehicleCard response : " + new Gson().toJson(response));
+        return response;
+    }
+
+    @GetMapping(value = Constants.UrlPath.URL_API_VEHICLE_BY_ACCOUNT_ID_AND_VEHICLE_TYPE)
+    public ResponseEntity<?> searchVehicleCardByAccountIdAndVehicleType(@RequestParam(name = "pageNo", required = false, defaultValue = "0") Integer pageNo,
+                                                                        @RequestParam(value = "accountId") Long accountId,
+                                                                        @RequestParam(value = "vehicleId") Long vehicleId) {
+        logger.debug("searchVehicleCardByAccountIdAndVehicleType request : " + accountId + " - " + vehicleId);
+        Integer pageSize = 5;
+        ApiResponse apiResponse = vehicleCardService.searchVehicleCardByRoomNumber(pageNo, pageSize, accountId, vehicleId);
+        ResponseEntity<ApiResponse> response = new ResponseEntity<>(apiResponse, HttpStatus.OK);
+        logger.debug("searchVehicleCardByAccountIdAndVehicleType response : " + new Gson().toJson(response));
+        return response;
+    }
+
+    @GetMapping(Constants.UrlPath.URL_API_VEHICLE_APP)
+    public ResponseEntity<?> listStatusVehicleApp(@RequestParam Long typeId) {
+        UserPrincipal currentUser = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication()
+                .getPrincipal();
+        List<VehicleTypeResponse> vehicleResponse = vehicleCardService.listVehicleByTypeAndByAccountId(currentUser.getId(), typeId);
+        ResponseEntity<List<VehicleTypeResponse>> response = new ResponseEntity<>(vehicleResponse, HttpStatus.OK);
+        logger.debug("listStatusVehicleApp response : " + new Gson().toJson(response));
         return response;
     }
 
