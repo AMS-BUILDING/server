@@ -260,13 +260,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         response.setDob(account.getDob());
         response.setHomeTown(account.getHomeTown());
         response.setIdentifyCard(account.getIdentifyCard());
-        String gender;
-        if (account.getGender()) {
-            gender = Constants.AccountGender.GENDER_MALE;
-        } else {
-            gender = Constants.AccountGender.GENDER_FEMALE;
-        }
-        response.setGender(gender);
+        response.setGender(account.getGender());
         if (Objects.isNull(account.getPosition())) {
             throw new RestApiException(StatusCode.POSITION_NOT_EXIST);
         }

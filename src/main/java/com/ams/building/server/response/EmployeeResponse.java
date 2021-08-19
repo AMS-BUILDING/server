@@ -17,7 +17,7 @@ public class EmployeeResponse {
     private String identifyCard;
     private String homeTown;
     private String currentAddress;
-    private String gender;
+    private Boolean gender;
     private String positionName;
 
 }
