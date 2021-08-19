@@ -327,6 +327,7 @@ public class RequestServiceServiceImpl implements RequestServiceService {
         response.setStatus(requestService.getStatusServiceRequest().getRequestName());
         response.setRoomName(apartment.getRoomNumber().getRoomName());
         response.setName(requestService.getAccount().getName());
+        response.setDayWant(convertDateToStringWithTimezone(requestService.getStartDate(), DD_MM_YYYY, null));
         return response;
     }
 

@@ -15,5 +15,6 @@ public class RequestServiceResponse {
     private String roomName;
     private String serviceName;
     private String status;
+    private String dayWant;
 
 }
