@@ -256,16 +256,6 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
     }
 
     @Override
-    public List<LoginResponse> find() {
-        List<Account> accountList = accountDao.findAll();
-        List<LoginResponse> loginResponse = new ArrayList<>();
-        accountList.forEach(account -> {
-            loginResponse.add(convertToAccountResponse(account));
-        });
-        return loginResponse;
-    }
-
-    @Override
     public LoginResponse getById(Long id) {
         if (StringUtils.isEmpty(id)) {
             throw new RestApiException(StatusCode.DATA_EMPTY);
@@ -279,37 +269,8 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
     }
 
     @Override
-    public LoginResponse getByEmail(String email) {
-        if (StringUtils.isEmpty(email)) {
-            throw new RestApiException(StatusCode.EMAIL_EMPTY);
-        }
-        if (!isEmail(email)) {
-            throw new RestApiException(StatusCode.EMAIL_NOT_RIGHT_FORMAT);
-        }
-        Account account = accountDao.getAccountByEmail(email);
-        if (Objects.isNull(account)) {
-            throw new RestApiException(StatusCode.ACCOUNT_NOT_EXIST);
-        }
-        LoginResponse response = convertToAccountResponse(account);
-        return response;
-    }
-
-    @Override
     public Long count() {
         return accountDao.count();
-    }
-
-    @Override
-    public void changeAccountLock(long id) {
-        if (StringUtils.isEmpty(id)) {
-            throw new RestApiException(StatusCode.DATA_EMPTY);
-        }
-        Account account = accountDao.getAccountById(id);
-        if (Objects.isNull(account)) {
-            throw new RestApiException(StatusCode.ACCOUNT_NOT_EXIST);
-        }
-        account.setEnabled(!account.getEnabled());
-        accountDao.save(account);
     }
 
     @Override
@@ -417,25 +378,52 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
         if (StringUtils.isEmpty(residentRequest.getDob())) {
             throw new RestApiException(StatusCode.DOB_EMPTY);
         }
-        if (!StringUtils.isEmpty(residentRequest.getPhone())) {
-            if (!isPhoneNumber(residentRequest.getPhone())) {
-                throw new RestApiException(StatusCode.PHONE_NUMBER_NOT_RIGHT_FORMAT);
-            }
+        if (StringUtils.isEmpty(residentRequest.getPositionId())) {
+            throw new RestApiException(StatusCode.POSITION_EMPTY);
         }
-        if (!StringUtils.isEmpty(residentRequest.getEmail())) {
-            if (!isEmail(residentRequest.getEmail())) {
-                throw new RestApiException(StatusCode.EMAIL_NOT_RIGHT_FORMAT);
-            }
-        }
-        if (!StringUtils.isEmpty(residentRequest.getIdentifyCard())) {
-            if (!isIdentifyCard(residentRequest.getIdentifyCard())) {
-                throw new RestApiException(StatusCode.IDENTIFY_CARD_EMPTY);
+        if (residentRequest.getPositionId() != null) {
+            if (residentRequest.getPositionId() < 5) {
+                throw new RestApiException(StatusCode.POSITION_MUST_BE_IN_HOME);
             }
         }
         Account account = accountDao.getAccountById(residentRequest.getAccountId());
         if (Objects.isNull(account)) {
             throw new RestApiException(StatusCode.ACCOUNT_NOT_EXIST);
         }
+        if (!StringUtils.isEmpty(residentRequest.getPhone())) {
+            if (!isPhoneNumber(residentRequest.getPhone())) {
+                throw new RestApiException(StatusCode.PHONE_NUMBER_NOT_RIGHT_FORMAT);
+            }
+            if (!account.getPhone().trim().equalsIgnoreCase(residentRequest.getPhone().trim())) {
+                List<String> accountsByPhone = accountDao.getAccountByPhoneNumber(residentRequest.getPhone());
+                if (!accountsByPhone.isEmpty()) {
+                    throw new RestApiException(StatusCode.PHONE_REGISTER_BEFORE);
+                }
+            }
+        }
+        if (!StringUtils.isEmpty(residentRequest.getEmail())) {
+            if (!isEmail(residentRequest.getEmail())) {
+                throw new RestApiException(StatusCode.EMAIL_NOT_RIGHT_FORMAT);
+            }
+            if (!account.getEmail().trim().equalsIgnoreCase(residentRequest.getEmail().trim())) {
+                Account accountCheck = accountDao.getAccountByEmail(residentRequest.getEmail().trim());
+                if (Objects.nonNull(accountCheck)) {
+                    throw new RestApiException(StatusCode.EMAIL_REGISTER_BEFORE);
+                }
+            }
+        }
+        if (!StringUtils.isEmpty(residentRequest.getIdentifyCard())) {
+            if (!isIdentifyCard(residentRequest.getIdentifyCard())) {
+                throw new RestApiException(StatusCode.IDENTIFY_CARD_EMPTY);
+            }
+            if (!account.getIdentifyCard().trim().equalsIgnoreCase(residentRequest.getIdentifyCard().trim())) {
+                Account accountCheck = accountDao.getAccountByIdentify(residentRequest.getIdentifyCard().trim());
+                if (Objects.nonNull(accountCheck)) {
+                    throw new RestApiException(StatusCode.IDENTIFY_CARD_DUPLICATE);
+                }
+            }
+        }
+
         account.setName(residentRequest.getName());
         account.setGender(residentRequest.getGender());
         account.setDob(residentRequest.getDob());
@@ -443,10 +431,6 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
         account.setEmail(residentRequest.getEmail());
         account.setIdentifyCard(residentRequest.getIdentifyCard());
         accountDao.save(account);
-    }
-
-    @Override
-    public void forwardPassword(String email) {
     }
 
     @Override
@@ -460,80 +444,6 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
         }
         AccountAppResponse response = convertToAccountApp(account);
         return response;
-    }
-
-    @Override
-    public void updateAccountAppByName(String name, Long id) {
-        if (StringUtils.isEmpty(name)) {
-            throw new RestApiException(StatusCode.NAME_EMPTY);
-        }
-        Account currenAccount = accountDao.getAccountById(id);
-        if (Objects.isNull(currenAccount)) {
-            throw new RestApiException(StatusCode.ACCOUNT_NOT_EXIST);
-        }
-        currenAccount.setName(name);
-        accountDao.save(currenAccount);
-    }
-
-    @Override
-    public void updateAccountAppByIdentifyCard(String identifyCard, Long id) {
-        if (StringUtils.isEmpty(identifyCard)) {
-            throw new RestApiException(StatusCode.IDENTIFY_CARD_EMPTY);
-        }
-        if (!isIdentifyCard(identifyCard)) {
-            throw new RestApiException(StatusCode.IDENTIFY_CARD_NOT_RIGHT);
-        }
-        Account currenAccount = accountDao.getAccountById(id);
-        if (Objects.isNull(currenAccount)) {
-            throw new RestApiException(StatusCode.ACCOUNT_NOT_EXIST);
-        }
-        if (currenAccount.getIdentifyCard().equals(identifyCard)) {
-            throw new RestApiException(StatusCode.IDENTIFY_CARD_DUPLICATE);
-        }
-        currenAccount.setIdentifyCard(identifyCard);
-        accountDao.save(currenAccount);
-    }
-
-    @Override
-    public void updateAccountAppByDob(String dob, Long id) {
-        if (StringUtils.isEmpty(dob)) {
-            throw new RestApiException(StatusCode.DOB_EMPTY);
-        }
-        Account currenAccount = accountDao.getAccountById(id);
-        if (Objects.isNull(currenAccount)) {
-            throw new RestApiException(StatusCode.ACCOUNT_NOT_EXIST);
-        }
-        currenAccount.setDob(dob);
-        accountDao.save(currenAccount);
-    }
-
-    @Override
-    public void updateAccountAppByPhoneNumber(String phoneNumber, Long id) {
-        if (StringUtils.isEmpty(phoneNumber)) {
-            throw new RestApiException(StatusCode.PHONE_EMPTY);
-        }
-        if (!isPhoneNumber(phoneNumber)) {
-            throw new RestApiException(StatusCode.PHONE_NUMBER_NOT_RIGHT_FORMAT);
-        }
-        Account currenAccount = accountDao.getAccountById(id);
-        if (Objects.isNull(currenAccount)) {
-            throw new RestApiException(StatusCode.ACCOUNT_NOT_EXIST);
-        }
-        currenAccount.setPhone(phoneNumber);
-        accountDao.save(currenAccount);
-    }
-
-    @Override
-    public void updateAccountAppByCurrentAddress(String currentAddress, Long id) {
-        if (StringUtils.isEmpty(currentAddress)) {
-            throw new RestApiException(StatusCode.CURRENT_ADDRESS_EMPTY);
-        }
-        Account currenAccount = accountDao.getAccountById(id);
-        if (Objects.isNull(currenAccount)) {
-            throw new RestApiException(StatusCode.ACCOUNT_NOT_EXIST);
-        }
-        currenAccount.setCurrentAddress(currentAddress);
-        accountDao.save(currenAccount);
     }
 
     @Override

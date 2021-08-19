@@ -50,7 +50,7 @@ public class JwtTokenProvider {
 
     public TokenResponse createToken(String username) {
         if (StringUtils.isEmpty(username)) {
-            throw new RestApiException(StatusCode.NAME_EMPTY);
+            throw new RestApiException(StatusCode.USER_NAME_EMPTY);
         }
         Claims claims = Jwts.claims().setSubject(username);
         Account account = accountDAO.getAccountByEmail(username);

@@ -103,7 +103,7 @@ public class ResidentCardServiceImpl implements ResidentCardService {
         newCard.setAccount(account);
         newCard.setPrice(Double.valueOf(Constants.ResidentCard.PRICE));
         newCard.setCardCode(genCardCode(roomName));
-        StatusResidentCard statusResidentCard = statusResidentCardDAO.getOne(3L);
+        StatusResidentCard statusResidentCard = statusResidentCardDAO.getOne(2L);
         newCard.setStatusResidentCard(statusResidentCard);
         residentCardDAO.save(newCard);
     }

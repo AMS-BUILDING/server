@@ -60,14 +60,14 @@ public class AccountController {
         emailService.updateResetPasswordToken(token, email);
         String resetPassWordLink = "/forward-password?token=" + token;
         StringBuilder content = new StringBuilder();
-        content.append("Hello");
-        content.append(" <p>You have requested to reset your password </p>");
-        content.append(" <p>Click the link below to change your password </p>");
-        content.append(" <p><b><a href=\"" + resetPassWordLink + "\"> Change my Password </a><b></p>");
-        content.append("<p> Ignore this email if you do remember your password , or you havav not made the request</p>");
-        content.append("<p>   your code  is :   \"" + token + "\"   </p>");
+        content.append("Xin chào");
+        content.append(" <p>Bạn có yêu cầu thay đổi mật khẩu </p>");
+        content.append(" <p>Bạn vui lòng ấn vào link dưới đây</p>");
+        content.append(" <p><b><a href=\"" + resetPassWordLink + "\"> Đổi mật khẩu của tôi </a><b></p>");
+        content.append("<p> Bỏ qua email này nếu bạn nhớ mật khẩu của mình hoặc bạn havav không thực hiện yêu cầu</p>");
+        content.append("<p> Mã code của bạn :   \"" + token + "\"   </p>");
         emailService.sendSimpleMessage(email, PropertiesReader.getProperty(PropertyKeys.SEND_EMAIL), content.toString());
-        ResponseEntity<String> response = new ResponseEntity<>("Send Link  Forward Password Success", HttpStatus.OK);
+        ResponseEntity<String> response = new ResponseEntity<>("Mã code đã được gửi đến mail. Vui lòng check", HttpStatus.OK);
         return response;
     }
 

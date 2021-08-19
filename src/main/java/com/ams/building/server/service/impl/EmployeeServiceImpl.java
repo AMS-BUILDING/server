@@ -29,6 +29,7 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -130,8 +131,14 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public void addEmployee(EmployeeRequest request) {
-        if (Objects.isNull(request)) {
+        if (Objects.isNull(request) || (StringUtils.isEmpty(request.getName()) && StringUtils.isEmpty(request.getGender())
+                && StringUtils.isEmpty(request.getPhoneNumber()) && StringUtils.isEmpty(request.getEmail())
+                && StringUtils.isEmpty(request.getIdentifyCard()) && StringUtils.isEmpty(request.getCurrentAddress())
+                && StringUtils.isEmpty(request.getHomeTown()) && StringUtils.isEmpty(request.getPosition()))) {
             throw new RestApiException(StatusCode.DATA_EMPTY);
+        }
+        if (StringUtils.isEmpty(request.getName())) {
+            throw new RestApiException(StatusCode.NAME_EMPTY);
         }
         if (StringUtils.isEmpty(request.getIdentifyCard())) {
             throw new RestApiException(StatusCode.IDENTIFY_CARD_EMPTY);
@@ -151,6 +158,12 @@ public class EmployeeServiceImpl implements EmployeeService {
         if (StringUtils.isEmpty(request.getEmail())) {
             throw new RestApiException(StatusCode.EMAIL_EMPTY);
         }
+        if (StringUtils.isEmpty(request.getPosition())) {
+            throw new RestApiException(StatusCode.POSITION_NOT_EXIST);
+        }
+        if (request.getPosition() < 0 || request.getPosition() > 4) {
+            throw new RestApiException(StatusCode.POSITION_NOT_RIGHT_WITH_EMPLOYEE);
+        }
         if (!isEmail(request.getEmail())) {
             throw new RestApiException(StatusCode.EMAIL_NOT_RIGHT_FORMAT);
         }
@@ -164,9 +177,13 @@ public class EmployeeServiceImpl implements EmployeeService {
         if (Objects.nonNull(searchAccountByIdentify)) {
             throw new RestApiException(StatusCode.IDENTIFY_CARD_DUPLICATE);
         }
+        List<String> searchAccountByPhone = accountDao.getAccountByPhoneNumber(request.getPhoneNumber());
+        if (!searchAccountByPhone.isEmpty()) {
+            throw new RestApiException(StatusCode.PHONE_REGISTER_BEFORE);
+        }
         Account searchAccountByEmail = accountDao.getAccountByEmail(request.getEmail());
         if (Objects.nonNull(searchAccountByEmail)) {
-            throw new RestApiException(StatusCode.ACCOUNT_REGISTER);
+            throw new RestApiException(StatusCode.EMAIL_REGISTER_BEFORE);
         }
         Account account = new Account();
         account.setIdentifyCard(request.getIdentifyCard());

@@ -57,7 +57,7 @@ public class NotificationSeviceImpl implements NotificationService {
 
     @Override
     public void addNotification(NotificationRequest request) {
-        if (Objects.isNull(request))
+        if (Objects.isNull(request) || (StringUtils.isEmpty(request.getDescription()) && StringUtils.isEmpty(request.getTitle())))
             throw new RestApiException(StatusCode.DATA_EMPTY);
         if (StringUtils.isEmpty(request.getDescription())) {
             throw new RestApiException(StatusCode.DESCRIPTION_EMPTY);
