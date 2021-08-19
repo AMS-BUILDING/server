@@ -10,6 +10,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 @Repository
 public interface ResidentCardDAO extends JpaRepository<ResidentCard, Long> {
@@ -24,5 +25,8 @@ public interface ResidentCardDAO extends JpaRepository<ResidentCard, Long> {
     @Modifying
     @Query("UPDATE ResidentCard r SET r.statusResidentCard.id=:statusId WHERE r.id=:cardId")
     void updateStatus(@Param("statusId") Long statusId, @Param("cardId") Long cardId);
+
+    @Query("SELECT r FROM ResidentCard r WHERE r.account.id =:accountId AND r.statusResidentCard.id IN (:status) ORDER BY r.id DESC")
+    List<ResidentCard>residentCardRegister(@Param("accountId") Long accountId, @Param("status") List<Long> status);
 
 }

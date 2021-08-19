@@ -33,10 +33,10 @@ public interface RequestServiceDAO extends JpaRepository<RequestService, Long> {
     @Query("SELECT r FROM  RequestService r WHERE r.startDate = :startDate AND r.reasonDetailSubService.id = :id")
     RequestService findRequestServiceByStartDateAndReasonDetailSubServiceId(@Param("startDate") Date startDate, @Param("id") Long id);
 
-    @Query("SELECT r FROM  RequestService r WHERE r.account.id = :accountId AND r.reasonDetailSubService.id >= 6 AND r.statusServiceRequest.id NOT IN (3,4) ")
+    @Query("SELECT r FROM  RequestService r WHERE r.account.id = :accountId AND r.reasonDetailSubService.id >= 6 AND r.statusServiceRequest.id NOT IN (3,4) ORDER BY r.id DESC ")
     List<RequestService> findRequestServiceByAccountId(@Param("accountId") Long accountId);
 
-    @Query("SELECT r FROM RequestService r WHERE r.account.id=?1 AND r.statusServiceRequest.id=?2 AND r.statusServiceRequest.id < 4 ORDER BY r.startDate desc ")
+    @Query("SELECT r FROM RequestService r WHERE r.account.id=?1 AND r.statusServiceRequest.id=?2 AND r.statusServiceRequest.id < 4 ORDER BY r.startDate DESC ")
     List<RequestService> requestServiceByAccountId(Long accountId, Long statusId);
 
     @Query("SELECT sum(r.reasonDetailSubService.price) FROM RequestService r where r.statusServiceRequest.id = 3")

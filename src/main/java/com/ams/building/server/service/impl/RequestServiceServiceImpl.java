@@ -5,8 +5,10 @@ import com.ams.building.server.bean.Apartment;
 import com.ams.building.server.bean.DetailSubService;
 import com.ams.building.server.bean.ReasonDetailSubService;
 import com.ams.building.server.bean.RequestService;
+import com.ams.building.server.bean.ResidentCard;
 import com.ams.building.server.bean.RoomNumber;
 import com.ams.building.server.bean.StatusServiceRequest;
+import com.ams.building.server.bean.VehicleCard;
 import com.ams.building.server.constant.RoleEnum;
 import com.ams.building.server.constant.StatusCode;
 import com.ams.building.server.dao.AccountDAO;
@@ -14,7 +16,9 @@ import com.ams.building.server.dao.ApartmentDAO;
 import com.ams.building.server.dao.DetailSubServiceDAO;
 import com.ams.building.server.dao.ReasonDetailSubServiceDAO;
 import com.ams.building.server.dao.RequestServiceDAO;
+import com.ams.building.server.dao.ResidentCardDAO;
 import com.ams.building.server.dao.StatusRequestServiceDAO;
+import com.ams.building.server.dao.VehicleCardDAO;
 import com.ams.building.server.exception.RestApiException;
 import com.ams.building.server.request.RequestServiceRequest;
 import com.ams.building.server.response.ApiResponse;
@@ -70,6 +74,12 @@ public class RequestServiceServiceImpl implements RequestServiceService {
     @Autowired
     private AccountDAO accountDAO;
 
+    @Autowired
+    private VehicleCardDAO vehicleCardDAO;
+
+    @Autowired
+    private ResidentCardDAO residentCardDAO;
+
     @Override
     public List<StatusServiceResponse> statusResponses() {
         List<StatusServiceResponse> responses = new ArrayList<>();
@@ -123,9 +133,16 @@ public class RequestServiceServiceImpl implements RequestServiceService {
         if (Objects.isNull(account)) {
             throw new RestApiException(StatusCode.ACCOUNT_NOT_EXIST);
         }
+        List<Long> status = new ArrayList<>();
+        status.add(statusId);
+        List<ResidentCard> residentCards = residentCardDAO.residentCardRegister(id, status);
         List<RequestService> requestServiceByAccountId = requestServiceDAO.requestServiceByAccountId(id, statusId);
         List<RequestServiceClientResponse> responses = new ArrayList<>();
         requestServiceByAccountId.forEach(s -> responses.add(convertToHistoryResponse(s)));
+        for (ResidentCard residentCard : residentCards) {
+            RequestServiceClientResponse requestServiceClientResponse = convertResidentCardToResponse(residentCard);
+            responses.add(requestServiceClientResponse);
+        }
         return responses;
     }
 
@@ -226,8 +243,21 @@ public class RequestServiceServiceImpl implements RequestServiceService {
     public List<RequestServiceClientResponse> findRequestServiceByAccountId(Long accountId) {
         List<RequestServiceClientResponse> response = new ArrayList<>();
         List<RequestService> requestServices = requestServiceDAO.findRequestServiceByAccountId(accountId);
+        List<VehicleCard> requestVehicleCard = vehicleCardDAO.vehicleCardRegister(accountId);
+        List<Long> status = new ArrayList<>();
+        status.add(1L);
+        status.add(2L);
+        List<ResidentCard> residentCards = residentCardDAO.residentCardRegister(accountId, status);
         for (RequestService requestService : requestServices) {
             RequestServiceClientResponse requestServiceClientResponse = convertRequestServiceToRequestServiceClientResponse(requestService);
+            response.add(requestServiceClientResponse);
+        }
+        for (VehicleCard vehicleCard : requestVehicleCard) {
+            RequestServiceClientResponse requestServiceClientResponse = convertVehicleCardToResponse(vehicleCard);
+            response.add(requestServiceClientResponse);
+        }
+        for (ResidentCard residentCard : residentCards) {
+            RequestServiceClientResponse requestServiceClientResponse = convertResidentCardToResponse(residentCard);
             response.add(requestServiceClientResponse);
         }
         return response;
@@ -292,7 +322,61 @@ public class RequestServiceServiceImpl implements RequestServiceService {
                 .description(description)
                 .time(time)
                 .statusId(requestService.getStatusServiceRequest().getId())
+                .typeRequest(1L)
                 .build();
+        return response;
+    }
+
+    private RequestServiceClientResponse convertVehicleCardToResponse(VehicleCard vehicleCard) {
+        Account account = vehicleCard.getAccount();
+        Date currentTime = new Date();
+        Apartment apartment = apartmentDAO.getApartmentByAccountId(account.getId());
+        RoomNumber roomNumber = apartment.getRoomNumber();
+        Long diff = currentTime.getTime() - vehicleCard.getStartDate().getTime();
+        long minutes
+                = TimeUnit.MILLISECONDS.toMinutes(diff);
+        String time = "";
+        if (minutes >= 0 && minutes < 60) {
+            time = minutes + " phút trước";
+        } else if (minutes >= 60 && minutes < 1440) {
+            time = Long.valueOf(minutes / 60) + " giờ trước";
+        } else {
+            time = convertDateToStringWithTimezone(vehicleCard.getStartDate(), DD_MM_YYYY, null);
+        }
+        RequestServiceClientResponse response = RequestServiceClientResponse.builder().build();
+        response.setId(vehicleCard.getId());
+        response.setServiceName("Yêu cầu đăng kí thẻ gửi xe  - " + convertDateToStringWithTimezone(vehicleCard.getStartDate(), DD_MM_YYYY, null));
+        response.setDescription("Yêu cầu đăng kí thẻ gửi xe của căn hộ " + roomNumber.getRoomName() + " lúc " + convertDateToStringWithTimezone(vehicleCard.getStartDate(), HH_MM, null));
+        response.setTime(time);
+        response.setStatusId(vehicleCard.getStatusVehicleCard().getId());
+        response.setTypeRequest(2L);
+        return response;
+
+    }
+
+    private RequestServiceClientResponse convertResidentCardToResponse(ResidentCard residentCard) {
+        Account account = residentCard.getAccount();
+        RequestServiceClientResponse response = RequestServiceClientResponse.builder().build();
+        Date currentTime = new Date();
+        Apartment apartment = apartmentDAO.getApartmentByAccountId(account.getId());
+        RoomNumber roomNumber = apartment.getRoomNumber();
+        Long diff = currentTime.getTime() - residentCard.getStartDate().getTime();
+        long minutes
+                = TimeUnit.MILLISECONDS.toMinutes(diff);
+        String time = "";
+        if (minutes >= 0 && minutes < 60) {
+            time = minutes + " phút trước";
+        } else if (minutes >= 60 && minutes < 1440) {
+            time = Long.valueOf(minutes / 60) + " giờ trước";
+        } else {
+            time = convertDateToStringWithTimezone(residentCard.getStartDate(), DD_MM_YYYY, null);
+        }
+        response.setId(residentCard.getId());
+        response.setServiceName("Yêu cầu đăng kí thêm thẻ căn hộ  - " + convertDateToStringWithTimezone(residentCard.getStartDate(), DD_MM_YYYY, null));
+        response.setDescription("Yêu cầu đăng kí thêm  thẻ gửi xe của căn hộ " + roomNumber.getRoomName() + " lúc " + convertDateToStringWithTimezone(residentCard.getStartDate(), HH_MM, null));
+        response.setTime(time);
+        response.setStatusId(residentCard.getStatusResidentCard().getId());
+        response.setTypeRequest(3L);
         return response;
     }
 
@@ -341,16 +425,26 @@ public class RequestServiceServiceImpl implements RequestServiceService {
         }
         long minutes
                 = TimeUnit.MILLISECONDS.toMinutes(diff);
+        String time = "";
+        if (minutes >= 0 && minutes < 60) {
+            time = minutes + " phút trước";
+        } else if (minutes >= 60 && minutes < 1440) {
+            time = Long.valueOf(minutes / 60) + " giờ trước";
+        } else {
+            time = convertDateToStringWithTimezone(requestService.getDateRequest(), DD_MM_YYYY, null);
+        }
         RequestServiceClientResponse response = RequestServiceClientResponse.builder().build();
         String serviceName = requestService.getReasonDetailSubService().getDetailSubService().getService().getSubServiceName();
         String firstDescription = "Đã đăng kí thành công dịch vụ ";
         String serviceNameFirst = "Sử dụng dịch vụ ";
         String date = convertDateToStringWithTimezone(requestService.getStartDate(), DD_MM_YYYY, null);
-        String time = convertDateToStringWithTimezone(requestService.getStartDate(), HH_MM, null);
+        String timeStr = convertDateToStringWithTimezone(requestService.getStartDate(), HH_MM, null);
         response.setId(requestService.getId());
         response.setServiceName(serviceNameFirst + serviceName.toLowerCase() + " - " + date);
-        response.setDescription(firstDescription + serviceName.toLowerCase() + " vào lúc " + time + " ngày " + date);
-        response.setTime(minutes + " phút trước");
+        response.setDescription(firstDescription + serviceName.toLowerCase() + " vào lúc " + timeStr + " ngày " + date);
+        response.setTime(time);
+        response.setStatusId(requestService.getStatusServiceRequest().getId());
+        response.setTypeRequest(1L);
         return response;
     }
 }
