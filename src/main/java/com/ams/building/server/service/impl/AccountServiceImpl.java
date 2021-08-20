@@ -268,7 +268,6 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
         account.setPhone(accountDTO.getPhone());
         account.setIdentifyCard(accountDTO.getIdentifyCard());
         account.setDob(accountDTO.getDob());
-        account.setGender(accountDTO.getGender());
         account.setCurrentAddress(accountDTO.getCurrentAddress());
         account.setHomeTown(accountDTO.getHomeTown());
         if (image1 != null) {
@@ -279,7 +278,6 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
             account.setImage(accountDTO.getImage());
         }
         accountDao.save(account);
-
     }
 
     @Override

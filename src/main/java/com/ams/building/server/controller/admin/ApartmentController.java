@@ -9,6 +9,7 @@ import com.ams.building.server.request.ResidentRequestWrap;
 import com.ams.building.server.request.UpdateResidentRequest;
 import com.ams.building.server.response.AccountResponse;
 import com.ams.building.server.response.ApiResponse;
+import com.ams.building.server.response.UserPrincipal;
 import com.ams.building.server.service.AccountService;
 import com.ams.building.server.service.ApartmentService;
 import com.ams.building.server.service.EmailService;
@@ -18,6 +19,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -160,8 +162,11 @@ public class ApartmentController {
         return response;
     }
 
-    @GetMapping(value = Constants.UrlPath.URL_API_DEPENDENT_PERSON_APP + "/{id}")
-    public ResponseEntity<?> dependentPersonByRoomNumber(@PathVariable("id") Long id) {
+    @GetMapping(value = Constants.UrlPath.URL_API_DEPENDENT_PERSON_APP)
+    public ResponseEntity<?> dependentPersonByRoomNumber() {
+        UserPrincipal currentUser = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication()
+                .getPrincipal();
+        Long id = currentUser.getId();
         logger.debug("dependentPersonByRoomNumber request : " + id);
         List<AccountResponse> dependentPerson = apartmentService.dependentPerson(id);
         ResponseEntity<List<AccountResponse>> response = new ResponseEntity<>(dependentPerson, HttpStatus.OK);
