@@ -8,15 +8,21 @@ import com.ams.building.server.dao.DashboardVehicleCardDAO;
 import com.ams.building.server.dao.RequestServiceDAO;
 import com.ams.building.server.response.DashboardResponse;
 import com.ams.building.server.response.DashboardResponseNumberOfUseServiceRequest;
+import com.ams.building.server.response.DashboardResponseNumberOfUseServiceRequestConvert;
 import com.ams.building.server.response.DashboardResponseTotal;
+import com.ams.building.server.response.DashboardResponseTotalConvert;
 import com.ams.building.server.response.DashboardTypeAccountResponse;
+import com.ams.building.server.response.DashboardTypeAccountResponseConvert;
 import com.ams.building.server.service.DashBoardService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.awt.*;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 @Transactional
 @Service
@@ -25,22 +31,22 @@ public class DashboardServiceImpl implements DashBoardService {
     private static final Logger logger = Logger.getLogger(DashboardServiceImpl.class);
 
     @Autowired
-    private AccountDAO accountDAO;
+    AccountDAO accountDAO;
 
     @Autowired
-    private ApartmentDAO apartmentDAO;
+    ApartmentDAO apartmentDAO;
 
     @Autowired
-    private RequestServiceDAO requestServiceDAO;
+    RequestServiceDAO requestServiceDAO;
 
     @Autowired
-    private DashboardRequestServiceDao dashboardRequestServiceDao;
+    DashboardRequestServiceDao dashboardRequestServiceDao;
 
     @Autowired
-    private DashboardAccountDao dashboardAccountDao;
+    DashboardAccountDao dashboardAccountDao;
 
     @Autowired
-    private DashboardVehicleCardDAO dashboardVehicleCardDAO;
+    DashboardVehicleCardDAO dashboardVehicleCardDAO;
 
     @Override
     public DashboardResponse dashboardNumber() {
@@ -54,39 +60,106 @@ public class DashboardServiceImpl implements DashBoardService {
     }
 
     @Override
-    public List<DashboardResponseTotal> yearlyTotalRevenue() {
-        List<DashboardResponseTotal> response = dashboardRequestServiceDao.yearlyTotalRevenue();
+    public List<DashboardResponseTotalConvert> yearlyTotalRevenue() {
+        List<DashboardResponseTotal> yearlyTotalRevenue = dashboardRequestServiceDao.yearlyTotalRevenue();
+        List<DashboardResponseTotalConvert> response = new ArrayList<>();
+        for (DashboardResponseTotal r : yearlyTotalRevenue) {
+            response.add(DashboardResponseTotalToDashboardResponseTotalConvert(r));
+        }
+        return response;
+    }
+
+
+    @Override
+    public List<DashboardResponseTotalConvert> yearlyCountServiceRequest() {
+        List<DashboardResponseTotal> yearlyCountServiceRequest = dashboardRequestServiceDao.yearlyCountServiceRequest();
+        List<DashboardResponseTotalConvert> response = new ArrayList<>();
+        for (DashboardResponseTotal r : yearlyCountServiceRequest) {
+            response.add(DashboardResponseTotalToDashboardResponseTotalConvert(r));
+        }
         return response;
     }
 
     @Override
-    public List<DashboardResponseTotal> yearlyCountServiceRequest() {
-        List<DashboardResponseTotal> response = dashboardRequestServiceDao.yearlyCountServiceRequest();
+    public List<DashboardResponseTotalConvert> monthlyAccount(String year) {
+        List<DashboardResponseTotal> monthlyAccount = dashboardAccountDao.monthlyAccount(year);
+        List<DashboardResponseTotalConvert> response = new ArrayList<>();
+        for (DashboardResponseTotal r : monthlyAccount) {
+            response.add(DashboardResponseTotalToDashboardResponseTotalConvert(r));
+        }
         return response;
     }
 
     @Override
-    public List<DashboardResponseTotal> monthlyAccount(String year) {
-        List<DashboardResponseTotal> response = dashboardAccountDao.monthlyAccount(year);
+    public List<DashboardTypeAccountResponseConvert> typeApartmentAccount() {
+        List<DashboardTypeAccountResponse> typeApartmentAccount = dashboardAccountDao.typeApartmentAccount();
+        List<DashboardTypeAccountResponseConvert> response = new ArrayList<>();
+        for (DashboardTypeAccountResponse r : typeApartmentAccount) {
+            response.add(DashboardTypeAccountResponseToDashboardTypeAccountResponseConvert(r));
+        }
+        return response;
+    }
+
+    private DashboardTypeAccountResponseConvert DashboardTypeAccountResponseToDashboardTypeAccountResponseConvert(DashboardTypeAccountResponse request) {
+        DashboardTypeAccountResponseConvert response = DashboardTypeAccountResponseConvert.builder()
+                .type(request.getType())
+                .total(request.getTotal())
+                .color(randomColor())
+                .build();
         return response;
     }
 
     @Override
-    public List<DashboardTypeAccountResponse> typeApartmentAccount() {
-        List<DashboardTypeAccountResponse> response = dashboardAccountDao.typeApartmentAccount();
+    public List<DashboardResponseTotalConvert> monthlyVehicle() {
+        List<DashboardResponseTotal> monthlyVehicle = dashboardVehicleCardDAO.monthlyVehicle();
+        List<DashboardResponseTotalConvert> response = new ArrayList<>();
+        for (DashboardResponseTotal r : monthlyVehicle) {
+            response.add(DashboardResponseTotalToDashboardResponseTotalConvert(r));
+        }
         return response;
     }
 
     @Override
-    public List<DashboardResponseTotal> monthlyVehicle() {
-        List<DashboardResponseTotal> response = dashboardVehicleCardDAO.monthlyVehicle();
+    public List<DashboardResponseNumberOfUseServiceRequestConvert> numberOfUseServiceRequest() {
+        List<DashboardResponseNumberOfUseServiceRequest> numberOfUseServiceRequest = dashboardRequestServiceDao.numberOfUseServiceRequest();
+        List<DashboardResponseNumberOfUseServiceRequestConvert> response = new ArrayList<>();
+        for (DashboardResponseNumberOfUseServiceRequest r : numberOfUseServiceRequest) {
+            response.add(DashboardResponseNumberOfUseServiceRequestToDashboardResponseNumberOfUseServiceRequestConvert(r));
+        }
         return response;
     }
 
-    @Override
-    public List<DashboardResponseNumberOfUseServiceRequest> numberOfUseServiceRequest() {
-        List<DashboardResponseNumberOfUseServiceRequest> response = dashboardRequestServiceDao.numberOfUseServiceRequest();
+    private DashboardResponseNumberOfUseServiceRequestConvert DashboardResponseNumberOfUseServiceRequestToDashboardResponseNumberOfUseServiceRequestConvert(DashboardResponseNumberOfUseServiceRequest request) {
+        DashboardResponseNumberOfUseServiceRequestConvert response = DashboardResponseNumberOfUseServiceRequestConvert.builder()
+                .serviceName(request.getServiceName())
+                .total(request.getTotal())
+                .color(randomColor())
+                .build();
         return response;
+    }
+
+    private DashboardResponseTotalConvert DashboardResponseTotalToDashboardResponseTotalConvert(DashboardResponseTotal request) {
+        DashboardResponseTotalConvert response = DashboardResponseTotalConvert.builder()
+                .date(request.getDate())
+                .total(request.getTotal())
+                .color(randomColor())
+                .build();
+        return response;
+    }
+
+    private String randomColor() {
+        Random ra = new Random();
+        int r, g, b;
+        r = ra.nextInt(255);
+        g = ra.nextInt(255);
+        b = ra.nextInt(255);
+        Color color = new Color(r, g, b);
+        String hex = Integer.toHexString(color.getRGB() & 0xffffff);
+        if (hex.length() < 6) {
+            hex = "0" + hex;
+        }
+        hex = "#" + hex;
+        return hex;
     }
 
 }

@@ -1,9 +1,9 @@
 package com.ams.building.server.service;
 
 import com.ams.building.server.response.DashboardResponse;
-import com.ams.building.server.response.DashboardResponseNumberOfUseServiceRequest;
-import com.ams.building.server.response.DashboardResponseTotal;
-import com.ams.building.server.response.DashboardTypeAccountResponse;
+import com.ams.building.server.response.DashboardResponseNumberOfUseServiceRequestConvert;
+import com.ams.building.server.response.DashboardResponseTotalConvert;
+import com.ams.building.server.response.DashboardTypeAccountResponseConvert;
 
 import java.util.List;
 
@@ -11,16 +11,16 @@ public interface DashBoardService {
 
     DashboardResponse dashboardNumber();
 
-    List<DashboardResponseTotal> yearlyTotalRevenue();
+    List<DashboardResponseTotalConvert> yearlyTotalRevenue();
 
-    List<DashboardResponseTotal> yearlyCountServiceRequest();
+    List<DashboardResponseTotalConvert> yearlyCountServiceRequest();
 
-    List<DashboardResponseTotal> monthlyAccount(String year);
+    List<DashboardResponseTotalConvert> monthlyAccount(String year);
 
-    List<DashboardTypeAccountResponse> typeApartmentAccount();
+    List<DashboardTypeAccountResponseConvert> typeApartmentAccount();
 
-    List<DashboardResponseTotal> monthlyVehicle();
+    List<DashboardResponseTotalConvert> monthlyVehicle();
 
-    List<DashboardResponseNumberOfUseServiceRequest> numberOfUseServiceRequest();
+    List<DashboardResponseNumberOfUseServiceRequestConvert> numberOfUseServiceRequest();
 
 }

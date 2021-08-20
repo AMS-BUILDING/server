@@ -2,9 +2,9 @@ package com.ams.building.server.controller.admin;
 
 import com.ams.building.server.constant.Constants;
 import com.ams.building.server.response.DashboardResponse;
-import com.ams.building.server.response.DashboardResponseNumberOfUseServiceRequest;
-import com.ams.building.server.response.DashboardResponseTotal;
-import com.ams.building.server.response.DashboardTypeAccountResponse;
+import com.ams.building.server.response.DashboardResponseNumberOfUseServiceRequestConvert;
+import com.ams.building.server.response.DashboardResponseTotalConvert;
+import com.ams.building.server.response.DashboardTypeAccountResponseConvert;
 import com.ams.building.server.service.DashBoardService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +26,8 @@ public class DashboardController {
     private static final Logger logger = Logger.getLogger(DashboardController.class);
 
     @Autowired
-    private DashBoardService dashBoardService;
+    DashBoardService dashBoardService;
+
 
     @GetMapping(value = Constants.UrlPath.URL_API_DASHBOARD_NUMBER)
     public ResponseEntity<?> dashboardNumber() {
@@ -37,43 +38,43 @@ public class DashboardController {
 
     @GetMapping(value = Constants.UrlPath.URL_API_DASHBOARD_DASHBOARD_YEARLY_TOTAL_REVENUE)
     public ResponseEntity<?> yearlyTotalRevenue() {
-        List<DashboardResponseTotal> dashboardResponse = dashBoardService.yearlyTotalRevenue();
-        ResponseEntity<List<DashboardResponseTotal>> response = new ResponseEntity<>(dashboardResponse, HttpStatus.CREATED);
+        List<DashboardResponseTotalConvert> dashboardResponse = dashBoardService.yearlyTotalRevenue();
+        ResponseEntity<List<DashboardResponseTotalConvert>> response = new ResponseEntity<>(dashboardResponse, HttpStatus.CREATED);
         return response;
     }
 
     @GetMapping(value = Constants.UrlPath.URL_API_DASHBOARD_DASHBOARD_YEARLY_COUNT_SERVICE_REQUEST)
     public ResponseEntity<?> yearlyCountServiceRequest() {
-        List<DashboardResponseTotal> dashboardResponse = dashBoardService.yearlyCountServiceRequest();
-        ResponseEntity<List<DashboardResponseTotal>> response = new ResponseEntity<>(dashboardResponse, HttpStatus.CREATED);
+        List<DashboardResponseTotalConvert> dashboardResponse = dashBoardService.yearlyCountServiceRequest();
+        ResponseEntity<List<DashboardResponseTotalConvert>> response = new ResponseEntity<>(dashboardResponse, HttpStatus.CREATED);
         return response;
     }
 
     @GetMapping(value = Constants.UrlPath.URL_API_DASHBOARD_DASHBOARD_MONTHLY_ACCOUNT)
     public ResponseEntity<?> monthlyAccount(@RequestParam String year) {
-        List<DashboardResponseTotal> dashboardResponse = dashBoardService.monthlyAccount(year);
-        ResponseEntity<List<DashboardResponseTotal>> response = new ResponseEntity<>(dashboardResponse, HttpStatus.CREATED);
+        List<DashboardResponseTotalConvert> dashboardResponse = dashBoardService.monthlyAccount(year);
+        ResponseEntity<List<DashboardResponseTotalConvert>> response = new ResponseEntity<>(dashboardResponse, HttpStatus.CREATED);
         return response;
     }
 
     @GetMapping(value = Constants.UrlPath.URL_API_DASHBOARD_DASHBOARD_TYPE_APARTMENT_ACCOUNT)
     public ResponseEntity<?> typeApartmentAccount() {
-        List<DashboardTypeAccountResponse> dashboardResponse = dashBoardService.typeApartmentAccount();
-        ResponseEntity<List<DashboardTypeAccountResponse>> response = new ResponseEntity<>(dashboardResponse, HttpStatus.CREATED);
+        List<DashboardTypeAccountResponseConvert> dashboardResponse = dashBoardService.typeApartmentAccount();
+        ResponseEntity<List<DashboardTypeAccountResponseConvert>> response = new ResponseEntity<>(dashboardResponse, HttpStatus.CREATED);
         return response;
     }
 
     @GetMapping(value = Constants.UrlPath.URL_API_DASHBOARD_DASHBOARD_MONTHLY_VEHICLE)
     public ResponseEntity<?> monthlyVehicle() {
-        List<DashboardResponseTotal> dashboardResponse = dashBoardService.monthlyVehicle();
-        ResponseEntity<List<DashboardResponseTotal>> response = new ResponseEntity<>(dashboardResponse, HttpStatus.CREATED);
+        List<DashboardResponseTotalConvert> dashboardResponse = dashBoardService.monthlyVehicle();
+        ResponseEntity<List<DashboardResponseTotalConvert>> response = new ResponseEntity<>(dashboardResponse, HttpStatus.CREATED);
         return response;
     }
 
     @GetMapping(value = Constants.UrlPath.URL_API_DASHBOARD_DASHBOARD_NUMBER_OF_USER_SERVICE_REQUEST)
     public ResponseEntity<?> numberOfUseServiceRequest() {
-        List<DashboardResponseNumberOfUseServiceRequest> dashboardResponse = dashBoardService.numberOfUseServiceRequest();
-        ResponseEntity<List<DashboardResponseNumberOfUseServiceRequest>> response = new ResponseEntity<>(dashboardResponse, HttpStatus.CREATED);
+        List<DashboardResponseNumberOfUseServiceRequestConvert> dashboardResponse = dashBoardService.numberOfUseServiceRequest();
+        ResponseEntity<List<DashboardResponseNumberOfUseServiceRequestConvert>> response = new ResponseEntity<>(dashboardResponse, HttpStatus.CREATED);
         return response;
     }
 }
