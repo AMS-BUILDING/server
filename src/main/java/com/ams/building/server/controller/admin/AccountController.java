@@ -10,10 +10,8 @@ import com.ams.building.server.response.LoginResponse;
 import com.ams.building.server.response.UserPrincipal;
 import com.ams.building.server.service.AccountService;
 import com.ams.building.server.service.EmailService;
-import com.ams.building.server.utils.FileStore;
 import com.ams.building.server.utils.PropertiesReader;
 import com.ams.building.server.utils.RandomNumber;
-import com.google.gson.Gson;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -46,7 +44,7 @@ public class AccountController {
     private EmailService emailService;
 
     @PostMapping(Constants.UrlPath.URL_API_UPDATE_PROFILE_ACCOUNT)
-    public ResponseEntity<?> updateAccountProfile(@ModelAttribute LoginResponse  accountDTO) {
+    public ResponseEntity<?> updateAccountProfile(@ModelAttribute LoginResponse accountDTO) {
         accountService.updateProfile(accountDTO);
         ResponseEntity<String> response = new ResponseEntity<>("Update profile success", HttpStatus.OK);
         return response;
@@ -61,10 +59,13 @@ public class AccountController {
         StringBuilder content = new StringBuilder();
         content.append("Xin chào");
         content.append(" <p>Bạn có yêu cầu thay đổi mật khẩu </p>");
-        content.append(" <p>Bạn vui lòng ấn vào link dưới đây</p>");
-        content.append(" <p><b><a href=\"" + resetPassWordLink + "\"> Đổi mật khẩu của tôi </a><b></p>");
-        content.append("<p> Bỏ qua email này nếu bạn nhớ mật khẩu của mình hoặc bạn havav không thực hiện yêu cầu</p>");
+        Long roleId = accountService.roleIdAccountByEmail(email);
+        if (roleId == 1 || roleId == 2) {
+            content.append(" <p>Bạn vui lòng ấn vào link dưới đây</p>");
+            content.append(" <p><b><a href=\"" + resetPassWordLink + "\"> Đổi mật khẩu của tôi </a><b></p>");
+        }
         content.append("<p> Mã code của bạn :   \"" + token + "\"   </p>");
+        content.append("<p> Bỏ qua email này nếu bạn nhớ mật khẩu của mình hoặc bạn gửi nhầm yêu cầu</p>");
         emailService.sendSimpleMessage(email, PropertiesReader.getProperty(PropertyKeys.SEND_EMAIL), content.toString());
         ResponseEntity<String> response = new ResponseEntity<>("Mã code đã được gửi đến mail. Vui lòng check", HttpStatus.OK);
         return response;

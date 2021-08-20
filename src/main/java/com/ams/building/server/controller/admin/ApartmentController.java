@@ -22,7 +22,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -126,11 +125,12 @@ public class ApartmentController {
 
     private void sendResidentEmail(ResidentRequest residentRequest) throws MessagingException {
         StringBuilder content = new StringBuilder();
-        content.append("\"Xin chào cư dân!");
-        content.append(" <p> Dưới đây là tài khoản và mật khẩu của bạn để đăng nhập vào app </p>");
+        content.append("\"Xin chào quý cư dân!");
+        content.append(" <p> Quý cư dân đã đăng ký tài khoản để sử dụng ứng dụng trên điện thoại. </p>");
+        content.append(" <p> Dưới đây là tài khoản và mật khẩu của bạn để đăng nhập vào ứng dụng </p>");
         content.append("<p>  Tên đăng nhập :  \"" + residentRequest.getEmail() + "\"   </p>");
         content.append("<p>  Mật khẩu :  \"" + Constants.DEFAULT_PASSWORD_ENCODE + "\"   </p>");
-        content.append("<p> Chúng tôi hi vọng bạn có một ngày tuyệt vời! </p>");
+        content.append("<p> Chúng tôi chúc quý cư dân có một ngày tốt lành! </p>");
         emailService.sendSimpleMessage(residentRequest.getEmail(), PropertiesReader.getProperty(PropertyKeys.SEND_EMAIL_ADD_APARTMENT), content.toString());
     }
 
@@ -181,10 +181,14 @@ public class ApartmentController {
         ResponseEntity<String> response = new ResponseEntity<>("Add apartment success", HttpStatus.CREATED);
         //send email
         if (!request.getRequest().getEmail().isEmpty()) {
-            String emailText = "Hello and welcome new resident! \n" + "Here is the password for your first login \n" +
-                    " User name : " + request.getRequest().getName() + "\n" + " Email: " + request.getRequest().getEmail()
-                    + "\n" + " Password: " + Constants.DEFAULT_PASSWORD_ENCODE + "\n" + "We hope you have a nice day!”";
-            emailService.sendSimpleMessage(request.getRequest().getEmail(), PropertiesReader.getProperty(PropertyKeys.SEND_EMAIL_ADD_APARTMENT), emailText);
+            StringBuilder content = new StringBuilder();
+            content.append("\"Xin chào quý cư dân!");
+            content.append(" <p> Quý cư dân đã đăng ký tài khoản để sử dụng ứng dụng trên điện thoại. </p>");
+            content.append(" <p> Dưới đây là tài khoản và mật khẩu của bạn để đăng nhập vào ứng dụng </p>");
+            content.append("<p>  Tên đăng nhập :  \"" + request.getRequest().getEmail() + "\"   </p>");
+            content.append("<p>  Mật khẩu :  \"" + Constants.DEFAULT_PASSWORD_ENCODE + "\"   </p>");
+            content.append("<p> Chúng tôi chúc quý cư dân có một ngày tốt lành! </p>");
+            emailService.sendSimpleMessage(request.getRequest().getEmail(), PropertiesReader.getProperty(PropertyKeys.SEND_EMAIL_ADD_APARTMENT), content.toString());
         }
         logger.debug("Add apartmentOwner response : " + new Gson().toJson(response));
         return response;

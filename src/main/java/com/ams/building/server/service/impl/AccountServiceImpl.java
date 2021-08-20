@@ -633,6 +633,19 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
         }
     }
 
+    @Override
+    public Long roleIdAccountByEmail(String email) {
+        if (Objects.isNull(email)) {
+            throw new RestApiException(StatusCode.EMAIL_EMPTY);
+        }
+        Account account = accountDao.getAccountByEmail(email);
+        if (Objects.isNull(account)) {
+            throw new RestApiException(StatusCode.ACCOUNT_NOT_EXIST);
+        }
+        Long roleId = account.getRole().getId();
+        return roleId;
+    }
+
     private AccountAppResponse convertToAccountApp(Account account) {
         AccountAppResponse response = AccountAppResponse.builder().build();
         Apartment apartment = apartmentDAO.getApartmentByAccountId(account.getId());
