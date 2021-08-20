@@ -17,6 +17,7 @@ public class ApartmentBillingSchedule {
     private ApartmentBillingService service;
 
     @Scheduled(cron = "1 * * * * ?")
+//    @Scheduled(cron = "0 0 1 * * ?")
     public void checkAndInsertBillingInMonth() {
         try {
             service.checkAndInsertBillingInMonth();

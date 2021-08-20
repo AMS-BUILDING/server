@@ -45,4 +45,7 @@ public interface RequestServiceDAO extends JpaRepository<RequestService, Long> {
     @Query("SELECT count(r.id)FROM RequestService r WHERE r.statusServiceRequest.id = 3")
     Long totalServiceRequest();
 
+    @Query("SELECT r FROM RequestService  r WHERE r.statusServiceRequest.id=3 AND MONTH(r.dateRequest)=?1 AND YEAR(r.dateRequest)=?2 ORDER BY r.id  ")
+    List<RequestService> requestServiceByMonth(String month, String year);
+
 }

@@ -411,9 +411,10 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
         if (Objects.isNull(residentRequest)) {
             throw new RestApiException(StatusCode.DATA_EMPTY);
         }
-        if (StringUtils.isEmpty(residentRequest.getName())) {
-            throw new RestApiException(StatusCode.NAME_EMPTY);
-        }
+        if (StringUtils.isEmpty(residentRequest.getIdentifyCard()))
+            if (StringUtils.isEmpty(residentRequest.getName())) {
+                throw new RestApiException(StatusCode.NAME_EMPTY);
+            }
         if (StringUtils.isEmpty(residentRequest.getDob())) {
             throw new RestApiException(StatusCode.DOB_EMPTY);
         }
@@ -429,18 +430,23 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
         if (Objects.isNull(account)) {
             throw new RestApiException(StatusCode.ACCOUNT_NOT_EXIST);
         }
-        if (!StringUtils.isEmpty(residentRequest.getPhone())) {
-            if (!isPhoneNumber(residentRequest.getPhone())) {
-                throw new RestApiException(StatusCode.PHONE_NUMBER_NOT_RIGHT_FORMAT);
+        Long roleId = account.getRole().getId();
+        if (roleId == 3) {
+            if (StringUtils.isEmpty(residentRequest.getIdentifyCard())) {
+                throw new RestApiException(StatusCode.IDENTIFY_CARD_EMPTY);
             }
-            if (!account.getPhone().trim().equalsIgnoreCase(residentRequest.getPhone().trim())) {
-                List<String> accountsByPhone = accountDao.getAccountByPhoneNumber(residentRequest.getPhone());
-                if (!accountsByPhone.isEmpty()) {
-                    throw new RestApiException(StatusCode.PHONE_REGISTER_BEFORE);
+            if (!isIdentifyCard(residentRequest.getIdentifyCard())) {
+                throw new RestApiException(StatusCode.IDENTIFY_CARD_EMPTY);
+            }
+            if (!account.getIdentifyCard().trim().equalsIgnoreCase(residentRequest.getIdentifyCard().trim())) {
+                Account accountCheck = accountDao.getAccountByIdentify(residentRequest.getIdentifyCard().trim());
+                if (Objects.nonNull(accountCheck)) {
+                    throw new RestApiException(StatusCode.IDENTIFY_CARD_DUPLICATE);
                 }
             }
-        }
-        if (!StringUtils.isEmpty(residentRequest.getEmail())) {
+            if (StringUtils.isEmpty(residentRequest.getEmail())) {
+                throw new RestApiException(StatusCode.EMAIL_EMPTY);
+            }
             if (!isEmail(residentRequest.getEmail())) {
                 throw new RestApiException(StatusCode.EMAIL_NOT_RIGHT_FORMAT);
             }
@@ -450,15 +456,51 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
                     throw new RestApiException(StatusCode.EMAIL_REGISTER_BEFORE);
                 }
             }
-        }
-        if (!StringUtils.isEmpty(residentRequest.getIdentifyCard())) {
-            if (!isIdentifyCard(residentRequest.getIdentifyCard())) {
-                throw new RestApiException(StatusCode.IDENTIFY_CARD_EMPTY);
+            if (StringUtils.isEmpty(residentRequest.getPhone())) {
+                throw new RestApiException(StatusCode.PHONE_EMPTY);
             }
-            if (!account.getIdentifyCard().trim().equalsIgnoreCase(residentRequest.getIdentifyCard().trim())) {
-                Account accountCheck = accountDao.getAccountByIdentify(residentRequest.getIdentifyCard().trim());
-                if (Objects.nonNull(accountCheck)) {
-                    throw new RestApiException(StatusCode.IDENTIFY_CARD_DUPLICATE);
+            if (!isPhoneNumber(residentRequest.getPhone())) {
+                throw new RestApiException(StatusCode.PHONE_NUMBER_NOT_RIGHT_FORMAT);
+            }
+            if (!account.getPhone().trim().equalsIgnoreCase(residentRequest.getPhone().trim())) {
+                List<String> accountsByPhone = accountDao.getAccountByPhoneNumber(residentRequest.getPhone());
+                if (!accountsByPhone.isEmpty()) {
+                    throw new RestApiException(StatusCode.PHONE_REGISTER_BEFORE);
+                }
+            }
+
+        } else {
+            if (!StringUtils.isEmpty(residentRequest.getIdentifyCard())) {
+                if (!isIdentifyCard(residentRequest.getIdentifyCard())) {
+                    throw new RestApiException(StatusCode.IDENTIFY_CARD_EMPTY);
+                }
+                if (!account.getIdentifyCard().trim().equalsIgnoreCase(residentRequest.getIdentifyCard().trim())) {
+                    Account accountCheck = accountDao.getAccountByIdentify(residentRequest.getIdentifyCard().trim());
+                    if (Objects.nonNull(accountCheck)) {
+                        throw new RestApiException(StatusCode.IDENTIFY_CARD_DUPLICATE);
+                    }
+                }
+            }
+            if (!StringUtils.isEmpty(residentRequest.getPhone())) {
+                if (!isPhoneNumber(residentRequest.getPhone())) {
+                    throw new RestApiException(StatusCode.PHONE_NUMBER_NOT_RIGHT_FORMAT);
+                }
+                if (!account.getPhone().trim().equalsIgnoreCase(residentRequest.getPhone().trim())) {
+                    List<String> accountsByPhone = accountDao.getAccountByPhoneNumber(residentRequest.getPhone());
+                    if (!accountsByPhone.isEmpty()) {
+                        throw new RestApiException(StatusCode.PHONE_REGISTER_BEFORE);
+                    }
+                }
+            }
+            if (!StringUtils.isEmpty(residentRequest.getEmail())) {
+                if (!isEmail(residentRequest.getEmail())) {
+                    throw new RestApiException(StatusCode.EMAIL_NOT_RIGHT_FORMAT);
+                }
+                if (!account.getEmail().trim().equalsIgnoreCase(residentRequest.getEmail().trim())) {
+                    Account accountCheck = accountDao.getAccountByEmail(residentRequest.getEmail().trim());
+                    if (Objects.nonNull(accountCheck)) {
+                        throw new RestApiException(StatusCode.EMAIL_REGISTER_BEFORE);
+                    }
                 }
             }
         }
