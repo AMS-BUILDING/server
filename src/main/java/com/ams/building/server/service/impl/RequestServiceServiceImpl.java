@@ -1,33 +1,12 @@
 package com.ams.building.server.service.impl;
 
-import com.ams.building.server.bean.Account;
-import com.ams.building.server.bean.Apartment;
-import com.ams.building.server.bean.DetailSubService;
-import com.ams.building.server.bean.ReasonDetailSubService;
-import com.ams.building.server.bean.RequestService;
-import com.ams.building.server.bean.ResidentCard;
-import com.ams.building.server.bean.RoomNumber;
-import com.ams.building.server.bean.StatusServiceRequest;
-import com.ams.building.server.bean.VehicleCard;
+import com.ams.building.server.bean.*;
 import com.ams.building.server.constant.RoleEnum;
 import com.ams.building.server.constant.StatusCode;
-import com.ams.building.server.dao.AccountDAO;
-import com.ams.building.server.dao.ApartmentDAO;
-import com.ams.building.server.dao.DetailSubServiceDAO;
-import com.ams.building.server.dao.ReasonDetailSubServiceDAO;
-import com.ams.building.server.dao.RequestServiceDAO;
-import com.ams.building.server.dao.ResidentCardDAO;
-import com.ams.building.server.dao.StatusRequestServiceDAO;
-import com.ams.building.server.dao.VehicleCardDAO;
+import com.ams.building.server.dao.*;
 import com.ams.building.server.exception.RestApiException;
 import com.ams.building.server.request.RequestServiceRequest;
-import com.ams.building.server.response.ApiResponse;
-import com.ams.building.server.response.DetailServiceRequestResponse;
-import com.ams.building.server.response.DetailSubServiceClientResponse;
-import com.ams.building.server.response.ReasonDetailSubServiceResponse;
-import com.ams.building.server.response.RequestServiceClientResponse;
-import com.ams.building.server.response.RequestServiceResponse;
-import com.ams.building.server.response.StatusServiceResponse;
+import com.ams.building.server.response.*;
 import com.ams.building.server.service.RequestServiceService;
 import com.ams.building.server.utils.DateTimeUtils;
 import org.apache.log4j.Logger;
@@ -39,17 +18,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
-import static com.ams.building.server.utils.DateTimeUtils.DD_MM_YYYY;
-import static com.ams.building.server.utils.DateTimeUtils.HH_MM;
-import static com.ams.building.server.utils.DateTimeUtils.convertDateToStringWithTimezone;
-import static com.ams.building.server.utils.DateTimeUtils.convertStringToDate;
+import static com.ams.building.server.utils.DateTimeUtils.*;
 
 @Transactional
 @Service
@@ -259,7 +231,7 @@ public class RequestServiceServiceImpl implements RequestServiceService {
             response.add(requestServiceClientResponse);
         }
         for (ResidentCard residentCard : residentCards) {
-            RequestServiceClientResponse requestServiceClientResponse = convertResidentCardToResponse(residentCard);
+            RequestServiceClientResponse requestServiceClientResponse = convertHistoryResidentCard(residentCard);
             response.add(requestServiceClientResponse);
         }
         response.sort(Comparator.comparing(RequestServiceClientResponse::getMinutes));
@@ -423,14 +395,9 @@ public class RequestServiceServiceImpl implements RequestServiceService {
 
     private RequestServiceClientResponse convertToHistoryResponse(RequestService requestService) {
         Date currentTime = new Date();
-        Long diff;
-        if (requestService.getEndDate() == null) {
-            diff = currentTime.getTime() - requestService.getStartDate().getTime();
-        } else {
-            diff = currentTime.getTime() - requestService.getEndDate().getTime();
-        }
+        Long diff = currentTime.getTime() - requestService.getDateRequest().getTime();
         long minutes
-                = TimeUnit.MILLISECONDS.toMinutes(diff);
+                = TimeUnit.MILLISECONDS.toMinutes(Math.abs(diff));
         String time = "";
         if (minutes >= 0 && minutes < 60) {
             time = minutes + " phút trước";
@@ -451,6 +418,34 @@ public class RequestServiceServiceImpl implements RequestServiceService {
         response.setTime(time);
         response.setStatusId(requestService.getStatusServiceRequest().getId());
         response.setTypeRequest(1L);
+        response.setMinutes(minutes);
+        return response;
+    }
+
+    private RequestServiceClientResponse convertHistoryResidentCard(ResidentCard residentCard) {
+        Account account = residentCard.getAccount();
+        RequestServiceClientResponse response = RequestServiceClientResponse.builder().build();
+        Date currentTime = new Date();
+        Apartment apartment = apartmentDAO.getApartmentByAccountId(account.getId());
+        RoomNumber roomNumber = apartment.getRoomNumber();
+        Long diff = currentTime.getTime() - residentCard.getStartDate().getTime();
+        long minutes
+                = TimeUnit.MILLISECONDS.toMinutes(diff);
+        String time = "";
+        if (minutes >= 0 && minutes < 60) {
+            time = minutes + " phút trước";
+        } else if (minutes >= 60 && minutes < 1440) {
+            time = Long.valueOf(minutes / 60) + " giờ trước";
+        } else {
+            time = convertDateToStringWithTimezone(residentCard.getStartDate(), DD_MM_YYYY, null);
+        }
+        response.setId(residentCard.getId());
+        response.setServiceName("Đã đăng kí thành công thêm thẻ căn hộ  - " + convertDateToStringWithTimezone(residentCard.getStartDate(), DD_MM_YYYY, null));
+        response.setDescription("Đã đăng kí thành công thẻ gửi xe của căn hộ " + roomNumber.getRoomName() + " lúc " + convertDateToStringWithTimezone(residentCard.getStartDate(), HH_MM, null));
+        response.setTime(time);
+        response.setStatusId(residentCard.getStatusResidentCard().getId());
+        response.setTypeRequest(3L);
+        response.setMinutes(minutes);
         return response;
     }
 }
