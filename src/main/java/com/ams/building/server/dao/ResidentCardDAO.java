@@ -27,6 +27,6 @@ public interface ResidentCardDAO extends JpaRepository<ResidentCard, Long> {
     void updateStatus(@Param("statusId") Long statusId, @Param("cardId") Long cardId);
 
     @Query("SELECT r FROM ResidentCard r WHERE r.account.id =:accountId AND r.statusResidentCard.id IN (:status) ORDER BY r.id DESC")
-    List<ResidentCard>residentCardRegister(@Param("accountId") Long accountId, @Param("status") List<Long> status);
+    List<ResidentCard> residentCardRegister(@Param("accountId") Long accountId, @Param("status") List<Long> status);
 
 }
