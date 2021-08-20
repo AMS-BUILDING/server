@@ -421,15 +421,16 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
         if (StringUtils.isEmpty(residentRequest.getPositionId())) {
             throw new RestApiException(StatusCode.POSITION_EMPTY);
         }
-        if (residentRequest.getPositionId() != null) {
-            if (residentRequest.getPositionId() < 5) {
-                throw new RestApiException(StatusCode.POSITION_MUST_BE_IN_HOME);
-            }
-        }
         Account account = accountDao.getAccountById(residentRequest.getAccountId());
         if (Objects.isNull(account)) {
             throw new RestApiException(StatusCode.ACCOUNT_NOT_EXIST);
         }
+        if (Objects.nonNull(account.getPosition())) {
+            if (residentRequest.getPositionId() < 5) {
+                throw new RestApiException(StatusCode.POSITION_MUST_BE_IN_HOME);
+            }
+        }
+
         Long roleId = account.getRole().getId();
         if (roleId == 3) {
             if (StringUtils.isEmpty(residentRequest.getIdentifyCard())) {
