@@ -278,6 +278,10 @@ public class ApartmentServiceImpl implements ApartmentService {
             if (!isPhoneNumber(request.getPhone())) {
                 throw new RestApiException(StatusCode.PHONE_NUMBER_NOT_RIGHT_FORMAT);
             }
+            List<String>phones= accountDAO.getAccountByPhoneNumber(request.getPhone);
+            if(phones.isEmpty()){
+                throw new RestApiException(StatusCode.PHONE_REGISTER_BEFORE);
+            }
         }
         if (!StringUtils.isEmpty(request.getEmail())) {
             if (!isEmail(request.getEmail())) {
