@@ -34,6 +34,7 @@ import java.util.Objects;
 @RequestMapping("/api")
 @CrossOrigin(origins = "*", maxAge = -1)
 public class AccountController {
+
     private static final Logger logger = Logger.getLogger(AccountController.class);
 
     @Autowired

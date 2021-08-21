@@ -11,6 +11,7 @@ import com.ams.building.server.dao.VehicleDAO;
 import com.ams.building.server.exception.RestApiException;
 import com.ams.building.server.request.VehicleCardClientRequest;
 import com.ams.building.server.response.ApiResponse;
+import com.ams.building.server.response.ResidentCardAddResponse;
 import com.ams.building.server.response.VehicleCardResponse;
 import com.ams.building.server.response.VehicleTypeResponse;
 import com.ams.building.server.service.VehicleCardService;
@@ -125,7 +126,7 @@ public class VehicleCardServiceImpl implements VehicleCardService {
     }
 
     @Override
-    public void addVehicleCard(List<VehicleCardClientRequest> requests, Long accountId) {
+    public ResidentCardAddResponse addVehicleCard(List<VehicleCardClientRequest> requests, Long accountId) {
         if (requests.isEmpty()) {
             throw new RestApiException(StatusCode.DATA_EMPTY);
         }
@@ -141,6 +142,7 @@ public class VehicleCardServiceImpl implements VehicleCardService {
         Vehicle vehicle = new Vehicle();
         StatusVehicleCard status = new StatusVehicleCard();
         status.setId(1L);
+        List<Long> ids = new ArrayList<>();
         for (VehicleCardClientRequest request : requests) {
             VehicleCard vehicleCard = new VehicleCard();
             vehicle.setId(request.getVehicleId());
@@ -152,8 +154,11 @@ public class VehicleCardServiceImpl implements VehicleCardService {
             vehicleCard.setLicensePlate(request.getLicensePlate().trim());
             vehicleCard.setVehicleColor(request.getVehicleColor().trim());
             vehicleCard.setBillingMonth(billingMonth);
-            vehicleCardDAO.save(vehicleCard);
+            VehicleCard card = vehicleCardDAO.save(vehicleCard);
+            ids.add(card.getId());
         }
+        ResidentCardAddResponse respone = ResidentCardAddResponse.builder().serviceId(ids).typeService(2L).build();
+        return respone;
     }
 
     @Override

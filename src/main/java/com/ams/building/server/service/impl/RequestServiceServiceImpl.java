@@ -27,6 +27,7 @@ import com.ams.building.server.response.DetailSubServiceClientResponse;
 import com.ams.building.server.response.ReasonDetailSubServiceResponse;
 import com.ams.building.server.response.RequestServiceClientResponse;
 import com.ams.building.server.response.RequestServiceResponse;
+import com.ams.building.server.response.ServiceAddResponse;
 import com.ams.building.server.response.StatusServiceResponse;
 import com.ams.building.server.service.RequestServiceService;
 import com.ams.building.server.utils.DateTimeUtils;
@@ -149,7 +150,7 @@ public class RequestServiceServiceImpl implements RequestServiceService {
     }
 
     @Override
-    public DetailServiceRequestResponse detailServiceRequest(Long serviceRequestId) {
+    public DetailServiceRequestResponse detailServiceRequest(Long serviceRequestId,Long typeRequest) {
         if (StringUtils.isEmpty(serviceRequestId)) {
             throw new RestApiException(StatusCode.DATA_EMPTY);
         }
@@ -168,7 +169,7 @@ public class RequestServiceServiceImpl implements RequestServiceService {
     }
 
     @Override
-    public Long addRequestServiceSuccessStatus(RequestServiceRequest requestServiceRequest) {
+    public ServiceAddResponse addRequestServiceSuccessStatus(RequestServiceRequest requestServiceRequest) {
         Long id;
         if (Objects.isNull(requestServiceRequest)) {
             throw new RestApiException(StatusCode.DATA_EMPTY);
@@ -214,7 +215,11 @@ public class RequestServiceServiceImpl implements RequestServiceService {
             requestServiceDAO.save(requestService);
         }
         id = requestService.getId();
-        return id;
+        ServiceAddResponse response = ServiceAddResponse.builder()
+                .serviceId(id)
+                .typeService(1L)
+                .build();
+        return response;
     }
 
     @Override
