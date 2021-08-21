@@ -66,8 +66,8 @@ public class NotificationSeviceImpl implements NotificationService {
             throw new RestApiException(StatusCode.TITLE_EMPTY);
         }
         Notification notification = new Notification();
-        notification.setDescription(request.getDescription());
-        notification.setTitle(request.getTitle());
+        notification.setDescription(request.getDescription().trim());
+        notification.setTitle(request.getTitle().trim());
         notification.setIsRead(false);
         notificationDAO.save(notification);
     }

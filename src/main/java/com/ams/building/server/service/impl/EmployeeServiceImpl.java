@@ -221,13 +221,13 @@ public class EmployeeServiceImpl implements EmployeeService {
         }
         Account account = new Account();
         account.setIdentifyCard(request.getIdentifyCard());
-        account.setEmail(request.getEmail());
-        account.setDob(request.getDob());
+        account.setEmail(request.getEmail().trim());
+        account.setDob(request.getDob().trim());
         account.setGender(request.getGender());
-        account.setHomeTown(request.getHomeTown());
-        account.setPhone(request.getPhoneNumber());
-        account.setCurrentAddress(request.getCurrentAddress());
-        account.setName(request.getName());
+        account.setHomeTown(request.getHomeTown().trim());
+        account.setPhone(request.getPhoneNumber().trim());
+        account.setCurrentAddress(request.getCurrentAddress().trim());
+        account.setName(request.getName().trim());
         account.setPassword(Constants.DEFAULT_PASSWORD);
         account.setImage(FileStore.getDefaultAvatar());
         account.setEnabled(true);
