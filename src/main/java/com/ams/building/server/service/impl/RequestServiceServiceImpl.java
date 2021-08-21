@@ -150,21 +150,40 @@ public class RequestServiceServiceImpl implements RequestServiceService {
     }
 
     @Override
-    public DetailServiceRequestResponse detailServiceRequest(Long serviceRequestId,Long typeRequest) {
+    public DetailServiceRequestResponse detailServiceRequest(Long serviceRequestId, Long typeRequest) {
         if (StringUtils.isEmpty(serviceRequestId)) {
             throw new RestApiException(StatusCode.DATA_EMPTY);
         }
-        RequestService request = requestServiceDAO.findRequestServiceById(serviceRequestId);
-        if (Objects.isNull(request)) {
-            throw new RestApiException(StatusCode.REQUEST_SERVICE_NOT_EXIST);
-        }
-        String message = request.getReasonDetailSubService().getDetailSubService().getService().getSubServiceName();
-        if (request.getReasonDetailSubService().getDetailSubService().getService().getId() == 9) {
-            message += request.getReasonDetailSubService().getDetailSubService().getDetailSubServiceName().toLowerCase() + " vì  " + request.getReasonDetailSubService().getReasonName().toLowerCase();
-        }
         DetailServiceRequestResponse response = DetailServiceRequestResponse.builder().build();
-        response.setStatusId(request.getStatusServiceRequest().getId());
-        response.setServiceName(message);
+        if (typeRequest == 1) {
+            RequestService request = requestServiceDAO.findRequestServiceById(serviceRequestId);
+            if (Objects.isNull(request)) {
+                throw new RestApiException(StatusCode.REQUEST_SERVICE_NOT_EXIST);
+            }
+            String message = request.getReasonDetailSubService().getDetailSubService().getService().getSubServiceName();
+            if (request.getReasonDetailSubService().getDetailSubService().getService().getId() == 9) {
+                message += request.getReasonDetailSubService().getDetailSubService().getDetailSubServiceName().toLowerCase() + " vì  " + request.getReasonDetailSubService().getReasonName().toLowerCase();
+            }
+            response.setStatusId(request.getStatusServiceRequest().getId());
+            response.setServiceName(message);
+        } else if (typeRequest == 2) {
+            VehicleCard card = vehicleCardDAO.getById(serviceRequestId);
+            if (Objects.isNull(card)) {
+                throw new RestApiException(StatusCode.VEHICLE_NOT_EXIST);
+            }
+            String message = "Đăng kí thẻ xe";
+            response.setStatusId(card.getStatusVehicleCard().getId());
+            response.setServiceName(message);
+        } else {
+            ResidentCard card = residentCardDAO.getById(serviceRequestId);
+            if (Objects.isNull(card)) {
+                throw new RestApiException(StatusCode.RESIDENT_CARD_NOT_EXIST);
+            }
+            String message = "Đăng kí thẻ căn hộ " + card.getCardCode();
+            response.setServiceName(message);
+            response.setStatusId(card.getStatusResidentCard().getId());
+        }
+
         return response;
     }
 

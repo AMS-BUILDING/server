@@ -162,6 +162,7 @@ public class ResidentCardServiceImpl implements ResidentCardService {
             residentCard.setAccount(account);
             residentCard.setPrice(Double.valueOf(50000));
             residentCard.setBillingMonth(billingMonth);
+            residentCard.setIsUse(1);
             ResidentCard card = residentCardDAO.save(residentCard);
             ids.add(card.getId());
         }

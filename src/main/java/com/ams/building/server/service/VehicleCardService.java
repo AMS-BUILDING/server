@@ -2,7 +2,7 @@ package com.ams.building.server.service;
 
 import com.ams.building.server.request.VehicleCardClientRequest;
 import com.ams.building.server.response.ApiResponse;
-import com.ams.building.server.response.ResidentCardAddResponse;
+import com.ams.building.server.response.ServiceAddResponse;
 import com.ams.building.server.response.VehicleCardResponse;
 import com.ams.building.server.response.VehicleTypeResponse;
 
@@ -20,7 +20,7 @@ public interface VehicleCardService {
 
     List<VehicleTypeResponse> listVehicleByTypeAndByAccountId(Long id, Long vehicleTypeId);
 
-    ResidentCardAddResponse addVehicleCard(List<VehicleCardClientRequest> requests, Long accountId);
+    ServiceAddResponse addVehicleCard(List<VehicleCardClientRequest> requests, Long accountId);
 
     ApiResponse searchVehicleCardByRoomNumber(Integer page, Integer size, Long accountId, Long vehicleId);
 
