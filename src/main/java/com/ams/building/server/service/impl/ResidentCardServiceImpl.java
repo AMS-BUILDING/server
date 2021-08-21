@@ -123,6 +123,7 @@ public class ResidentCardServiceImpl implements ResidentCardService {
         StatusResidentCard statusResidentCard = statusResidentCardDAO.getOne(1L);
         newCard.setStatusResidentCard(statusResidentCard);
         newCard.setBillingMonth(billingMonth);
+        newCard.setIsUse(1);
         residentCardDAO.save(newCard);
     }
 

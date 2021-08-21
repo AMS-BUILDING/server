@@ -95,7 +95,7 @@ public class DashboardServiceImpl implements DashBoardService {
         List<DashboardTypeAccountResponse> typeApartmentAccount = dashboardAccountDao.typeApartmentAccount();
         List<DashboardTypeAccountResponseConvert> response = new ArrayList<>();
         for (DashboardTypeAccountResponse r : typeApartmentAccount) {
-            response.add(DashboardTypeAccountResponseToDashboardTypeAccountResponseConvert(r));
+            response.add(dashboardTypeAccountResponseToDashboardTypeAccountResponseConvert(r));
         }
         return response;
     }
@@ -124,7 +124,7 @@ public class DashboardServiceImpl implements DashBoardService {
         List<DashboardResponseNumberOfUseServiceRequest> numberOfUseServiceRequest = dashboardRequestServiceDao.numberOfUseServiceRequest();
         List<DashboardResponseNumberOfUseServiceRequestConvert> response = new ArrayList<>();
         for (DashboardResponseNumberOfUseServiceRequest r : numberOfUseServiceRequest) {
-            response.add(DashboardResponseNumberOfUseServiceRequestToDashboardResponseNumberOfUseServiceRequestConvert(r));
+            response.add(dashboardResponseNumberOfUseServiceRequestToDashboardResponseNumberOfUseServiceRequestConvert(r));
         }
         return response;
     }
