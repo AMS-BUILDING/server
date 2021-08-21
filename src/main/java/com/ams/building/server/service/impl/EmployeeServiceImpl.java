@@ -28,7 +28,6 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
@@ -97,28 +96,28 @@ public class EmployeeServiceImpl implements EmployeeService {
         if (request.getPosition() < 0 || request.getPosition() > 4) {
             throw new RestApiException(StatusCode.POSITION_NOT_RIGHT_WITH_EMPLOYEE);
         }
-        if (StringUtils.isEmpty(request.getName().trim())) {
+        if (StringUtils.isEmpty(request.getName())) {
             throw new RestApiException(StatusCode.NAME_EMPTY);
         }
-        if (StringUtils.isEmpty(request.getDob().trim())) {
+        if (StringUtils.isEmpty(request.getDob())) {
             throw new RestApiException(StatusCode.DOB_EMPTY);
         }
-        if (StringUtils.isEmpty(request.getCurrentAddress().trim())) {
+        if (StringUtils.isEmpty(request.getCurrentAddress())) {
             throw new RestApiException(StatusCode.CURRENT_ADDRESS_EMPTY);
         }
-        if (StringUtils.isEmpty(request.getHomeTown().trim())) {
+        if (StringUtils.isEmpty(request.getHomeTown())) {
             throw new RestApiException(StatusCode.HOME_TOWN_EMPTY);
         }
-        if (StringUtils.isEmpty(request.getPhoneNumber().trim())) {
+        if (StringUtils.isEmpty(request.getPhoneNumber())) {
             throw new RestApiException(StatusCode.PHONE_EMPTY);
         }
-        if (!isPhoneNumber(request.getPhoneNumber().trim())) {
+        if (!isPhoneNumber(request.getPhoneNumber())) {
             throw new RestApiException(StatusCode.PHONE_NUMBER_NOT_RIGHT_FORMAT);
         }
-        if (StringUtils.isEmpty(request.getIdentifyCard().trim())) {
+        if (StringUtils.isEmpty(request.getIdentifyCard())) {
             throw new RestApiException(StatusCode.IDENTIFY_CARD_EMPTY);
         }
-        if (!isIdentifyCard(request.getIdentifyCard().trim())) {
+        if (!isIdentifyCard(request.getIdentifyCard())) {
             throw new RestApiException(StatusCode.IDENTIFY_CARD_NOT_RIGHT);
         }
         if (!request.getIdentifyCard().equalsIgnoreCase(currentAccount.getIdentifyCard())) {
@@ -135,20 +134,20 @@ public class EmployeeServiceImpl implements EmployeeService {
                 throw new RestApiException(StatusCode.PHONE_REGISTER_BEFORE);
             }
         }
-        String yearDob = request.getDob().split("/")[2];
-        Calendar cal = Calendar.getInstance();
-        int year = cal.get(Calendar.YEAR);
-        int age = year - Integer.valueOf(yearDob);
-        if (age < 18) {
-            throw new RestApiException(StatusCode.EMPLOYEE_NOT_WORKING);
-        }
-        currentAccount.setDob(request.getDob());
+//        String yearDob = request.getDob().split("/")[2];
+//        Calendar cal = Calendar.getInstance();
+//        int year = cal.get(Calendar.YEAR);
+//        int age = year - Integer.valueOf(yearDob);
+//        if (age < 18) {
+//            throw new RestApiException(StatusCode.EMPLOYEE_NOT_WORKING);
+//        }
+        currentAccount.setDob(request.getDob().trim());
         currentAccount.setGender(request.getGender());
-        currentAccount.setHomeTown(request.getHomeTown());
-        currentAccount.setPhone(request.getPhoneNumber());
-        currentAccount.setCurrentAddress(request.getCurrentAddress());
-        currentAccount.setName(request.getName());
-        currentAccount.setIdentifyCard(request.getIdentifyCard());
+        currentAccount.setHomeTown(request.getHomeTown().trim());
+        currentAccount.setPhone(request.getPhoneNumber().trim());
+        currentAccount.setCurrentAddress(request.getCurrentAddress().trim());
+        currentAccount.setName(request.getName().trim());
+        currentAccount.setIdentifyCard(request.getIdentifyCard().trim());
         Position position = positionDAO.getOne(request.getPosition());
         currentAccount.setPosition(position);
         Role role = roleDAO.getOne(4L);
@@ -164,25 +163,25 @@ public class EmployeeServiceImpl implements EmployeeService {
                 && StringUtils.isEmpty(request.getHomeTown()) && StringUtils.isEmpty(request.getPosition()))) {
             throw new RestApiException(StatusCode.DATA_EMPTY);
         }
-        if (StringUtils.isEmpty(request.getName().trim())) {
+        if (StringUtils.isEmpty(request.getName())) {
             throw new RestApiException(StatusCode.NAME_EMPTY);
         }
-        if (StringUtils.isEmpty(request.getIdentifyCard().trim())) {
+        if (StringUtils.isEmpty(request.getIdentifyCard())) {
             throw new RestApiException(StatusCode.IDENTIFY_CARD_EMPTY);
         }
-        if (StringUtils.isEmpty(request.getDob().trim())) {
+        if (StringUtils.isEmpty(request.getDob())) {
             throw new RestApiException(StatusCode.DOB_EMPTY);
         }
-        if (StringUtils.isEmpty(request.getCurrentAddress().trim())) {
+        if (StringUtils.isEmpty(request.getCurrentAddress())) {
             throw new RestApiException(StatusCode.CURRENT_ADDRESS_EMPTY);
         }
-        if (StringUtils.isEmpty(request.getHomeTown().trim())) {
+        if (StringUtils.isEmpty(request.getHomeTown())) {
             throw new RestApiException(StatusCode.HOME_TOWN_EMPTY);
         }
-        if (StringUtils.isEmpty(request.getPhoneNumber().trim())) {
+        if (StringUtils.isEmpty(request.getPhoneNumber())) {
             throw new RestApiException(StatusCode.PHONE_EMPTY);
         }
-        if (StringUtils.isEmpty(request.getEmail().trim())) {
+        if (StringUtils.isEmpty(request.getEmail())) {
             throw new RestApiException(StatusCode.EMAIL_EMPTY);
         }
         if (StringUtils.isEmpty(request.getPosition())) {
@@ -191,13 +190,13 @@ public class EmployeeServiceImpl implements EmployeeService {
         if (request.getPosition() < 0 || request.getPosition() > 4) {
             throw new RestApiException(StatusCode.POSITION_NOT_RIGHT_WITH_EMPLOYEE);
         }
-        if (!isEmail(request.getEmail().trim())) {
+        if (!isEmail(request.getEmail())) {
             throw new RestApiException(StatusCode.EMAIL_NOT_RIGHT_FORMAT);
         }
-        if (!isPhoneNumber(request.getPhoneNumber().trim())) {
+        if (!isPhoneNumber(request.getPhoneNumber())) {
             throw new RestApiException(StatusCode.PHONE_NUMBER_NOT_RIGHT_FORMAT);
         }
-        if (!isIdentifyCard(request.getIdentifyCard().trim())) {
+        if (!isIdentifyCard(request.getIdentifyCard())) {
             throw new RestApiException(StatusCode.IDENTIFY_CARD_NOT_RIGHT);
         }
         Account searchAccountByIdentify = accountDao.getAccountByIdentify(request.getIdentifyCard());
@@ -224,10 +223,10 @@ public class EmployeeServiceImpl implements EmployeeService {
         account.setEmail(request.getEmail().trim());
         account.setDob(request.getDob().trim());
         account.setGender(request.getGender());
-        account.setHomeTown(request.getHomeTown().trim());
-        account.setPhone(request.getPhoneNumber().trim());
-        account.setCurrentAddress(request.getCurrentAddress().trim());
-        account.setName(request.getName().trim());
+        account.setHomeTown(request.getHomeTown());
+        account.setPhone(request.getPhoneNumber());
+        account.setCurrentAddress(request.getCurrentAddress());
+        account.setName(request.getName());
         account.setPassword(Constants.DEFAULT_PASSWORD);
         account.setImage(FileStore.getDefaultAvatar());
         account.setEnabled(true);

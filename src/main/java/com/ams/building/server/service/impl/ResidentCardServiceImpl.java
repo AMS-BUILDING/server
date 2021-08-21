@@ -85,7 +85,7 @@ public class ResidentCardServiceImpl implements ResidentCardService {
         }
         ResidentCard residentCard = residentCardDAO.getDetailResidentCardById(id);
         if (Objects.isNull(residentCard)) throw new RestApiException(StatusCode.RESIDENT_CARD_NOT_EXIST);
-        residentCardDAO.delete(residentCard);
+        residentCardDAO.cancelExtend(0, id);
     }
 
     @Override
@@ -117,9 +117,14 @@ public class ResidentCardServiceImpl implements ResidentCardService {
         }
         String billingMonth = monthStr + "/" + year;
         String roomName = roomNumber.getRoomName();
+        List<ResidentCard> listResidentCard = residentCardDAO.checkRegisterCard(account.getId());
         ResidentCard newCard = new ResidentCard();
+        if (listResidentCard.size() > 0) {
+            newCard.setPrice(Double.valueOf(Constants.ResidentCard.PRICE));
+        } else {
+            newCard.setPrice(0D);
+        }
         newCard.setAccount(account);
-        newCard.setPrice(Double.valueOf(Constants.ResidentCard.PRICE));
         newCard.setCardCode(genCardCode(roomName));
         StatusResidentCard statusResidentCard = statusResidentCardDAO.getOne(1L);
         newCard.setStatusResidentCard(statusResidentCard);

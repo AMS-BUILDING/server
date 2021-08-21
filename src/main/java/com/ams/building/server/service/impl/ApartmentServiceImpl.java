@@ -259,11 +259,11 @@ public class ApartmentServiceImpl implements ApartmentService {
         if (Objects.isNull(request)) {
             throw new RestApiException(StatusCode.DATA_EMPTY);
         }
-        if (StringUtils.isEmpty(request.getName().trim())) {
+        if (StringUtils.isEmpty(request.getName())) {
             throw new RestApiException(StatusCode.NAME_EMPTY);
         }
-        if (!StringUtils.isEmpty(request.getIdentifyCard().trim())) {
-            if (!isIdentifyCard(request.getIdentifyCard().trim())) {
+        if (!StringUtils.isEmpty(request.getIdentifyCard())) {
+            if (!isIdentifyCard(request.getIdentifyCard())) {
                 throw new RestApiException(StatusCode.IDENTIFY_CARD_NOT_RIGHT);
             }
             Account currentAccount = accountDAO.getAccountByIdentify(request.getIdentifyCard().trim());
@@ -274,8 +274,8 @@ public class ApartmentServiceImpl implements ApartmentService {
         } else {
             account.setIdentifyCard(null);
         }
-        if (!StringUtils.isEmpty(request.getPhone().trim())) {
-            if (!isPhoneNumber(request.getPhone().trim())) {
+        if (!StringUtils.isEmpty(request.getPhone())) {
+            if (!isPhoneNumber(request.getPhone())) {
                 throw new RestApiException(StatusCode.PHONE_NUMBER_NOT_RIGHT_FORMAT);
             }
             List<String> phones = accountDAO.getAccountByPhoneNumber(request.getPhone().trim());
@@ -283,8 +283,8 @@ public class ApartmentServiceImpl implements ApartmentService {
                 throw new RestApiException(StatusCode.PHONE_REGISTER_BEFORE);
             }
         }
-        if (!StringUtils.isEmpty(request.getEmail().trim())) {
-            if (!isEmail(request.getEmail().trim())) {
+        if (!StringUtils.isEmpty(request.getEmail())) {
+            if (!isEmail(request.getEmail())) {
                 throw new RestApiException(StatusCode.EMAIL_NOT_RIGHT_FORMAT);
             }
             Account currentAccount = accountDAO.getAccountByEmail(request.getEmail().trim());
@@ -295,10 +295,10 @@ public class ApartmentServiceImpl implements ApartmentService {
         } else {
             account.setEmail(null);
         }
-        if (StringUtils.isEmpty(request.getCurrentAddress().trim())) {
+        if (StringUtils.isEmpty(request.getCurrentAddress())) {
             throw new RestApiException(StatusCode.CURRENT_ADDRESS_EMPTY);
         }
-        if (StringUtils.isEmpty(request.getHomeTown().trim())) {
+        if (StringUtils.isEmpty(request.getHomeTown())) {
             throw new RestApiException(StatusCode.HOME_TOWN_EMPTY);
         }
         account.setName(request.getName().trim());

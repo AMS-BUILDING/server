@@ -68,7 +68,11 @@ public enum StatusCode {
     STATUS_NOT_EXIST(461, PropertiesReader.getProperty(PropertyKeys.STATUS_NOT_EXIST)),
     APARTMENT_BILLING_NOT_EXIST(462, PropertiesReader.getProperty(PropertyKeys.APARTMENT_BILLING_NOT_EXIST)),
     EMPLOYEE_NOT_WORKING(463, PropertiesReader.getProperty(PropertyKeys.EMPLOYEE_NOT_WORKING)),
-    ACCOUNT_NOT_NEED_CHOOSE_POSITION(464, PropertiesReader.getProperty(PropertyKeys.ACCOUNT_NOT_NEED_CHOOSE_POSITION));
+    ACCOUNT_NOT_NEED_CHOOSE_POSITION(464, PropertiesReader.getProperty(PropertyKeys.ACCOUNT_NOT_NEED_CHOOSE_POSITION)),
+    VEHICLE_BRANCH_EMPTY(465, PropertiesReader.getProperty(PropertyKeys.VEHICLE_BRANCH_EMPTY)),
+    LICENSE_PLATE_EMPTY(466, PropertiesReader.getProperty(PropertyKeys.LICENSE_PLATE_EMPTY)),
+    VEHICLE_COLOR_EMPTY(467, PropertiesReader.getProperty(PropertyKeys.VEHICLE_COLOR_EMPTY)),
+    VEHICLE_REGISTER_BEFORE(468, PropertiesReader.getProperty(PropertyKeys.VEHICLE_REGISTER_BEFORE));
 
     private Integer status;
 

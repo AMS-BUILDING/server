@@ -11,4 +11,6 @@ public interface ApartmentBillingService {
 
     void sendEmailToNotificationForResidentAboutFeeServiceInMonth();
 
+    void sendMailRemindForResident();
+
 }

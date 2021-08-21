@@ -70,5 +70,9 @@ public class PropertyKeys {
     public static final String POSITION_NOT_RIGHT_WITH_EMPLOYEE = "position.not.right.with.employee";
     public static final String EMPLOYEE_NOT_WORKING = "employee.not.working";
     public static final String ACCOUNT_NOT_NEED_CHOOSE_POSITION = "account.not.need.position";
+    public static final String VEHICLE_BRANCH_EMPTY = "vehicle.branch.empty";
+    public static final String LICENSE_PLATE_EMPTY = "license.plate.empty";
+    public static final String VEHICLE_COLOR_EMPTY = "vehicle.color.branch";
+    public static final String VEHICLE_REGISTER_BEFORE = "vehicle.register.before";
 
 }

@@ -137,7 +137,10 @@ public class RequestServiceServiceImpl implements RequestServiceService {
         }
         List<Long> status = new ArrayList<>();
         status.add(statusId);
-        List<ResidentCard> residentCards = residentCardDAO.residentCardRegister(id, status);
+        List<Integer> isUses = new ArrayList<>();
+        isUses.add(1);
+        isUses.add(0);
+        List<ResidentCard> residentCards = residentCardDAO.residentCardRegister(id, status, isUses);
         List<RequestService> requestServiceByAccountId = requestServiceDAO.requestServiceByAccountId(id, statusId);
         List<RequestServiceClientResponse> responses = new ArrayList<>();
         requestServiceByAccountId.forEach(s -> responses.add(convertToHistoryResponse(s)));
@@ -294,7 +297,9 @@ public class RequestServiceServiceImpl implements RequestServiceService {
         List<Long> status = new ArrayList<>();
         status.add(1L);
         status.add(2L);
-        List<ResidentCard> residentCards = residentCardDAO.residentCardRegister(accountId, status);
+        List<Integer> isUses = new ArrayList<>();
+        isUses.add(1);
+        List<ResidentCard> residentCards = residentCardDAO.residentCardRegister(accountId, status, isUses);
         for (RequestService requestService : requestServices) {
             RequestServiceClientResponse requestServiceClientResponse = convertRequestServiceToRequestServiceClientResponse(requestService);
             response.add(requestServiceClientResponse);
@@ -422,8 +427,8 @@ public class RequestServiceServiceImpl implements RequestServiceService {
             time = convertDateToStringWithTimezone(residentCard.getStartDate(), DD_MM_YYYY, null);
         }
         response.setId(residentCard.getId());
-        response.setServiceName("Yêu cầu đăng kí thêm thẻ căn hộ  - " + convertDateToStringWithTimezone(residentCard.getStartDate(), DD_MM_YYYY, null));
-        response.setDescription("Yêu cầu đăng kí thêm  thẻ gửi xe của căn hộ " + roomNumber.getRoomName() + " lúc " + convertDateToStringWithTimezone(residentCard.getStartDate(), HH_MM, null));
+        response.setServiceName("Yêu cầu được cấp thẻ căn hộ  - " + convertDateToStringWithTimezone(residentCard.getStartDate(), DD_MM_YYYY, null));
+        response.setDescription("Yêu cầu được cấp  thẻ căn hộ của căn hộ " + roomNumber.getRoomName() + " lúc " + convertDateToStringWithTimezone(residentCard.getStartDate(), HH_MM, null));
         response.setTime(time);
         response.setStatusId(residentCard.getStatusResidentCard().getId());
         response.setTypeRequest(3L);

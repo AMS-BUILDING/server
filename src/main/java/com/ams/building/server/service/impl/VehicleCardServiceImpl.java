@@ -103,7 +103,7 @@ public class VehicleCardServiceImpl implements VehicleCardService {
         if (Objects.isNull(card)) {
             throw new RestApiException(StatusCode.VEHICLE_CARD_NOT_EXIST);
         }
-        vehicleCardDAO.delete(card);
+        vehicleCardDAO.cancelCard(0, id);
     }
 
     @Override
@@ -144,6 +144,22 @@ public class VehicleCardServiceImpl implements VehicleCardService {
         status.setId(1L);
         List<Long> ids = new ArrayList<>();
         for (VehicleCardClientRequest request : requests) {
+            if (Objects.isNull(request)) {
+                throw new RestApiException(StatusCode.DATA_EMPTY);
+            }
+            if (StringUtils.isEmpty(request.getVehicleBranch())) {
+                throw new RestApiException(StatusCode.VEHICLE_BRANCH_EMPTY);
+            }
+            if (StringUtils.isEmpty(request.getLicensePlate())) {
+                throw new RestApiException(StatusCode.LICENSE_PLATE_EMPTY);
+            }
+            if (StringUtils.isEmpty(request.getVehicleColor())) {
+                throw new RestApiException(StatusCode.VEHICLE_COLOR_EMPTY);
+            }
+            List<VehicleCard> currentCard = vehicleCardDAO.findByLicense(request.getLicensePlate());
+            if (currentCard.size() > 0) {
+                throw new RestApiException(StatusCode.VEHICLE_REGISTER_BEFORE);
+            }
             VehicleCard vehicleCard = new VehicleCard();
             vehicle.setId(request.getVehicleId());
             vehicleCard.setVehicle(vehicle);
@@ -153,7 +169,7 @@ public class VehicleCardServiceImpl implements VehicleCardService {
             vehicleCard.setVehicleBranch(request.getVehicleBranch().trim());
             vehicleCard.setLicensePlate(request.getLicensePlate().trim());
             vehicleCard.setVehicleColor(request.getVehicleColor().trim());
-            vehicleCard.setBillingMonth(billingMonth);
+            vehicleCard.setBillingMonth(billingMonth.trim());
             VehicleCard card = vehicleCardDAO.save(vehicleCard);
             ids.add(card.getId());
         }
