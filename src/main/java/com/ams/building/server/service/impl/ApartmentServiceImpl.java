@@ -259,14 +259,14 @@ public class ApartmentServiceImpl implements ApartmentService {
         if (Objects.isNull(request)) {
             throw new RestApiException(StatusCode.DATA_EMPTY);
         }
-        if (StringUtils.isEmpty(request.getName())) {
+        if (StringUtils.isEmpty(request.getName().trim())) {
             throw new RestApiException(StatusCode.NAME_EMPTY);
         }
-        if (!StringUtils.isEmpty(request.getIdentifyCard())) {
-            if (!isIdentifyCard(request.getIdentifyCard())) {
+        if (!StringUtils.isEmpty(request.getIdentifyCard().trim())) {
+            if (!isIdentifyCard(request.getIdentifyCard().trim())) {
                 throw new RestApiException(StatusCode.IDENTIFY_CARD_NOT_RIGHT);
             }
-            Account currentAccount = accountDAO.getAccountByIdentify(request.getIdentifyCard());
+            Account currentAccount = accountDAO.getAccountByIdentify(request.getIdentifyCard().trim());
             if (Objects.nonNull(currentAccount)) {
                 throw new RestApiException(StatusCode.IDENTIFY_CARD_DUPLICATE);
             }
@@ -274,20 +274,20 @@ public class ApartmentServiceImpl implements ApartmentService {
         } else {
             account.setIdentifyCard(null);
         }
-        if (!StringUtils.isEmpty(request.getPhone())) {
-            if (!isPhoneNumber(request.getPhone())) {
+        if (!StringUtils.isEmpty(request.getPhone().trim())) {
+            if (!isPhoneNumber(request.getPhone().trim())) {
                 throw new RestApiException(StatusCode.PHONE_NUMBER_NOT_RIGHT_FORMAT);
             }
-            List<String>phones= accountDAO.getAccountByPhoneNumber(request.getPhone());
-            if(!phones.isEmpty()){
+            List<String> phones = accountDAO.getAccountByPhoneNumber(request.getPhone().trim());
+            if (phones.size() > 0) {
                 throw new RestApiException(StatusCode.PHONE_REGISTER_BEFORE);
             }
         }
-        if (!StringUtils.isEmpty(request.getEmail())) {
-            if (!isEmail(request.getEmail())) {
+        if (!StringUtils.isEmpty(request.getEmail().trim())) {
+            if (!isEmail(request.getEmail().trim())) {
                 throw new RestApiException(StatusCode.EMAIL_NOT_RIGHT_FORMAT);
             }
-            Account currentAccount = accountDAO.getAccountByEmail(request.getEmail());
+            Account currentAccount = accountDAO.getAccountByEmail(request.getEmail().trim());
             if (Objects.nonNull(currentAccount)) {
                 throw new RestApiException(StatusCode.EMAIL_REGISTER_BEFORE);
             }
@@ -295,21 +295,21 @@ public class ApartmentServiceImpl implements ApartmentService {
         } else {
             account.setEmail(null);
         }
-        if (StringUtils.isEmpty(request.getCurrentAddress())) {
+        if (StringUtils.isEmpty(request.getCurrentAddress().trim())) {
             throw new RestApiException(StatusCode.CURRENT_ADDRESS_EMPTY);
         }
-        if (StringUtils.isEmpty(request.getHomeTown())) {
+        if (StringUtils.isEmpty(request.getHomeTown().trim())) {
             throw new RestApiException(StatusCode.HOME_TOWN_EMPTY);
         }
-        account.setName(request.getName());
-        account.setPhone(request.getPhone());
+        account.setName(request.getName().trim());
+        account.setPhone(request.getPhone().trim());
         account.setGender(request.getGender());
         account.setPassword(Constants.DEFAULT_PASSWORD);
         account.setImage(FileStore.getDefaultAvatar());
         account.setDob(request.getDob());
         account.setEnabled(true);
-        account.setHomeTown(request.getHomeTown());
-        account.setCurrentAddress(request.getCurrentAddress());
+        account.setHomeTown(request.getHomeTown().trim());
+        account.setCurrentAddress(request.getCurrentAddress().trim());
         Role role = new Role();
         role.setId(3L);
         account.setRole(role);
