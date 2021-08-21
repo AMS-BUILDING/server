@@ -466,7 +466,7 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
         } else {
             if (!StringUtils.isEmpty(residentRequest.getIdentifyCard().trim())) {
                 if (!isIdentifyCard(residentRequest.getIdentifyCard().trim())) {
-                    throw new RestApiException(StatusCode.IDENTIFY_CARD_EMPTY);
+                    throw new RestApiException(StatusCode.IDENTIFY_CARD_NOT_RIGHT);
                 }
                 if (!account.getIdentifyCard().trim().equalsIgnoreCase(residentRequest.getIdentifyCard().trim())) {
                     Account accountCheck = accountDao.getAccountByIdentify(residentRequest.getIdentifyCard().trim());
