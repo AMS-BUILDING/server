@@ -115,16 +115,16 @@ public class AbsentServiceImpl implements AbsentService {
                 && StringUtils.isEmpty(request.getAccountId()))) {
             throw new RestApiException(StatusCode.DATA_EMPTY);
         }
-        if (StringUtils.isEmpty(request.getName())) {
+        if (StringUtils.isEmpty(request.getName().trim())) {
             throw new RestApiException(StatusCode.NAME_EMPTY);
         }
         if (StringUtils.isEmpty(request.getDob())) {
             throw new RestApiException(StatusCode.DOB_EMPTY);
         }
-        if (StringUtils.isEmpty(request.getHomeTown())) {
+        if (StringUtils.isEmpty(request.getHomeTown().trim())) {
             throw new RestApiException(StatusCode.HOME_TOWN_EMPTY);
         }
-        if (StringUtils.isEmpty(request.getReason())) {
+        if (StringUtils.isEmpty(request.getReason().trim())) {
             throw new RestApiException(StatusCode.REASON_EMPTY);
         }
         if (StringUtils.isEmpty(request.getStartDate())) {
@@ -133,7 +133,7 @@ public class AbsentServiceImpl implements AbsentService {
         if (StringUtils.isEmpty(request.getEndDate())) {
             throw new RestApiException(StatusCode.END_DATE_EMPTY);
         }
-        if (StringUtils.isEmpty(request.getIdentifyCard())) {
+        if (StringUtils.isEmpty(request.getIdentifyCard().trim())) {
             throw new RestApiException(StatusCode.IDENTIFY_CARD_EMPTY);
         }
         AbsentType absentType = absentTypeDAO.findAbsentTypeById(request.getAbsentType());
@@ -153,10 +153,10 @@ public class AbsentServiceImpl implements AbsentService {
         }
         AbsentDetail absentDetail = new AbsentDetail();
         absentDetail.setAbsentType(absentType);
-        absentDetail.setName(request.getName());
-        absentDetail.setReason(request.getReason());
-        absentDetail.setHomeTown(request.getHomeTown());
-        absentDetail.setIdentifyCard(request.getIdentifyCard());
+        absentDetail.setName(request.getName().trim());
+        absentDetail.setReason(request.getReason().trim());
+        absentDetail.setHomeTown(request.getHomeTown().trim());
+        absentDetail.setIdentifyCard(request.getIdentifyCard().trim());
         absentDetail.setDob(convertDateToStringWithTimezone(request.getDob(), DateTimeUtils.DD_MM_YYYY, null));
         absentDetail.setEndDate(request.getEndDate());
         absentDetail.setStartDate(request.getStartDate());

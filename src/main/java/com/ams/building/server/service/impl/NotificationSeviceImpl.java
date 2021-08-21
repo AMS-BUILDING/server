@@ -59,10 +59,10 @@ public class NotificationSeviceImpl implements NotificationService {
     public void addNotification(NotificationRequest request) {
         if (Objects.isNull(request) || (StringUtils.isEmpty(request.getDescription()) && StringUtils.isEmpty(request.getTitle())))
             throw new RestApiException(StatusCode.DATA_EMPTY);
-        if (StringUtils.isEmpty(request.getDescription())) {
+        if (StringUtils.isEmpty(request.getDescription().trim())) {
             throw new RestApiException(StatusCode.DESCRIPTION_EMPTY);
         }
-        if (StringUtils.isEmpty(request.getTitle())) {
+        if (StringUtils.isEmpty(request.getTitle().trim())) {
             throw new RestApiException(StatusCode.TITLE_EMPTY);
         }
         Notification notification = new Notification();

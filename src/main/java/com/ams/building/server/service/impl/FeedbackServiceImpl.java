@@ -36,7 +36,7 @@ public class FeedbackServiceImpl implements FeedbackService {
         if (Objects.isNull(feedbackRequest)) {
             throw new RestApiException(StatusCode.FEEDBACK_EMPTY);
         }
-        if (StringUtils.isEmpty(feedbackRequest.getDescription())) {
+        if (StringUtils.isEmpty(feedbackRequest.getDescription().trim())) {
             throw new RestApiException(StatusCode.DESCRIPTION_EMPTY);
         }
         if (StringUtils.isEmpty(feedbackRequest.getStar())) {

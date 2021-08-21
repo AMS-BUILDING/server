@@ -148,9 +148,9 @@ public class VehicleCardServiceImpl implements VehicleCardService {
             account.setId(accountId);
             vehicleCard.setAccount(account);
             vehicleCard.setStatusVehicleCard(status);
-            vehicleCard.setVehicleBranch(request.getVehicleBranch());
-            vehicleCard.setLicensePlate(request.getLicensePlate());
-            vehicleCard.setVehicleColor(request.getVehicleColor());
+            vehicleCard.setVehicleBranch(request.getVehicleBranch().trim());
+            vehicleCard.setLicensePlate(request.getLicensePlate().trim());
+            vehicleCard.setVehicleColor(request.getVehicleColor().trim());
             vehicleCard.setBillingMonth(billingMonth);
             vehicleCardDAO.save(vehicleCard);
         }
