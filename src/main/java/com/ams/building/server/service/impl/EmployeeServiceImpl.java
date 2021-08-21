@@ -28,6 +28,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
@@ -80,12 +81,24 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public void updateEmployee(Long accountId, EmployeeRequest request) {
-        if (Objects.isNull(request)) {
+        if (Objects.isNull(request) || (StringUtils.isEmpty(request.getName()) && StringUtils.isEmpty(request.getGender())
+                && StringUtils.isEmpty(request.getPhoneNumber())
+                && StringUtils.isEmpty(request.getIdentifyCard()) && StringUtils.isEmpty(request.getCurrentAddress())
+                && StringUtils.isEmpty(request.getHomeTown()) && StringUtils.isEmpty(request.getPosition()))) {
             throw new RestApiException(StatusCode.DATA_EMPTY);
         }
         Account currentAccount = accountDao.getAccountById(accountId);
         if (Objects.isNull(currentAccount)) {
             throw new RestApiException(StatusCode.ACCOUNT_NOT_EXIST);
+        }
+        if (StringUtils.isEmpty(request.getPosition())) {
+            throw new RestApiException(StatusCode.POSITION_NOT_EXIST);
+        }
+        if (request.getPosition() < 0 || request.getPosition() > 4) {
+            throw new RestApiException(StatusCode.POSITION_NOT_RIGHT_WITH_EMPLOYEE);
+        }
+        if (StringUtils.isEmpty(request.getName())) {
+            throw new RestApiException(StatusCode.NAME_EMPTY);
         }
         if (StringUtils.isEmpty(request.getDob())) {
             throw new RestApiException(StatusCode.DOB_EMPTY);
@@ -108,11 +121,26 @@ public class EmployeeServiceImpl implements EmployeeService {
         if (!isIdentifyCard(request.getIdentifyCard())) {
             throw new RestApiException(StatusCode.IDENTIFY_CARD_NOT_RIGHT);
         }
-        Account accountByIdentifyCard = accountDao.getAccountByIdentify(request.getIdentifyCard());
-        if (Objects.nonNull(accountByIdentifyCard)) {
-            if (!accountByIdentifyCard.getIdentifyCard().equalsIgnoreCase(currentAccount.getIdentifyCard())) {
-                throw new RestApiException(StatusCode.IDENTIFY_CARD_DUPLICATE);
+        if (!request.getIdentifyCard().equalsIgnoreCase(currentAccount.getIdentifyCard())) {
+            Account accountByIdentifyCard = accountDao.getAccountByIdentify(request.getIdentifyCard());
+            if (Objects.nonNull(accountByIdentifyCard)) {
+                if (!accountByIdentifyCard.getIdentifyCard().equalsIgnoreCase(currentAccount.getIdentifyCard())) {
+                    throw new RestApiException(StatusCode.IDENTIFY_CARD_DUPLICATE);
+                }
             }
+        }
+        if (!request.getPhoneNumber().equalsIgnoreCase(currentAccount.getPhone())) {
+            List<String> searchAccountByPhone = accountDao.getAccountByPhoneNumber(request.getPhoneNumber());
+            if (!searchAccountByPhone.isEmpty()) {
+                throw new RestApiException(StatusCode.PHONE_REGISTER_BEFORE);
+            }
+        }
+        String yearDob = request.getDob().split("/")[2];
+        Calendar cal = Calendar.getInstance();
+        int year = cal.get(Calendar.YEAR);
+        int age = year - Integer.valueOf(yearDob);
+        if (age < 18) {
+            throw new RestApiException(StatusCode.EMPLOYEE_NOT_WORKING);
         }
         currentAccount.setDob(request.getDob());
         currentAccount.setGender(request.getGender());
@@ -183,6 +211,13 @@ public class EmployeeServiceImpl implements EmployeeService {
         Account searchAccountByEmail = accountDao.getAccountByEmail(request.getEmail());
         if (Objects.nonNull(searchAccountByEmail)) {
             throw new RestApiException(StatusCode.EMAIL_REGISTER_BEFORE);
+        }
+        String yearDob = request.getDob().split("/")[2];
+        Calendar cal = Calendar.getInstance();
+        int year = cal.get(Calendar.YEAR);
+        int age = year - Integer.valueOf(yearDob);
+        if (age < 18) {
+            throw new RestApiException(StatusCode.EMPLOYEE_NOT_WORKING);
         }
         Account account = new Account();
         account.setIdentifyCard(request.getIdentifyCard());

@@ -425,11 +425,6 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
         if (Objects.isNull(account)) {
             throw new RestApiException(StatusCode.ACCOUNT_NOT_EXIST);
         }
-        if (Objects.nonNull(account.getPosition())) {
-            if (residentRequest.getPositionId() < 5) {
-                throw new RestApiException(StatusCode.POSITION_MUST_BE_IN_HOME);
-            }
-        }
 
         Long roleId = account.getRole().getId();
         if (roleId == 3) {
@@ -503,6 +498,12 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
                         throw new RestApiException(StatusCode.EMAIL_REGISTER_BEFORE);
                     }
                 }
+            }
+            if (StringUtils.isEmpty(residentRequest.getPositionId())) {
+                throw new RestApiException(StatusCode.POSITION_NOT_EXIST);
+            }
+            if (residentRequest.getPositionId() < 5) {
+                throw new RestApiException(StatusCode.POSITION_MUST_BE_IN_HOME);
             }
         }
 
