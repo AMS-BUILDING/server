@@ -110,14 +110,16 @@ public class ApartmentBillingServiceImpl implements ApartmentBillingService {
         response.setTotal(totalFee.toString());
         Long statusId = billings.get(0).getApartmentBilling().getStatusApartmentBilling().getId();
         String month = billingMonth.split("/")[0];
+        String year = billingMonth.split("/")[1];
         String monthNext = String.valueOf(Integer.valueOf(month) + 1);
         if (monthNext.length() == 1) {
             monthNext = "0" + monthNext;
         }
         if (month.equals("12")) {
             monthNext = "01";
+            year = String.valueOf(Integer.valueOf(year) + 1);
         }
-        response.setStatus(statusId == 1 ? "Hạn chót thanh toán 10/" + monthNext : "Đã thanh toán");
+        response.setStatus(statusId == 1 ? "Hạn chót thanh toán 10/" + monthNext + "/" + year : "Đã thanh toán");
         List<ServiceNameFeeApartmentResponse> servicesResponse = new ArrayList<>();
         services.forEach(s -> {
             if (s.getServiceName() != null) {
@@ -302,7 +304,9 @@ public class ApartmentBillingServiceImpl implements ApartmentBillingService {
         content.append("<br/>");
         content.append("&nbsp;&nbsp;&nbsp;&nbsp; + Chuyển khoản qua ví điện tử: Momo, Viettel Pay <b><0964600609></b>");
         content.append("<p> <b>Nội dung thanh toán </b></p>");
-        content.append("&nbsp;&nbsp;&nbsp;&nbsp; +[Mã căn hô],[Số điện thoại],Nộp phí hàng tháng.....");
+        content.append("&nbsp;&nbsp;&nbsp;&nbsp; +[Mã căn hô],[Số điện thoại],Nộp phí tháng ...");
+        content.append("<br/>");
+        content.append("<p> Nếu có thắc mắc về các khoản phí trên, quý cư dân gửi phản hồi qua ứng dụng. Chúng tôi sẽ tiếp nhận và xử lý</p>");
         List<String> result = new ArrayList<>();
         result.add(title.toString());
         result.add(content.toString());

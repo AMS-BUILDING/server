@@ -39,4 +39,6 @@ public interface AccountService {
 
     void validateListResident(List<ResidentRequest> residentRequestList, ApartmentOwnerRequest ownerRequest);
 
+    Long roleIdAccountByEmail(String email);
+
 }

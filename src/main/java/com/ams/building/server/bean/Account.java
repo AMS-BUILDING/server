@@ -65,7 +65,7 @@ public class Account implements Serializable {
     @Column(name = "current_address")
     private String currentAddress;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "role_id", referencedColumnName = "id")
     private Role role;
 

@@ -268,7 +268,6 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
         account.setPhone(accountDTO.getPhone().trim());
         account.setIdentifyCard(accountDTO.getIdentifyCard().trim());
         account.setDob(accountDTO.getDob().trim());
-        account.setGender(accountDTO.getGender());
         account.setCurrentAddress(accountDTO.getCurrentAddress().trim());
         account.setHomeTown(accountDTO.getHomeTown().trim());
         if (image1 != null) {
@@ -279,7 +278,6 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
             account.setImage(accountDTO.getImage());
         }
         accountDao.save(account);
-
     }
 
     @Override
@@ -677,6 +675,19 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
                 throw new RestApiException(StatusCode.IDENTIFY_CARD_DUPLICATE);
             }
         }
+    }
+
+    @Override
+    public Long roleIdAccountByEmail(String email) {
+        if (Objects.isNull(email.trim())) {
+            throw new RestApiException(StatusCode.EMAIL_EMPTY);
+        }
+        Account account = accountDao.getAccountByEmail(email.trim());
+        if (Objects.isNull(account)) {
+            throw new RestApiException(StatusCode.ACCOUNT_NOT_EXIST);
+        }
+        Long roleId = account.getRole().getId();
+        return roleId;
     }
 
     private AccountAppResponse convertToAccountApp(Account account) {
