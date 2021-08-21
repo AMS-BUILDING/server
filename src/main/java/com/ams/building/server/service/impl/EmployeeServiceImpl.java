@@ -212,13 +212,13 @@ public class EmployeeServiceImpl implements EmployeeService {
         if (Objects.nonNull(searchAccountByEmail)) {
             throw new RestApiException(StatusCode.EMAIL_REGISTER_BEFORE);
         }
-        String yearDob = request.getDob().split("/")[2];
-        Calendar cal = Calendar.getInstance();
-        int year = cal.get(Calendar.YEAR);
-        int age = year - Integer.valueOf(yearDob);
-        if (age < 18) {
-            throw new RestApiException(StatusCode.EMPLOYEE_NOT_WORKING);
-        }
+//        String yearDob = request.getDob().split("/")[2];
+//        Calendar cal = Calendar.getInstance();
+//        int year = cal.get(Calendar.YEAR);
+//        int age = year - Integer.valueOf(yearDob);
+//        if (age < 18) {
+//            throw new RestApiException(StatusCode.EMPLOYEE_NOT_WORKING);
+//        }
         Account account = new Account();
         account.setIdentifyCard(request.getIdentifyCard());
         account.setEmail(request.getEmail().trim());
