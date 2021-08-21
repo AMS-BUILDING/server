@@ -6,6 +6,7 @@ import com.ams.building.server.constant.PropertyKeys;
 import com.ams.building.server.constant.StatusCode;
 import com.ams.building.server.dao.SendEmailAccountDAO;
 import com.ams.building.server.exception.RestApiException;
+import com.ams.building.server.request.ForwardPasswordRequest;
 import com.ams.building.server.response.LoginResponse;
 import com.ams.building.server.response.UserPrincipal;
 import com.ams.building.server.service.AccountService;
@@ -13,7 +14,6 @@ import com.ams.building.server.service.EmailService;
 import com.ams.building.server.utils.FileStore;
 import com.ams.building.server.utils.PropertiesReader;
 import com.ams.building.server.utils.RandomNumber;
-import com.google.gson.Gson;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -47,7 +47,6 @@ public class AccountController {
 
     @PostMapping(Constants.UrlPath.URL_API_UPDATE_PROFILE_ACCOUNT)
     public ResponseEntity<?> updateAccountProfile(@ModelAttribute LoginResponse accountDTO) {
-        logger.debug(" updateAccountProfile: request " + new Gson().toJson(accountDTO));
         accountDTO.setImage(FileStore.getFilePath(accountDTO.getMultipartFile(), "-user"));
         accountService.updateProfile(accountDTO);
         ResponseEntity<String> response = new ResponseEntity<>("Update profile success", HttpStatus.OK);
@@ -72,12 +71,12 @@ public class AccountController {
     }
 
     @PostMapping(Constants.UrlPath.URL_API_RESET_PASSWORD)
-    public ResponseEntity<?> resetPassword(@RequestParam(name = "token", required = false, defaultValue = "") String token, @RequestParam(name = "password", required = false, defaultValue = "") String password) {
-        Account account = sendEmailAccountDao.findAccountByResetPasswordToken(token);
+    public ResponseEntity<?> resetPassword(@RequestBody ForwardPasswordRequest request) {
+        Account account = sendEmailAccountDao.findAccountByResetPasswordToken(request.getToken());
         if (Objects.isNull(account)) {
             throw new RestApiException(StatusCode.ACCOUNT_NOT_EXIST);
         }
-        emailService.updatePassWord(account, password);
+        emailService.updatePassWord(account, request.getPassword());
         ResponseEntity<String> response = new ResponseEntity<>("Reset Password Success", HttpStatus.OK);
         return response;
     }

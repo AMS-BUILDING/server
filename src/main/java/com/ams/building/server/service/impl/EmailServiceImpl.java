@@ -65,6 +65,15 @@ public class EmailServiceImpl implements EmailService {
 
     @Override
     public void updatePassWord(Account account, String newPassword) {
+        if (Objects.isNull(account)) {
+            throw new RestApiException(StatusCode.ACCOUNT_NOT_EXIST);
+        }
+        if (StringUtils.isEmpty(newPassword)) {
+            throw new RestApiException(StatusCode.PASSWORD_EMPTY);
+        }
+        if (!ValidateUtil.isPassword(newPassword)) {
+            throw new RestApiException(StatusCode.PASSWORD_NOT_RIGHT_FORMAT);
+        }
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         String encodedPassword = passwordEncoder.encode(newPassword);
         account.setPassword(encodedPassword);

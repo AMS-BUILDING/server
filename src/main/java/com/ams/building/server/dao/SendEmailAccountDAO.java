@@ -10,6 +10,7 @@ public interface SendEmailAccountDAO extends JpaRepository<Account, Long> {
     @Query("SELECT a FROM Account a WHERE a.email = ?1")
     Account findAccountByEmail(String email);
 
+    @Query("SELECT a FROM Account a WHERE a.resetPasswordToken = ?1")
     Account findAccountByResetPasswordToken(String token);
 
 }
