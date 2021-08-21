@@ -36,4 +36,6 @@ public interface RequestServiceService {
 
     DetailServiceRequestResponse detailServiceRequest(Long serviceRequestId, Long typeRequest);
 
+    void updateStatusRequestByTypeRequest(Long statusId, Long requestId, Long typeRequest);
+
 }

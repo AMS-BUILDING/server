@@ -188,6 +188,27 @@ public class RequestServiceServiceImpl implements RequestServiceService {
     }
 
     @Override
+    public void updateStatusRequestByTypeRequest(Long statusId, Long requestId, Long typeRequest) {
+        if (StringUtils.isEmpty(requestId) || StringUtils.isEmpty(statusId) || StringUtils.isEmpty(typeRequest))
+            throw new RestApiException(StatusCode.DATA_EMPTY);
+        if (typeRequest == 1) {
+            RequestService service = requestServiceDAO.findRequestServiceById(requestId);
+            if (Objects.isNull(service)) throw new RestApiException(StatusCode.REQUEST_SERVICE_NOT_EXIST);
+            requestServiceDAO.updateStatus(statusId, requestId);
+        } else if (typeRequest == 2) {
+            VehicleCard vehicleCard = vehicleCardDAO.getById(requestId);
+            if (Objects.isNull(vehicleCard)) throw new RestApiException(StatusCode.VEHICLE_CARD_NOT_EXIST);
+            vehicleCardDAO.updateStatus(statusId, requestId);
+        } else {
+            ResidentCard card = residentCardDAO.getById(requestId);
+            if (Objects.isNull(card)) {
+                throw new RestApiException(StatusCode.RESIDENT_CARD_NOT_EXIST);
+            }
+            residentCardDAO.updateStatus(statusId, requestId);
+        }
+    }
+
+    @Override
     public ServiceAddResponse addRequestServiceSuccessStatus(RequestServiceRequest requestServiceRequest) {
         Long id;
         if (Objects.isNull(requestServiceRequest)) {

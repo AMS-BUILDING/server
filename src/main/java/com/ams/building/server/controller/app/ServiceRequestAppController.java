@@ -17,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -91,6 +92,15 @@ public class ServiceRequestAppController {
         DetailServiceRequestResponse requestResponse = requestServiceService.detailServiceRequest(serviceRequestId, typeRequest);
         ResponseEntity<DetailServiceRequestResponse> response = new ResponseEntity<>(requestResponse, HttpStatus.OK);
         logger.debug("statusServiceRequest response: " + new Gson().toJson(response));
+        return response;
+    }
+
+    @PostMapping(Constants.UrlPath.URL_API_UPDATE_REQUEST_SERVICE_APP + "/{id}")
+    public ResponseEntity<?> updateStatusRequestServiceApp(@PathVariable("id") Long requestId, @RequestParam Long statusId, @RequestParam Long typeRequest) {
+        logger.debug("updateStatusRequestServiceApp: request " + requestId + "-" + statusId + " - " + typeRequest);
+        requestServiceService.updateStatusRequestByTypeRequest(statusId, requestId, typeRequest);
+        ResponseEntity<String> response = new ResponseEntity<>("Update Success", HttpStatus.OK);
+        logger.debug("updateStatusRequestServiceApp response: " + new Gson().toJson(response));
         return response;
     }
 }
