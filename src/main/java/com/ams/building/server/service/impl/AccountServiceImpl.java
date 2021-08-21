@@ -741,6 +741,7 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
         response.setDob(account.getDob());
         response.setHomeTown(account.getHomeTown());
         response.setIdentifyCard(account.getIdentifyCard());
+        response.setGender(account.getGender());
         return response;
     }
 
