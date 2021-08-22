@@ -173,11 +173,8 @@ public class ApartmentServiceImpl implements ApartmentService {
 
     @Override
     public List<FloorResponse> floorList(Long blockId) {
-        List<FloorBlock> floors = floorBlockDAO.floorBlockByBlockId(blockId);
-        List<Long> floorBlockId = new ArrayList<>();
-        List<FloorResponse> responses = new ArrayList<>();
-        floors.forEach(s -> responses.add(convertFloor(s)));
-        return responses;
+        List<FloorResponse> floors = floorBlockDAO.floorBlockByBlockId(blockId);
+        return floors;
     }
 
     @Override
@@ -326,11 +323,6 @@ public class ApartmentServiceImpl implements ApartmentService {
                 .roomName(apartment.getRoomNumber().getRoomName())
                 .id(apartment.getRoomNumber().getId())
                 .build();
-        return response;
-    }
-
-    private FloorResponse convertFloor(FloorBlock floor) {
-        FloorResponse response = FloorResponse.builder().floorName(floor.getFloor().getFloorName()).id(floor.getFloor().getId()).build();
         return response;
     }
 
