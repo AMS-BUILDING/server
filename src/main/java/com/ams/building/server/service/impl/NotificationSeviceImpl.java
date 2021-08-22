@@ -1,10 +1,12 @@
 package com.ams.building.server.service.impl;
 
+import com.ams.building.server.bean.Account;
 import com.ams.building.server.bean.Apartment;
 import com.ams.building.server.bean.ApartmentBilling;
 import com.ams.building.server.bean.Notification;
 import com.ams.building.server.constant.Constants;
 import com.ams.building.server.constant.StatusCode;
+import com.ams.building.server.dao.AccountDAO;
 import com.ams.building.server.dao.ApartmentBillingDAO;
 import com.ams.building.server.dao.ApartmentDAO;
 import com.ams.building.server.dao.NotificationDAO;
@@ -44,6 +46,9 @@ public class NotificationSeviceImpl implements NotificationService {
     @Autowired
     private ApartmentDAO apartmentDAO;
 
+    @Autowired
+    private AccountDAO accountDAO;
+
     @Override
     public ApiResponse searchNotification(String title, Integer page, Integer size) {
         List<NotificationResponse> notificationDTOList = new ArrayList<>();
@@ -65,6 +70,7 @@ public class NotificationSeviceImpl implements NotificationService {
         if (StringUtils.isEmpty(request.getTitle())) {
             throw new RestApiException(StatusCode.TITLE_EMPTY);
         }
+        
         Notification notification = new Notification();
         notification.setDescription(request.getDescription().trim());
         notification.setTitle(request.getTitle().trim());
@@ -81,16 +87,25 @@ public class NotificationSeviceImpl implements NotificationService {
     }
 
     @Override
-    public void updateStatus(Long notificationId) {
-        if (StringUtils.isEmpty(notificationId)) {
+    public void updateStatus(Long accountId) {
+        if (Objects.isNull(accountId)) {
             throw new RestApiException(StatusCode.DATA_EMPTY);
         }
-        Notification notification = notificationDAO.getById(notificationId);
-        if (Objects.isNull(notification)) {
-            throw new RestApiException(StatusCode.NOTIFICATION_NOT_EXIST);
+        Account account = accountDAO.getAccountById(accountId);
+        if (Objects.isNull(account)) {
+            throw new RestApiException(StatusCode.ACCOUNT_NOT_EXIST);
         }
-        notification.setIsRead(true);
-        notificationDAO.save(notification);
+        List<Notification> listNotificationNotRead = notificationDAO.listNotificationNotRead(accountId);
+        List<ApartmentBilling> listBillingNotRead = apartmentBillingDAO.listApartmentBillingNotRead(accountId);
+
+        for (Notification notification : listNotificationNotRead) {
+            notification.setIsRead(true);
+            notificationDAO.save(notification);
+        }
+        for (ApartmentBilling apartmentBilling : listBillingNotRead) {
+            apartmentBilling.setIsRead(true);
+            apartmentBillingDAO.save(apartmentBilling);
+        }
     }
 
     @Override
@@ -133,7 +148,14 @@ public class NotificationSeviceImpl implements NotificationService {
 
     @Override
     public Integer showNotificationNotRead(Long accountId) {
-        Integer totalNotificationGeneral = notificationDAO.countNotificationNotRead();
+        if (Objects.isNull(accountId)) {
+            throw new RestApiException(StatusCode.DATA_EMPTY);
+        }
+        Account account = accountDAO.getAccountById(accountId);
+        if (Objects.isNull(account)) {
+            throw new RestApiException(StatusCode.ACCOUNT_NOT_EXIST);
+        }
+        Integer totalNotificationGeneral = notificationDAO.countNotificationNotRead(accountId);
         Integer totalNotificationPrivate = apartmentBillingDAO.countNotificationNotReadPrivate(accountId);
         return totalNotificationGeneral + totalNotificationPrivate;
     }

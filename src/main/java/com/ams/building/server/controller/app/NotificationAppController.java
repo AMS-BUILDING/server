@@ -12,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -37,9 +36,12 @@ public class NotificationAppController {
         return response;
     }
 
-    @PostMapping(value = Constants.UrlPath.URL_API_UDPATE_NOTIFICATION + "/{id}")
-    public ResponseEntity<?> updateStatusRead(@PathVariable("id") Long id) {
-        notificationService.updateStatus(id);
+    @PostMapping(value = Constants.UrlPath.URL_API_UDPATE_NOTIFICATION)
+    public ResponseEntity<?> updateStatusRead() {
+        UserPrincipal currentUser = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication()
+                .getPrincipal();
+        Long accountId = currentUser.getId();
+        notificationService.updateStatus(accountId);
         ResponseEntity<String> response = new ResponseEntity<>("Update Status Read success", HttpStatus.CREATED);
         logger.debug("updateStatusRead response : " + new Gson().toJson(response));
         return response;

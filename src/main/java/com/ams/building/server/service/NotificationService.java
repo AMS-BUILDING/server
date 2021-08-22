@@ -14,7 +14,7 @@ public interface NotificationService {
 
     List<NotificationAppResponse> listNotificationAppGeneral();
 
-    void updateStatus(Long notificationId);
+    void updateStatus(Long accountId);
 
     List<NotificationAppResponse> listNotificationAppPrivate(Long accountId);
 
