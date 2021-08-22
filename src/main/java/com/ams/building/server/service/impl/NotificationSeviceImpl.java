@@ -131,6 +131,13 @@ public class NotificationSeviceImpl implements NotificationService {
         return responses;
     }
 
+    @Override
+    public Integer showNotificationNotRead(Long accountId) {
+        Integer totalNotificationGeneral = notificationDAO.countNotificationNotRead();
+        Integer totalNotificationPrivate = apartmentBillingDAO.countNotificationNotReadPrivate(accountId);
+        return totalNotificationGeneral + totalNotificationPrivate;
+    }
+
     private NotificationResponse convert(Notification notification) {
         NotificationResponse response = NotificationResponse.builder().build();
         response.setDescription(notification.getDescription());

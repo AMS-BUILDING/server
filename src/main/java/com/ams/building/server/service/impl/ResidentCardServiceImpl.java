@@ -214,4 +214,5 @@ public class ResidentCardServiceImpl implements ResidentCardService {
         response.setStatus(card.getStatusResidentCard().getStatusName());
         return response;
     }
+
 }

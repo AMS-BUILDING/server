@@ -442,4 +442,5 @@ public class ApartmentServiceImpl implements ApartmentService {
         BlockResponse response = BlockResponse.builder().blockName(block.getBlockName()).id(block.getId()).build();
         return response;
     }
+
 }

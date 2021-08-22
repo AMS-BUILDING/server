@@ -43,4 +43,5 @@ public class ValidateUtil {
         Matcher matcher = pattern.matcher(password);
         return matcher.matches();
     }
+
 }

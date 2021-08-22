@@ -315,4 +315,5 @@ public class BillingApartmentServiceImpl implements BillingApartmentService {
         response.setStatusName(status.getStatusName());
         return response;
     }
+
 }

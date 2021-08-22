@@ -27,4 +27,7 @@ public interface ApartmentBillingDAO extends JpaRepository<ApartmentBilling, Lon
     @Query("SELECT a FROM ApartmentBilling a WHERE a.billingMonth =?1 AND a.statusApartmentBilling.id=1")
     List<ApartmentBilling> listApartmentBillingByMonthNotPayment(String billingMonth);
 
+    @Query("SELECT COUNT(*) WHERE ApartmentBilling a WHERE a.isRead = false AND a.apartment.account.id=?1")
+    Integer countNotificationNotReadPrivate(Long accountId);
+
 }

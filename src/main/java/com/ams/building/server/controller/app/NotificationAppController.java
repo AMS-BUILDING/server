@@ -55,4 +55,16 @@ public class NotificationAppController {
         logger.debug("listNotificationPrivate response : " + new Gson().toJson(response));
         return response;
     }
+
+    @GetMapping(value = Constants.UrlPath.URL_API_LIST_NOTIFICATION_NUMBER)
+    public ResponseEntity<?> numberNotificationNew() {
+        UserPrincipal currentUser = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication()
+                .getPrincipal();
+        Long accountId = currentUser.getId();
+        Integer numberNotification = notificationService.showNotificationNotRead(accountId);
+        ResponseEntity<Integer> response = new ResponseEntity<>(numberNotification, HttpStatus.OK);
+        logger.debug("numberNotificationNew response : " + new Gson().toJson(response));
+        return response;
+    }
+
 }

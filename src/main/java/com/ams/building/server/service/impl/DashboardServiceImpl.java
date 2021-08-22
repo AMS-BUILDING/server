@@ -19,10 +19,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 @Transactional
 @Service
@@ -155,21 +153,6 @@ public class DashboardServiceImpl implements DashBoardService {
                 .color("#37AE8D")
                 .build();
         return response;
-    }
-
-    private String randomColor() {
-        Random ra = new Random();
-        int r, g, b;
-        r = ra.nextInt(255);
-        g = ra.nextInt(255);
-        b = ra.nextInt(255);
-        Color color = new Color(r, g, b);
-        String hex = Integer.toHexString(color.getRGB() & 0xffffff);
-        if (hex.length() < 6) {
-            hex = "0" + hex;
-        }
-        hex = "#" + hex;
-        return hex;
     }
 
 }

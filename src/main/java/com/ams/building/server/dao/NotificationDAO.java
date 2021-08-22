@@ -17,4 +17,7 @@ public interface NotificationDAO extends JpaRepository<Notification, Long> {
     @Query("SELECT n FROM Notification  n ORDER BY n.id desc")
     List<Notification> listNotification();
 
+    @Query("SELECT COUNT(*) WHERE Notification n WHERE n.isRead = false")
+    Integer countNotificationNotRead();
+
 }

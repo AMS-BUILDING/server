@@ -84,4 +84,5 @@ public class BillingApartmentController {
         logger.debug("searchBillingDetailAboutVehicleCardByAccountIdAndMonth response : " + new Gson().toJson(response));
         return response;
     }
+
 }

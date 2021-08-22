@@ -29,4 +29,5 @@ public interface DashboardAccountDao extends CrudRepository<Account, Long> {
                     " where ac.enabled = 1" +
                     " group by t.type_name;")
     List<DashboardTypeAccountResponse> typeApartmentAccount();
+
 }

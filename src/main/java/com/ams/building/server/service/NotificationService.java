@@ -18,4 +18,6 @@ public interface NotificationService {
 
     List<NotificationAppResponse> listNotificationAppPrivate(Long accountId);
 
+    Integer showNotificationNotRead(Long accountId);
+
 }
