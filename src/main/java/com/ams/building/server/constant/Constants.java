@@ -66,7 +66,7 @@ public class Constants {
         public static final String URL_API_ADD_APARTMENT_OWNER = "/admin/apartment/add/owner";
         public static final String URL_API_ADD_A_APARTMENT = "/admin/a/apartment/add";
         public static final String URL_API_ADD_APARTMENT_RESIDENT = "/admin/apartment/add/resident";
-        public static final String URL_API_DISABLE_APARTMENT = "/admin/apartment/disable";
+        public static final String URL_API_DISABLE_APARTMENT = "/admin/resident/remove-person";
         public static final String URL_API_SEARCH_APARTMENT_RESIDENT = "/admin/apartment/search/resident";
         public static final String URL_API_EXPORT_APARTMENT = "/admin/apartment/export";
         public static final String URL_API_FLOOR_LIST = "/admin/floor/list";

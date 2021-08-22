@@ -289,6 +289,9 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
         if (Objects.isNull(account)) {
             throw new RestApiException(StatusCode.ACCOUNT_NOT_EXIST);
         }
+        if (account.getRole().getId() != 3) {
+            throw new RestApiException(StatusCode.ACCOUNT_CAN_NOT_REMOVE);
+        }
         accountDao.deleteById(id);
     }
 

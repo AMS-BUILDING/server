@@ -74,5 +74,6 @@ public class PropertyKeys {
     public static final String LICENSE_PLATE_EMPTY = "license.plate.empty";
     public static final String VEHICLE_COLOR_EMPTY = "vehicle.color.branch";
     public static final String VEHICLE_REGISTER_BEFORE = "vehicle.register.before";
+    public static final String ACCOUNT_CAN_NOT_REMOVE = "account.can.not.remove";
 
 }
