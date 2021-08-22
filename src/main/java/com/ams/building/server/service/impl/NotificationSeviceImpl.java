@@ -70,12 +70,18 @@ public class NotificationSeviceImpl implements NotificationService {
         if (StringUtils.isEmpty(request.getTitle())) {
             throw new RestApiException(StatusCode.TITLE_EMPTY);
         }
-        
-        Notification notification = new Notification();
-        notification.setDescription(request.getDescription().trim());
-        notification.setTitle(request.getTitle().trim());
-        notification.setIsRead(false);
-        notificationDAO.save(notification);
+        List<Account> accounts = accountDAO.getAccountByRoles();
+        if (accounts.isEmpty()) {
+            throw new RestApiException(StatusCode.ACCOUNT_NOT_EXIST);
+        }
+        for (Account account : accounts) {
+            Notification notification = new Notification();
+            notification.setDescription(request.getDescription().trim());
+            notification.setTitle(request.getTitle().trim());
+            notification.setAccount(account);
+            notification.setIsRead(false);
+            notificationDAO.save(notification);
+        }
     }
 
     @Override
