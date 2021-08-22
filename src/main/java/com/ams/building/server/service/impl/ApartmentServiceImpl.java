@@ -173,12 +173,9 @@ public class ApartmentServiceImpl implements ApartmentService {
 
     @Override
     public List<FloorResponse> floorList(Long blockId) {
-        List<FloorBlock> floors = floorBlockDAO.floorBlockByBlockId(blockId);
-        List<FloorResponse> responses = new ArrayList<>();
-        floors.forEach(s -> responses.add(convertFloor(s)));
-        return responses;
+        List<FloorResponse> floors = floorBlockDAO.floorBlockByBlockId(blockId);
+        return floors;
     }
-
 
     @Override
     public String typeApartmentByAccountId(Long accountId) {
@@ -266,7 +263,7 @@ public class ApartmentServiceImpl implements ApartmentService {
             if (!isIdentifyCard(request.getIdentifyCard())) {
                 throw new RestApiException(StatusCode.IDENTIFY_CARD_NOT_RIGHT);
             }
-            Account currentAccount = accountDAO.getAccountByIdentify(request.getIdentifyCard());
+            Account currentAccount = accountDAO.getAccountByIdentify(request.getIdentifyCard().trim());
             if (Objects.nonNull(currentAccount)) {
                 throw new RestApiException(StatusCode.IDENTIFY_CARD_DUPLICATE);
             }
@@ -278,12 +275,16 @@ public class ApartmentServiceImpl implements ApartmentService {
             if (!isPhoneNumber(request.getPhone())) {
                 throw new RestApiException(StatusCode.PHONE_NUMBER_NOT_RIGHT_FORMAT);
             }
+            List<String> phones = accountDAO.getAccountByPhoneNumber(request.getPhone().trim());
+            if (phones.size() > 0) {
+                throw new RestApiException(StatusCode.PHONE_REGISTER_BEFORE);
+            }
         }
         if (!StringUtils.isEmpty(request.getEmail())) {
             if (!isEmail(request.getEmail())) {
                 throw new RestApiException(StatusCode.EMAIL_NOT_RIGHT_FORMAT);
             }
-            Account currentAccount = accountDAO.getAccountByEmail(request.getEmail());
+            Account currentAccount = accountDAO.getAccountByEmail(request.getEmail().trim());
             if (Objects.nonNull(currentAccount)) {
                 throw new RestApiException(StatusCode.EMAIL_REGISTER_BEFORE);
             }
@@ -297,17 +298,17 @@ public class ApartmentServiceImpl implements ApartmentService {
         if (StringUtils.isEmpty(request.getHomeTown())) {
             throw new RestApiException(StatusCode.HOME_TOWN_EMPTY);
         }
-        account.setName(request.getName());
-        account.setPhone(request.getPhone());
+        account.setName(request.getName().trim());
+        account.setPhone(request.getPhone().trim());
         account.setGender(request.getGender());
         account.setPassword(Constants.DEFAULT_PASSWORD);
         account.setImage(FileStore.getDefaultAvatar());
         account.setDob(request.getDob());
         account.setEnabled(true);
-        account.setHomeTown(request.getHomeTown());
-        account.setCurrentAddress(request.getCurrentAddress());
+        account.setHomeTown(request.getHomeTown().trim());
+        account.setCurrentAddress(request.getCurrentAddress().trim());
         Role role = new Role();
-        role.setId(3L);
+        role.setId(5L);
         account.setRole(role);
         Position position = new Position();
         position.setId(request.getPositionId());
@@ -322,11 +323,6 @@ public class ApartmentServiceImpl implements ApartmentService {
                 .roomName(apartment.getRoomNumber().getRoomName())
                 .id(apartment.getRoomNumber().getId())
                 .build();
-        return response;
-    }
-
-    private FloorResponse convertFloor(FloorBlock floor) {
-        FloorResponse response = FloorResponse.builder().floorName(floor.getFloor().getFloorName()).id(floor.getFloor().getId()).build();
         return response;
     }
 

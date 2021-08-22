@@ -27,34 +27,18 @@ public interface AccountService {
 
     void delete(Long id);
 
-    List<LoginResponse> find();
-
     LoginResponse getById(Long id);
-
-    LoginResponse getByEmail(String email);
 
     Long count();
 
-    void changeAccountLock(long id);
-
-    void forwardPassword(String email);
-
     AccountAppResponse detailAccountApp(Long id);
-
-    void updateAccountAppByName(String name, Long id);
-
-    void updateAccountAppByIdentifyCard(String identifyCard, Long id);
-
-    void updateAccountAppByDob(String dob, Long id);
-
-    void updateAccountAppByPhoneNumber(String phoneNumber, Long id);
-
-    void updateAccountAppByCurrentAddress(String currentAddress, Long id);
 
     void changePassword(Long id, PasswordRequest request);
 
     void validateApartmentOwner(ApartmentOwnerRequest ownerRequest);
 
     void validateListResident(List<ResidentRequest> residentRequestList, ApartmentOwnerRequest ownerRequest);
+
+    Long roleIdAccountByEmail(String email);
 
 }

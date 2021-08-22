@@ -5,7 +5,7 @@ import com.ams.building.server.bean.ApartmentBilling;
 import com.ams.building.server.bean.Notification;
 import com.ams.building.server.constant.Constants;
 import com.ams.building.server.constant.StatusCode;
-import com.ams.building.server.dao.ApartmentBuildingDAO;
+import com.ams.building.server.dao.ApartmentBillingDAO;
 import com.ams.building.server.dao.ApartmentDAO;
 import com.ams.building.server.dao.NotificationDAO;
 import com.ams.building.server.exception.RestApiException;
@@ -39,7 +39,7 @@ public class NotificationSeviceImpl implements NotificationService {
     private NotificationDAO notificationDAO;
 
     @Autowired
-    private ApartmentBuildingDAO apartmentBuildingDAO;
+    private ApartmentBillingDAO apartmentBillingDAO;
 
     @Autowired
     private ApartmentDAO apartmentDAO;
@@ -57,7 +57,7 @@ public class NotificationSeviceImpl implements NotificationService {
 
     @Override
     public void addNotification(NotificationRequest request) {
-        if (Objects.isNull(request))
+        if (Objects.isNull(request) || (StringUtils.isEmpty(request.getDescription()) && StringUtils.isEmpty(request.getTitle())))
             throw new RestApiException(StatusCode.DATA_EMPTY);
         if (StringUtils.isEmpty(request.getDescription())) {
             throw new RestApiException(StatusCode.DESCRIPTION_EMPTY);
@@ -66,8 +66,8 @@ public class NotificationSeviceImpl implements NotificationService {
             throw new RestApiException(StatusCode.TITLE_EMPTY);
         }
         Notification notification = new Notification();
-        notification.setDescription(request.getDescription());
-        notification.setTitle(request.getTitle());
+        notification.setDescription(request.getDescription().trim());
+        notification.setTitle(request.getTitle().trim());
         notification.setIsRead(false);
         notificationDAO.save(notification);
     }
@@ -102,25 +102,30 @@ public class NotificationSeviceImpl implements NotificationService {
         if (Objects.isNull(apartment)) {
             throw new RestApiException(StatusCode.APARTMENT_NOT_EXIST);
         }
-        List<ApartmentBilling> apartmentBillings = apartmentBuildingDAO.detailApartmentBuildingByMonth(apartment.getId());
+        List<ApartmentBilling> apartmentBillings = apartmentBillingDAO.detailApartmentBuildingByMonth(apartment.getId());
         String apartmentSquarMetter = apartment.getRoomNumber().getTypeApartment().getTypeName();
         Long squarMetter = Long.valueOf(apartmentSquarMetter);
         Long fee = Long.valueOf(Constants.GeneralSerivce.FEE_GENERAL_SERVICE) * squarMetter;
         List<NotificationAppResponse> responses = new ArrayList<>();
         for (ApartmentBilling apartmentBilling : apartmentBillings) {
             String month = apartmentBilling.getBillingMonth().split("/")[0];
+            String year = apartmentBilling.getBillingMonth().split("/")[1];
             String monthNext = String.valueOf(Integer.valueOf(month) + 1);
             if (monthNext.length() == 1) {
                 monthNext = "0" + monthNext;
             }
             if (month.equals("12")) {
                 monthNext = "01";
+                year = String.valueOf(Integer.valueOf(year) + 1);
             }
+            Long feeTotal = apartmentBilling.getTotalPrice().longValue() + fee;
             NotificationAppResponse notificationAppResponse = NotificationAppResponse.builder().build();
-            notificationAppResponse.setTitle("Thông báo phí tháng " + apartmentBilling.getBillingMonth() + " của căn hộ " + apartment.getRoomNumber().getRoomName());
-            String mess = "Tổng số tiền bạn phải thanh toán là : " + HelperUtils.formatDoubleNUmber(apartmentBilling.getTotalPrice() + fee);
-            mess += ". Bạn phải thanh toán trước ngày 10/" + monthNext;
+            notificationAppResponse.setTitle("Thông báo phí căn hộ số " + apartment.getRoomNumber().getRoomName() + " tháng " + apartmentBilling.getBillingMonth() + " của căn hộ " + apartment.getRoomNumber().getRoomName());
+            String mess = "Tổng số tiền quý cư dân cần hoàn thành thanh toán trong tháng là : " + HelperUtils.formatCurrentMoney(feeTotal);
+            mess += ". Quý cư dân thanh toán trước ngày 10/" + monthNext + "/" + year;
             notificationAppResponse.setDescription(mess);
+            notificationAppResponse.setTime("00:00");
+            notificationAppResponse.setDate("01/" + monthNext + "/" + year);
             responses.add(notificationAppResponse);
         }
         return responses;

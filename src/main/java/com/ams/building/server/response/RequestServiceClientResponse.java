@@ -14,5 +14,7 @@ public class RequestServiceClientResponse {
     private String description;
     private String time;
     private Long statusId;
+    private Long typeRequest;
+    private Long minutes;
 
 }

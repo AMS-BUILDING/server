@@ -89,6 +89,12 @@ public class Constants {
         public static final String URL_API_LIST_NOTIFICATION = "/landlord/notifications";
         public static final String URL_API_LIST_NOTIFICATION_PRIVATE = "/landlord/notifications/private";
         public static final String URL_API_UDPATE_NOTIFICATION = "/landlord/update-status";
+        public static final String URL_API_FEE_SERVICE = "/admin/fee-apartment/service";
+        public static final String URL_API_FEE_TOTAL_CARD = "/admin/fee-apartment/total-card";
+        public static final String URL_API_FEE_APARTMENT_TOTAL = "/admin/fee-apartment/total";
+        public static final String URL_API_VEHICLE_BY_ACCOUNT_ID_AND_VEHICLE_TYPE = "/manager-service/vehicle-card/search/account-id/vehicle-id";
+        public static final String URL_API_FEE_APARTMENT_SEARCH_RESIDENT_CARD = "/admin/fee-apartment/search/resident-card";
+        public static final String URL_API_FEE_APARTMENT_SEARCH_VEHICLE_CARD = "/admin/fee-apartment/search/vehicle-card";
 
         public static final String URL_API_LOGIN = "/login";
         public static final String URL_API_PROFILE = "/member/account/profile";
@@ -113,7 +119,7 @@ public class Constants {
         public static final String URL_API_DASHBOARD_DASHBOARD_MONTHLY_VEHICLE = "/manager-service/dashboard/monthlyVehicle";
         public static final String URL_API_DASHBOARD_DASHBOARD_NUMBER_OF_USER_SERVICE_REQUEST = "/manager-service/dashboard/numberOfUseServiceRequest";
 
-
+        public static final String URL_API_UPDATE_REQUEST_SERVICE_APP = "/landlord/request-service/update-app";
         public static final String URL_API_NOTIFICATION_FEE_APARTMENT = "/tenant/notification-fee-apartment";
 
     }
@@ -136,17 +142,17 @@ public class Constants {
     }
 
     public class ResidentCard {
-        public static final String PRICE = "50000";
-
         private ResidentCard() {
         }
+
+        public static final String PRICE = "50000";
     }
 
     public class StatusResidentCard {
-        public static final String SUCCESS = "Thành công";
-
         private StatusResidentCard() {
         }
+
+        public static final String SUCCESS = "Thành công";
     }
 
     public class Servicename {

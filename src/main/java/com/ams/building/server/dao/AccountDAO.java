@@ -48,4 +48,8 @@ public interface AccountDAO extends JpaRepository<Account, Long> {
 
     @Query("SELECT count(a.id) FROM Account a where a.enabled is not null ")
     Long countAccountEnable();
+
+    @Query("SELECT a.phone FROM Account a WHERE a.phone=?1")
+    List<String> getAccountByPhoneNumber(String phoneNumber);
+
 }

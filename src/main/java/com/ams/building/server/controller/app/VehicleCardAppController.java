@@ -2,6 +2,7 @@ package com.ams.building.server.controller.app;
 
 import com.ams.building.server.constant.Constants;
 import com.ams.building.server.request.VehicleCardClientRequest;
+import com.ams.building.server.response.ServiceAddResponse;
 import com.ams.building.server.response.UserPrincipal;
 import com.ams.building.server.response.VehicleTypeResponse;
 import com.ams.building.server.service.VehicleCardService;
@@ -47,8 +48,8 @@ public class VehicleCardAppController {
         UserPrincipal currentUser = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication()
                 .getPrincipal();
         Long accountId = currentUser.getId();
-        vehicleCardService.addVehicleCard(requests, accountId);
-        ResponseEntity<String> response = new ResponseEntity<>("Add Vehicle Card  success", HttpStatus.CREATED);
+        ServiceAddResponse residentCardAddResponse = vehicleCardService.addVehicleCard(requests, accountId);
+        ResponseEntity<ServiceAddResponse> response = new ResponseEntity<>(residentCardAddResponse, HttpStatus.CREATED);
         logger.debug("addVehicleCard response : " + new Gson().toJson(response));
         return response;
     }

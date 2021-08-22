@@ -2,6 +2,9 @@ package com.ams.building.server.constant;
 
 public class PropertyKeys {
 
+    private PropertyKeys() {
+    }
+
     public static final String ABSENT_DETAIL_NOT_EXIST = "absent.detail.not.exist";
     public static final String APARTMENT_NOT_EXIST = "apartment.not.exist";
     public static final String ROOM_NUMBER_NOT_EXIST = "room.number.not.exist";
@@ -51,13 +54,25 @@ public class PropertyKeys {
     public static final String DUPLICATE_IDENTIFY_CARD_IN_LIST_RESIDENT = "duplicate.identify.card.in.list.resident";
     public static final String REQUEST_SERVICE_REGISTER_BEFORE = "request.service.register.before";
     public static final String REASON_DETAIL_SUB_SERVICE_NOT_EXIST = "reason.detail.sub.service.not.exist";
+    public static final String CODE_NOT_RIGHT = "code.not.right";
+    public static final String STATUS_NOT_EXIST = "status.not.exist";
+    public static final String APARTMENT_BILLING_NOT_EXIST = "apartment.billing.not.exist";
     public static final String ACCOUNT_NOT_RIGHT_ROLE = "account.not.right.role";
     public static final String TYPE_APARTMENT_NOT_EXIST = "type.apartment.not.exist";
     public static final String NOTIFICATION_NOT_EXIST = "notification.not.exist";
     public static final String BILLING_MONTH_NOT_RIGHT = "billing.month.not.right";
     public static final String PASSWORD_NOT_RIGHT = "password.not.right";
-
-    private PropertyKeys() {
-    }
+    public static final String USER_NAME_EMPTY = "user.name.empty";
+    public static final String POSITION_EMPTY = "position.empty";
+    public static final String POSITION_MUST_BE_IN_HOME = "position.must.be.in.home";
+    public static final String PHONE_REGISTER_BEFORE = "phone.register.before";
+    public static final String STAR_FROM_ONE_TO_FIVE = "star.from.one.to.five";
+    public static final String POSITION_NOT_RIGHT_WITH_EMPLOYEE = "position.not.right.with.employee";
+    public static final String EMPLOYEE_NOT_WORKING = "employee.not.working";
+    public static final String ACCOUNT_NOT_NEED_CHOOSE_POSITION = "account.not.need.position";
+    public static final String VEHICLE_BRANCH_EMPTY = "vehicle.branch.empty";
+    public static final String LICENSE_PLATE_EMPTY = "license.plate.empty";
+    public static final String VEHICLE_COLOR_EMPTY = "vehicle.color.branch";
+    public static final String VEHICLE_REGISTER_BEFORE = "vehicle.register.before";
 
 }

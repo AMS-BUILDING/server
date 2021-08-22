@@ -57,7 +57,22 @@ public enum StatusCode {
     TYPE_APARTMENT_NOT_EXIST(450, PropertiesReader.getProperty(PropertyKeys.TYPE_APARTMENT_NOT_EXIST)),
     NOTIFICATION_NOT_EXIST(451, PropertiesReader.getProperty(PropertyKeys.NOTIFICATION_NOT_EXIST)),
     BILLING_MONTH_NOT_RIGHT(452, PropertiesReader.getProperty(PropertyKeys.BILLING_MONTH_NOT_RIGHT)),
-    PASSWORD_NOT_RIGHT(453, PropertiesReader.getProperty(PropertyKeys.PASSWORD_NOT_RIGHT));
+    PASSWORD_NOT_RIGHT(453, PropertiesReader.getProperty(PropertyKeys.PASSWORD_NOT_RIGHT)),
+    USER_NAME_EMPTY(454, PropertiesReader.getProperty(PropertyKeys.USER_NAME_EMPTY)),
+    POSITION_EMPTY(455, PropertiesReader.getProperty(PropertyKeys.POSITION_EMPTY)),
+    PHONE_REGISTER_BEFORE(456, PropertiesReader.getProperty(PropertyKeys.PHONE_REGISTER_BEFORE)),
+    POSITION_MUST_BE_IN_HOME(457, PropertiesReader.getProperty(PropertyKeys.POSITION_MUST_BE_IN_HOME)),
+    STAR_FROM_ONE_TO_FIVE(458, PropertiesReader.getProperty(PropertyKeys.STAR_FROM_ONE_TO_FIVE)),
+    POSITION_NOT_RIGHT_WITH_EMPLOYEE(459, PropertiesReader.getProperty(PropertyKeys.POSITION_NOT_RIGHT_WITH_EMPLOYEE)),
+    CODE_NOT_RIGHT(460, PropertiesReader.getProperty(PropertyKeys.CODE_NOT_RIGHT)),
+    STATUS_NOT_EXIST(461, PropertiesReader.getProperty(PropertyKeys.STATUS_NOT_EXIST)),
+    APARTMENT_BILLING_NOT_EXIST(462, PropertiesReader.getProperty(PropertyKeys.APARTMENT_BILLING_NOT_EXIST)),
+    EMPLOYEE_NOT_WORKING(463, PropertiesReader.getProperty(PropertyKeys.EMPLOYEE_NOT_WORKING)),
+    ACCOUNT_NOT_NEED_CHOOSE_POSITION(464, PropertiesReader.getProperty(PropertyKeys.ACCOUNT_NOT_NEED_CHOOSE_POSITION)),
+    VEHICLE_BRANCH_EMPTY(465, PropertiesReader.getProperty(PropertyKeys.VEHICLE_BRANCH_EMPTY)),
+    LICENSE_PLATE_EMPTY(466, PropertiesReader.getProperty(PropertyKeys.LICENSE_PLATE_EMPTY)),
+    VEHICLE_COLOR_EMPTY(467, PropertiesReader.getProperty(PropertyKeys.VEHICLE_COLOR_EMPTY)),
+    VEHICLE_REGISTER_BEFORE(468, PropertiesReader.getProperty(PropertyKeys.VEHICLE_REGISTER_BEFORE));
 
     private Integer status;
 
@@ -83,4 +98,5 @@ public enum StatusCode {
     public void setMessage(String message) {
         this.message = message;
     }
+
 }
