@@ -119,7 +119,7 @@ public class Constants {
         public static final String URL_API_DASHBOARD_DASHBOARD_MONTHLY_VEHICLE = "/manager-service/dashboard/monthlyVehicle";
         public static final String URL_API_DASHBOARD_DASHBOARD_NUMBER_OF_USER_SERVICE_REQUEST = "/manager-service/dashboard/numberOfUseServiceRequest";
 
-
+        public static final String URL_API_UPDATE_REQUEST_SERVICE_APP = "/landlord/request-service/update-app";
         public static final String URL_API_NOTIFICATION_FEE_APARTMENT = "/tenant/notification-fee-apartment";
 
     }

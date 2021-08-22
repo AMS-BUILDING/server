@@ -64,7 +64,7 @@ public class DashboardServiceImpl implements DashBoardService {
         List<DashboardResponseTotal> yearlyTotalRevenue = dashboardRequestServiceDao.yearlyTotalRevenue();
         List<DashboardResponseTotalConvert> response = new ArrayList<>();
         for (DashboardResponseTotal r : yearlyTotalRevenue) {
-            response.add(DashboardResponseTotalToDashboardResponseTotalConvert(r));
+            response.add(dashboardResponseTotalToDashboardResponseTotalConvert(r));
         }
         return response;
     }
@@ -75,7 +75,7 @@ public class DashboardServiceImpl implements DashBoardService {
         List<DashboardResponseTotal> yearlyCountServiceRequest = dashboardRequestServiceDao.yearlyCountServiceRequest();
         List<DashboardResponseTotalConvert> response = new ArrayList<>();
         for (DashboardResponseTotal r : yearlyCountServiceRequest) {
-            response.add(DashboardResponseTotalToDashboardResponseTotalConvert(r));
+            response.add(dashboardResponseTotalToDashboardResponseTotalConvert(r));
         }
         return response;
     }
@@ -85,7 +85,7 @@ public class DashboardServiceImpl implements DashBoardService {
         List<DashboardResponseTotal> monthlyAccount = dashboardAccountDao.monthlyAccount(year);
         List<DashboardResponseTotalConvert> response = new ArrayList<>();
         for (DashboardResponseTotal r : monthlyAccount) {
-            response.add(DashboardResponseTotalToDashboardResponseTotalConvert(r));
+            response.add(dashboardResponseTotalToDashboardResponseTotalConvert(r));
         }
         return response;
     }
@@ -95,12 +95,12 @@ public class DashboardServiceImpl implements DashBoardService {
         List<DashboardTypeAccountResponse> typeApartmentAccount = dashboardAccountDao.typeApartmentAccount();
         List<DashboardTypeAccountResponseConvert> response = new ArrayList<>();
         for (DashboardTypeAccountResponse r : typeApartmentAccount) {
-            response.add(DashboardTypeAccountResponseToDashboardTypeAccountResponseConvert(r));
+            response.add(dashboardTypeAccountResponseToDashboardTypeAccountResponseConvert(r));
         }
         return response;
     }
 
-    private DashboardTypeAccountResponseConvert DashboardTypeAccountResponseToDashboardTypeAccountResponseConvert(DashboardTypeAccountResponse request) {
+    private DashboardTypeAccountResponseConvert dashboardTypeAccountResponseToDashboardTypeAccountResponseConvert(DashboardTypeAccountResponse request) {
         DashboardTypeAccountResponseConvert response = DashboardTypeAccountResponseConvert.builder()
                 .type(request.getType())
                 .total(request.getTotal())
@@ -114,7 +114,7 @@ public class DashboardServiceImpl implements DashBoardService {
         List<DashboardResponseTotal> monthlyVehicle = dashboardVehicleCardDAO.monthlyVehicle();
         List<DashboardResponseTotalConvert> response = new ArrayList<>();
         for (DashboardResponseTotal r : monthlyVehicle) {
-            response.add(DashboardResponseTotalToDashboardResponseTotalConvert(r));
+            response.add(dashboardResponseTotalToDashboardResponseTotalConvert(r));
         }
         return response;
     }
@@ -124,12 +124,12 @@ public class DashboardServiceImpl implements DashBoardService {
         List<DashboardResponseNumberOfUseServiceRequest> numberOfUseServiceRequest = dashboardRequestServiceDao.numberOfUseServiceRequest();
         List<DashboardResponseNumberOfUseServiceRequestConvert> response = new ArrayList<>();
         for (DashboardResponseNumberOfUseServiceRequest r : numberOfUseServiceRequest) {
-            response.add(DashboardResponseNumberOfUseServiceRequestToDashboardResponseNumberOfUseServiceRequestConvert(r));
+            response.add(dashboardResponseNumberOfUseServiceRequestToDashboardResponseNumberOfUseServiceRequestConvert(r));
         }
         return response;
     }
 
-    private DashboardResponseNumberOfUseServiceRequestConvert DashboardResponseNumberOfUseServiceRequestToDashboardResponseNumberOfUseServiceRequestConvert(DashboardResponseNumberOfUseServiceRequest request) {
+    private DashboardResponseNumberOfUseServiceRequestConvert dashboardResponseNumberOfUseServiceRequestToDashboardResponseNumberOfUseServiceRequestConvert(DashboardResponseNumberOfUseServiceRequest request) {
         DashboardResponseNumberOfUseServiceRequestConvert response = DashboardResponseNumberOfUseServiceRequestConvert.builder()
                 .serviceName(request.getServiceName())
                 .total(request.getTotal())
@@ -138,7 +138,7 @@ public class DashboardServiceImpl implements DashBoardService {
         return response;
     }
 
-    private DashboardResponseTotalConvert DashboardResponseTotalToDashboardResponseTotalConvert(DashboardResponseTotal request) {
+    private DashboardResponseTotalConvert dashboardResponseTotalToDashboardResponseTotalConvert(DashboardResponseTotal request) {
         DashboardResponseTotalConvert response = DashboardResponseTotalConvert.builder()
                 .date(request.getDate())
                 .total(request.getTotal())

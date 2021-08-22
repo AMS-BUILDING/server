@@ -153,10 +153,10 @@ public class AbsentServiceImpl implements AbsentService {
         }
         AbsentDetail absentDetail = new AbsentDetail();
         absentDetail.setAbsentType(absentType);
-        absentDetail.setName(request.getName());
-        absentDetail.setReason(request.getReason());
-        absentDetail.setHomeTown(request.getHomeTown());
-        absentDetail.setIdentifyCard(request.getIdentifyCard());
+        absentDetail.setName(request.getName().trim());
+        absentDetail.setReason(request.getReason().trim());
+        absentDetail.setHomeTown(request.getHomeTown().trim());
+        absentDetail.setIdentifyCard(request.getIdentifyCard().trim());
         absentDetail.setDob(convertDateToStringWithTimezone(request.getDob(), DateTimeUtils.DD_MM_YYYY, null));
         absentDetail.setEndDate(request.getEndDate());
         absentDetail.setStartDate(request.getStartDate());

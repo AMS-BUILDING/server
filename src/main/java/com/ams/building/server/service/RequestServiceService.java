@@ -7,6 +7,7 @@ import com.ams.building.server.response.DetailSubServiceClientResponse;
 import com.ams.building.server.response.ReasonDetailSubServiceResponse;
 import com.ams.building.server.response.RequestServiceClientResponse;
 import com.ams.building.server.response.RequestServiceResponse;
+import com.ams.building.server.response.ServiceAddResponse;
 import com.ams.building.server.response.StatusServiceResponse;
 
 import java.util.List;
@@ -21,7 +22,7 @@ public interface RequestServiceService {
 
     void updateStatusRequest(Long statusId, Long requestId);
 
-    Long addRequestServiceSuccessStatus(RequestServiceRequest requestServiceRequest);
+    ServiceAddResponse addRequestServiceSuccessStatus(RequestServiceRequest requestServiceRequest);
 
     Double getPriceByReasonDetailSubServiceId(Long id);
 
@@ -33,6 +34,8 @@ public interface RequestServiceService {
 
     List<RequestServiceClientResponse> historyServiceResponse(Long id, Long statusId);
 
-    DetailServiceRequestResponse detailServiceRequest(Long serviceRequestId);
+    DetailServiceRequestResponse detailServiceRequest(Long serviceRequestId, Long typeRequest);
+
+    void updateStatusRequestByTypeRequest(Long statusId, Long requestId, Long typeRequest);
 
 }

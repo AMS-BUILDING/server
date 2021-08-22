@@ -27,6 +27,7 @@ import com.ams.building.server.response.DetailSubServiceClientResponse;
 import com.ams.building.server.response.ReasonDetailSubServiceResponse;
 import com.ams.building.server.response.RequestServiceClientResponse;
 import com.ams.building.server.response.RequestServiceResponse;
+import com.ams.building.server.response.ServiceAddResponse;
 import com.ams.building.server.response.StatusServiceResponse;
 import com.ams.building.server.service.RequestServiceService;
 import com.ams.building.server.utils.DateTimeUtils;
@@ -136,7 +137,10 @@ public class RequestServiceServiceImpl implements RequestServiceService {
         }
         List<Long> status = new ArrayList<>();
         status.add(statusId);
-        List<ResidentCard> residentCards = residentCardDAO.residentCardRegister(id, status);
+        List<Integer> isUses = new ArrayList<>();
+        isUses.add(1);
+        isUses.add(0);
+        List<ResidentCard> residentCards = residentCardDAO.residentCardRegister(id, status, isUses);
         List<RequestService> requestServiceByAccountId = requestServiceDAO.requestServiceByAccountId(id, statusId);
         List<RequestServiceClientResponse> responses = new ArrayList<>();
         requestServiceByAccountId.forEach(s -> responses.add(convertToHistoryResponse(s)));
@@ -149,26 +153,66 @@ public class RequestServiceServiceImpl implements RequestServiceService {
     }
 
     @Override
-    public DetailServiceRequestResponse detailServiceRequest(Long serviceRequestId) {
+    public DetailServiceRequestResponse detailServiceRequest(Long serviceRequestId, Long typeRequest) {
         if (StringUtils.isEmpty(serviceRequestId)) {
             throw new RestApiException(StatusCode.DATA_EMPTY);
         }
-        RequestService request = requestServiceDAO.findRequestServiceById(serviceRequestId);
-        if (Objects.isNull(request)) {
-            throw new RestApiException(StatusCode.REQUEST_SERVICE_NOT_EXIST);
-        }
-        String message = request.getReasonDetailSubService().getDetailSubService().getService().getSubServiceName();
-        if (request.getReasonDetailSubService().getDetailSubService().getService().getId() == 9) {
-            message += request.getReasonDetailSubService().getDetailSubService().getDetailSubServiceName().toLowerCase() + " vì  " + request.getReasonDetailSubService().getReasonName().toLowerCase();
-        }
         DetailServiceRequestResponse response = DetailServiceRequestResponse.builder().build();
-        response.setStatusId(request.getStatusServiceRequest().getId());
-        response.setServiceName(message);
+        if (typeRequest == 1) {
+            RequestService request = requestServiceDAO.findRequestServiceById(serviceRequestId);
+            if (Objects.isNull(request)) {
+                throw new RestApiException(StatusCode.REQUEST_SERVICE_NOT_EXIST);
+            }
+            String message = request.getReasonDetailSubService().getDetailSubService().getService().getSubServiceName();
+            if (request.getReasonDetailSubService().getDetailSubService().getService().getId() == 9) {
+                message += request.getReasonDetailSubService().getDetailSubService().getDetailSubServiceName().toLowerCase() + " vì  " + request.getReasonDetailSubService().getReasonName().toLowerCase();
+            }
+            response.setStatusId(request.getStatusServiceRequest().getId());
+            response.setServiceName(message);
+        } else if (typeRequest == 2) {
+            VehicleCard card = vehicleCardDAO.getById(serviceRequestId);
+            if (Objects.isNull(card)) {
+                throw new RestApiException(StatusCode.VEHICLE_NOT_EXIST);
+            }
+            String message = "Đăng kí thẻ xe";
+            response.setStatusId(card.getStatusVehicleCard().getId());
+            response.setServiceName(message);
+        } else {
+            ResidentCard card = residentCardDAO.getById(serviceRequestId);
+            if (Objects.isNull(card)) {
+                throw new RestApiException(StatusCode.RESIDENT_CARD_NOT_EXIST);
+            }
+            String message = "Đăng kí thẻ căn hộ " + card.getCardCode();
+            response.setServiceName(message);
+            response.setStatusId(card.getStatusResidentCard().getId());
+        }
+
         return response;
     }
 
     @Override
-    public Long addRequestServiceSuccessStatus(RequestServiceRequest requestServiceRequest) {
+    public void updateStatusRequestByTypeRequest(Long statusId, Long requestId, Long typeRequest) {
+        if (StringUtils.isEmpty(requestId) || StringUtils.isEmpty(statusId) || StringUtils.isEmpty(typeRequest))
+            throw new RestApiException(StatusCode.DATA_EMPTY);
+        if (typeRequest == 1) {
+            RequestService service = requestServiceDAO.findRequestServiceById(requestId);
+            if (Objects.isNull(service)) throw new RestApiException(StatusCode.REQUEST_SERVICE_NOT_EXIST);
+            requestServiceDAO.updateStatus(statusId, requestId);
+        } else if (typeRequest == 2) {
+            VehicleCard vehicleCard = vehicleCardDAO.getById(requestId);
+            if (Objects.isNull(vehicleCard)) throw new RestApiException(StatusCode.VEHICLE_CARD_NOT_EXIST);
+            vehicleCardDAO.updateStatus(statusId, requestId);
+        } else {
+            ResidentCard card = residentCardDAO.getById(requestId);
+            if (Objects.isNull(card)) {
+                throw new RestApiException(StatusCode.RESIDENT_CARD_NOT_EXIST);
+            }
+            residentCardDAO.updateStatus(statusId, requestId);
+        }
+    }
+
+    @Override
+    public ServiceAddResponse addRequestServiceSuccessStatus(RequestServiceRequest requestServiceRequest) {
         Long id;
         if (Objects.isNull(requestServiceRequest)) {
             throw new RestApiException(StatusCode.DATA_EMPTY);
@@ -214,7 +258,11 @@ public class RequestServiceServiceImpl implements RequestServiceService {
             requestServiceDAO.save(requestService);
         }
         id = requestService.getId();
-        return id;
+        ServiceAddResponse response = ServiceAddResponse.builder()
+                .serviceId(id)
+                .typeService(1L)
+                .build();
+        return response;
     }
 
     @Override
@@ -249,7 +297,9 @@ public class RequestServiceServiceImpl implements RequestServiceService {
         List<Long> status = new ArrayList<>();
         status.add(1L);
         status.add(2L);
-        List<ResidentCard> residentCards = residentCardDAO.residentCardRegister(accountId, status);
+        List<Integer> isUses = new ArrayList<>();
+        isUses.add(1);
+        List<ResidentCard> residentCards = residentCardDAO.residentCardRegister(accountId, status, isUses);
         for (RequestService requestService : requestServices) {
             RequestServiceClientResponse requestServiceClientResponse = convertRequestServiceToRequestServiceClientResponse(requestService);
             response.add(requestServiceClientResponse);
@@ -377,8 +427,8 @@ public class RequestServiceServiceImpl implements RequestServiceService {
             time = convertDateToStringWithTimezone(residentCard.getStartDate(), DD_MM_YYYY, null);
         }
         response.setId(residentCard.getId());
-        response.setServiceName("Yêu cầu đăng kí thêm thẻ căn hộ  - " + convertDateToStringWithTimezone(residentCard.getStartDate(), DD_MM_YYYY, null));
-        response.setDescription("Yêu cầu đăng kí thêm  thẻ gửi xe của căn hộ " + roomNumber.getRoomName() + " lúc " + convertDateToStringWithTimezone(residentCard.getStartDate(), HH_MM, null));
+        response.setServiceName("Yêu cầu được cấp thẻ căn hộ  - " + convertDateToStringWithTimezone(residentCard.getStartDate(), DD_MM_YYYY, null));
+        response.setDescription("Yêu cầu được cấp  thẻ căn hộ của căn hộ " + roomNumber.getRoomName() + " lúc " + convertDateToStringWithTimezone(residentCard.getStartDate(), HH_MM, null));
         response.setTime(time);
         response.setStatusId(residentCard.getStatusResidentCard().getId());
         response.setTypeRequest(3L);

@@ -80,12 +80,24 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public void updateEmployee(Long accountId, EmployeeRequest request) {
-        if (Objects.isNull(request)) {
+        if (Objects.isNull(request) || (StringUtils.isEmpty(request.getName()) && StringUtils.isEmpty(request.getGender())
+                && StringUtils.isEmpty(request.getPhoneNumber())
+                && StringUtils.isEmpty(request.getIdentifyCard()) && StringUtils.isEmpty(request.getCurrentAddress())
+                && StringUtils.isEmpty(request.getHomeTown()) && StringUtils.isEmpty(request.getPosition()))) {
             throw new RestApiException(StatusCode.DATA_EMPTY);
         }
         Account currentAccount = accountDao.getAccountById(accountId);
         if (Objects.isNull(currentAccount)) {
             throw new RestApiException(StatusCode.ACCOUNT_NOT_EXIST);
+        }
+        if (StringUtils.isEmpty(request.getPosition())) {
+            throw new RestApiException(StatusCode.POSITION_NOT_EXIST);
+        }
+        if (request.getPosition() < 0 || request.getPosition() > 4) {
+            throw new RestApiException(StatusCode.POSITION_NOT_RIGHT_WITH_EMPLOYEE);
+        }
+        if (StringUtils.isEmpty(request.getName())) {
+            throw new RestApiException(StatusCode.NAME_EMPTY);
         }
         if (StringUtils.isEmpty(request.getDob())) {
             throw new RestApiException(StatusCode.DOB_EMPTY);
@@ -108,19 +120,34 @@ public class EmployeeServiceImpl implements EmployeeService {
         if (!isIdentifyCard(request.getIdentifyCard())) {
             throw new RestApiException(StatusCode.IDENTIFY_CARD_NOT_RIGHT);
         }
-        Account accountByIdentifyCard = accountDao.getAccountByIdentify(request.getIdentifyCard());
-        if (Objects.nonNull(accountByIdentifyCard)) {
-            if (!accountByIdentifyCard.getIdentifyCard().equalsIgnoreCase(currentAccount.getIdentifyCard())) {
-                throw new RestApiException(StatusCode.IDENTIFY_CARD_DUPLICATE);
+        if (!request.getIdentifyCard().equalsIgnoreCase(currentAccount.getIdentifyCard())) {
+            Account accountByIdentifyCard = accountDao.getAccountByIdentify(request.getIdentifyCard());
+            if (Objects.nonNull(accountByIdentifyCard)) {
+                if (!accountByIdentifyCard.getIdentifyCard().equalsIgnoreCase(currentAccount.getIdentifyCard())) {
+                    throw new RestApiException(StatusCode.IDENTIFY_CARD_DUPLICATE);
+                }
             }
         }
-        currentAccount.setDob(request.getDob());
+        if (!request.getPhoneNumber().equalsIgnoreCase(currentAccount.getPhone())) {
+            List<String> searchAccountByPhone = accountDao.getAccountByPhoneNumber(request.getPhoneNumber());
+            if (!searchAccountByPhone.isEmpty()) {
+                throw new RestApiException(StatusCode.PHONE_REGISTER_BEFORE);
+            }
+        }
+//        String yearDob = request.getDob().split("/")[2];
+//        Calendar cal = Calendar.getInstance();
+//        int year = cal.get(Calendar.YEAR);
+//        int age = year - Integer.valueOf(yearDob);
+//        if (age < 18) {
+//            throw new RestApiException(StatusCode.EMPLOYEE_NOT_WORKING);
+//        }
+        currentAccount.setDob(request.getDob().trim());
         currentAccount.setGender(request.getGender());
-        currentAccount.setHomeTown(request.getHomeTown());
-        currentAccount.setPhone(request.getPhoneNumber());
-        currentAccount.setCurrentAddress(request.getCurrentAddress());
-        currentAccount.setName(request.getName());
-        currentAccount.setIdentifyCard(request.getIdentifyCard());
+        currentAccount.setHomeTown(request.getHomeTown().trim());
+        currentAccount.setPhone(request.getPhoneNumber().trim());
+        currentAccount.setCurrentAddress(request.getCurrentAddress().trim());
+        currentAccount.setName(request.getName().trim());
+        currentAccount.setIdentifyCard(request.getIdentifyCard().trim());
         Position position = positionDAO.getOne(request.getPosition());
         currentAccount.setPosition(position);
         Role role = roleDAO.getOne(4L);
@@ -184,10 +211,17 @@ public class EmployeeServiceImpl implements EmployeeService {
         if (Objects.nonNull(searchAccountByEmail)) {
             throw new RestApiException(StatusCode.EMAIL_REGISTER_BEFORE);
         }
+//        String yearDob = request.getDob().split("/")[2];
+//        Calendar cal = Calendar.getInstance();
+//        int year = cal.get(Calendar.YEAR);
+//        int age = year - Integer.valueOf(yearDob);
+//        if (age < 18) {
+//            throw new RestApiException(StatusCode.EMPLOYEE_NOT_WORKING);
+//        }
         Account account = new Account();
         account.setIdentifyCard(request.getIdentifyCard());
-        account.setEmail(request.getEmail());
-        account.setDob(request.getDob());
+        account.setEmail(request.getEmail().trim());
+        account.setDob(request.getDob().trim());
         account.setGender(request.getGender());
         account.setHomeTown(request.getHomeTown());
         account.setPhone(request.getPhoneNumber());

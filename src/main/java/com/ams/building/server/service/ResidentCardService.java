@@ -1,6 +1,7 @@
 package com.ams.building.server.service;
 
 import com.ams.building.server.response.ApiResponse;
+import com.ams.building.server.response.ResidentCardAddResponse;
 
 public interface ResidentCardService {
 
@@ -12,6 +13,6 @@ public interface ResidentCardService {
 
     void addResidentCard(String email);
 
-    void addResidentCard(Long amount, Long accountId);
+    ResidentCardAddResponse addResidentCard(Long amount, Long accountId);
 
 }

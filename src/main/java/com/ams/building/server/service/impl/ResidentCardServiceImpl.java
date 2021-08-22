@@ -14,6 +14,7 @@ import com.ams.building.server.dao.ResidentCardDAO;
 import com.ams.building.server.dao.StatusResidentCardDAO;
 import com.ams.building.server.exception.RestApiException;
 import com.ams.building.server.response.ApiResponse;
+import com.ams.building.server.response.ResidentCardAddResponse;
 import com.ams.building.server.response.ResidentCardResponse;
 import com.ams.building.server.service.ResidentCardService;
 import org.apache.log4j.Logger;
@@ -84,7 +85,7 @@ public class ResidentCardServiceImpl implements ResidentCardService {
         }
         ResidentCard residentCard = residentCardDAO.getDetailResidentCardById(id);
         if (Objects.isNull(residentCard)) throw new RestApiException(StatusCode.RESIDENT_CARD_NOT_EXIST);
-        residentCardDAO.delete(residentCard);
+        residentCardDAO.cancelExtend(0, id);
     }
 
     @Override
@@ -116,18 +117,24 @@ public class ResidentCardServiceImpl implements ResidentCardService {
         }
         String billingMonth = monthStr + "/" + year;
         String roomName = roomNumber.getRoomName();
+        List<ResidentCard> listResidentCard = residentCardDAO.checkRegisterCard(account.getId());
         ResidentCard newCard = new ResidentCard();
+        if (listResidentCard.size() > 0) {
+            newCard.setPrice(Double.valueOf(Constants.ResidentCard.PRICE));
+        } else {
+            newCard.setPrice(0D);
+        }
         newCard.setAccount(account);
-        newCard.setPrice(Double.valueOf(Constants.ResidentCard.PRICE));
         newCard.setCardCode(genCardCode(roomName));
-        StatusResidentCard statusResidentCard = statusResidentCardDAO.getOne(2L);
+        StatusResidentCard statusResidentCard = statusResidentCardDAO.getOne(1L);
         newCard.setStatusResidentCard(statusResidentCard);
         newCard.setBillingMonth(billingMonth);
+        newCard.setIsUse(1);
         residentCardDAO.save(newCard);
     }
 
     @Override
-    public void addResidentCard(Long amount, Long accountId) {
+    public ResidentCardAddResponse addResidentCard(Long amount, Long accountId) {
         if (StringUtils.isEmpty(accountId) || StringUtils.isEmpty(amount)) {
             throw new RestApiException(StatusCode.DATA_EMPTY);
         }
@@ -148,6 +155,7 @@ public class ResidentCardServiceImpl implements ResidentCardService {
         }
         String billingMonth = monthStr + "/" + year;
         Account account = new Account();
+        List<Long> ids = new ArrayList<>();
         for (Long i = 0L; i < amount; i++) {
             ResidentCard residentCard = new ResidentCard();
             StatusResidentCard status = new StatusResidentCard();
@@ -159,8 +167,14 @@ public class ResidentCardServiceImpl implements ResidentCardService {
             residentCard.setAccount(account);
             residentCard.setPrice(Double.valueOf(50000));
             residentCard.setBillingMonth(billingMonth);
-            residentCardDAO.save(residentCard);
+            residentCard.setIsUse(1);
+            ResidentCard card = residentCardDAO.save(residentCard);
+            ids.add(card.getId());
         }
+        ResidentCardAddResponse response = ResidentCardAddResponse.builder().build();
+        response.setServiceId(ids);
+        response.setTypeService(3L);
+        return response;
     }
 
     private String genCardCode(String apartmentName) {

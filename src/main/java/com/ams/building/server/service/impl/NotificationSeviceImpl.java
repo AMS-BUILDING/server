@@ -66,8 +66,8 @@ public class NotificationSeviceImpl implements NotificationService {
             throw new RestApiException(StatusCode.TITLE_EMPTY);
         }
         Notification notification = new Notification();
-        notification.setDescription(request.getDescription());
-        notification.setTitle(request.getTitle());
+        notification.setDescription(request.getDescription().trim());
+        notification.setTitle(request.getTitle().trim());
         notification.setIsRead(false);
         notificationDAO.save(notification);
     }
@@ -118,9 +118,10 @@ public class NotificationSeviceImpl implements NotificationService {
                 monthNext = "01";
                 year = String.valueOf(Integer.valueOf(year) + 1);
             }
+            Long feeTotal = apartmentBilling.getTotalPrice().longValue() + fee;
             NotificationAppResponse notificationAppResponse = NotificationAppResponse.builder().build();
             notificationAppResponse.setTitle("Thông báo phí căn hộ số " + apartment.getRoomNumber().getRoomName() + " tháng " + apartmentBilling.getBillingMonth() + " của căn hộ " + apartment.getRoomNumber().getRoomName());
-            String mess = "Tổng số tiền quý cư dân cần hoàn thành thanh toán trong tháng là : " + HelperUtils.formatDoubleNUmber(apartmentBilling.getTotalPrice() + fee);
+            String mess = "Tổng số tiền quý cư dân cần hoàn thành thanh toán trong tháng là : " + HelperUtils.formatCurrentMoney(feeTotal);
             mess += ". Quý cư dân thanh toán trước ngày 10/" + monthNext + "/" + year;
             notificationAppResponse.setDescription(mess);
             notificationAppResponse.setTime("00:00");

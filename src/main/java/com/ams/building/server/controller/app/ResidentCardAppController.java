@@ -1,6 +1,7 @@
 package com.ams.building.server.controller.app;
 
 import com.ams.building.server.constant.Constants;
+import com.ams.building.server.response.ResidentCardAddResponse;
 import com.ams.building.server.response.UserPrincipal;
 import com.ams.building.server.service.ResidentCardService;
 import com.google.gson.Gson;
@@ -30,8 +31,8 @@ public class ResidentCardAppController {
         UserPrincipal currentUser = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication()
                 .getPrincipal();
         Long accountId = currentUser.getId();
-        residentCardService.addResidentCard(amount, accountId);
-        ResponseEntity<String> response = new ResponseEntity<>("Add Resident Card success", HttpStatus.CREATED);
+        ResidentCardAddResponse serviceAddResponse = residentCardService.addResidentCard(amount, accountId);
+        ResponseEntity<ResidentCardAddResponse> response = new ResponseEntity<>(serviceAddResponse, HttpStatus.CREATED);
         logger.debug("addResidentCard response : " + new Gson().toJson(response));
         return response;
     }

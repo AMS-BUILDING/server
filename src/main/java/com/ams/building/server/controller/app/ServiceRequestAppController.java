@@ -5,6 +5,7 @@ import com.ams.building.server.request.RequestServiceRequest;
 import com.ams.building.server.response.DetailServiceRequestResponse;
 import com.ams.building.server.response.ReasonDetailSubServiceResponse;
 import com.ams.building.server.response.RequestServiceClientResponse;
+import com.ams.building.server.response.ServiceAddResponse;
 import com.ams.building.server.response.UserPrincipal;
 import com.ams.building.server.service.ApartmentService;
 import com.ams.building.server.service.RequestServiceService;
@@ -16,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -56,8 +58,8 @@ public class ServiceRequestAppController {
     @PostMapping(Constants.UrlPath.URL_API_ADD_SERVICE_REQUEST)
     public ResponseEntity<?> addRequestServiceSuccessStatus(@RequestBody RequestServiceRequest requestServiceRequest) {
         logger.debug("addRequestServiceSuccessStatus " + new Gson().toJson(requestServiceRequest));
-        Long id = requestServiceService.addRequestServiceSuccessStatus(requestServiceRequest);
-        ResponseEntity<Long> response = new ResponseEntity(id, HttpStatus.CREATED);
+        ServiceAddResponse id = requestServiceService.addRequestServiceSuccessStatus(requestServiceRequest);
+        ResponseEntity<ServiceAddResponse> response = new ResponseEntity(id, HttpStatus.CREATED);
         logger.debug("Add RequestService response : " + new Gson().toJson(response));
         return response;
     }
@@ -85,11 +87,20 @@ public class ServiceRequestAppController {
     }
 
     @GetMapping(Constants.UrlPath.URL_API_STATUS_SERVICE_REQUEST)
-    public ResponseEntity<?> statusServiceRequest(@RequestParam Long serviceRequestId) {
+    public ResponseEntity<?> statusServiceRequest(@RequestParam Long serviceRequestId, @RequestParam Long typeRequest) {
         logger.debug("statusServiceRequest request: " + serviceRequestId);
-        DetailServiceRequestResponse requestResponse = requestServiceService.detailServiceRequest(serviceRequestId);
+        DetailServiceRequestResponse requestResponse = requestServiceService.detailServiceRequest(serviceRequestId, typeRequest);
         ResponseEntity<DetailServiceRequestResponse> response = new ResponseEntity<>(requestResponse, HttpStatus.OK);
         logger.debug("statusServiceRequest response: " + new Gson().toJson(response));
+        return response;
+    }
+
+    @PostMapping(Constants.UrlPath.URL_API_UPDATE_REQUEST_SERVICE_APP + "/{id}")
+    public ResponseEntity<?> updateStatusRequestServiceApp(@PathVariable("id") Long requestId, @RequestParam Long statusId, @RequestParam Long typeRequest) {
+        logger.debug("updateStatusRequestServiceApp: request " + requestId + "-" + statusId + " - " + typeRequest);
+        requestServiceService.updateStatusRequestByTypeRequest(statusId, requestId, typeRequest);
+        ResponseEntity<String> response = new ResponseEntity<>("Update Success", HttpStatus.OK);
+        logger.debug("updateStatusRequestServiceApp response: " + new Gson().toJson(response));
         return response;
     }
 }

@@ -53,6 +53,9 @@ public class ResidentCard implements Serializable {
     @Column(name = "start_date")
     private Date startDate;
 
+    @Column(name = "is_use", columnDefinition = "1")
+    private Integer isUse;
+
     @PrePersist
     public void prePersist() {
         if (startDate == null) {
