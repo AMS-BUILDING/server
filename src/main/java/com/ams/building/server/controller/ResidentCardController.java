@@ -1,13 +1,16 @@
-package com.ams.building.server.controller.admin;
+package com.ams.building.server.controller;
 
 import com.ams.building.server.constant.Constants;
 import com.ams.building.server.response.ApiResponse;
+import com.ams.building.server.response.ResidentCardAddResponse;
+import com.ams.building.server.response.UserPrincipal;
 import com.ams.building.server.service.ResidentCardService;
 import com.google.gson.Gson;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -60,6 +63,17 @@ public class ResidentCardController {
         logger.debug("addResidentCard request : " + email);
         residentCardService.addResidentCard(email);
         ResponseEntity<String> response = new ResponseEntity<>("Add success", HttpStatus.OK);
+        logger.debug("addResidentCard response : " + new Gson().toJson(response));
+        return response;
+    }
+
+    @PostMapping(value = Constants.UrlPath.URL_API_ADD_RESIDENT_CARD_CLIENT)
+    public ResponseEntity<?> addResidentCard(@RequestParam Long amount) {
+        UserPrincipal currentUser = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication()
+                .getPrincipal();
+        Long accountId = currentUser.getId();
+        ResidentCardAddResponse serviceAddResponse = residentCardService.addResidentCard(amount, accountId);
+        ResponseEntity<ResidentCardAddResponse> response = new ResponseEntity<>(serviceAddResponse, HttpStatus.CREATED);
         logger.debug("addResidentCard response : " + new Gson().toJson(response));
         return response;
     }

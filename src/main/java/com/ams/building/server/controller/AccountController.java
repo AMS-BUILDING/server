@@ -1,4 +1,4 @@
-package com.ams.building.server.controller.admin;
+package com.ams.building.server.controller;
 
 import com.ams.building.server.bean.Account;
 import com.ams.building.server.constant.Constants;
@@ -7,6 +7,8 @@ import com.ams.building.server.constant.StatusCode;
 import com.ams.building.server.dao.SendEmailAccountDAO;
 import com.ams.building.server.exception.RestApiException;
 import com.ams.building.server.request.ForwardPasswordRequest;
+import com.ams.building.server.request.PasswordRequest;
+import com.ams.building.server.response.AccountAppResponse;
 import com.ams.building.server.response.LoginResponse;
 import com.ams.building.server.response.UserPrincipal;
 import com.ams.building.server.service.AccountService;
@@ -14,12 +16,14 @@ import com.ams.building.server.service.EmailService;
 import com.ams.building.server.utils.FileStore;
 import com.ams.building.server.utils.PropertiesReader;
 import com.ams.building.server.utils.RandomNumber;
+import com.google.gson.Gson;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -91,6 +95,29 @@ public class AccountController {
                 .getPrincipal();
         loginResponse.setId(currentUser.getId());
         accountService.changePassword(loginResponse);
+    }
+
+    @GetMapping(Constants.UrlPath.URL_API_DETAIL_ACCOUNT)
+    public ResponseEntity<?> detailAccountApp() {
+        UserPrincipal currentUser = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication()
+                .getPrincipal();
+        Long id = currentUser.getId();
+        AccountAppResponse accountAppResponse = accountService.detailAccountApp(id);
+        ResponseEntity<AccountAppResponse> response = new ResponseEntity<>(accountAppResponse, HttpStatus.OK);
+        logger.debug("detailAccountApp response: " + new Gson().toJson(response));
+        return response;
+    }
+
+    @PostMapping(Constants.UrlPath.URL_API_CHANGE_PASSWORD_APP)
+    public ResponseEntity<?> changePassword(@RequestBody PasswordRequest request) {
+        logger.debug("changePassword request: " + new Gson().toJson(request));
+        UserPrincipal currentUser = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication()
+                .getPrincipal();
+        Long id = currentUser.getId();
+        accountService.changePassword(id, request);
+        ResponseEntity<String> response = new ResponseEntity<>("Update success", HttpStatus.OK);
+        logger.debug("changePassword response: " + new Gson().toJson(response));
+        return response;
     }
 
 }

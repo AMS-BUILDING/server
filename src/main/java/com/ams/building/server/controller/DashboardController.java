@@ -1,4 +1,4 @@
-package com.ams.building.server.controller.admin;
+package com.ams.building.server.controller;
 
 import com.ams.building.server.constant.Constants;
 import com.ams.building.server.response.DashboardResponse;
