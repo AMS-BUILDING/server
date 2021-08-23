@@ -1720,6 +1720,7 @@ INSERT INTO `amsbuilding`.`apartment` (`account_id`, `building_id`, `room_number
 VALUES ('110', '1', '4');
 INSERT INTO `amsbuilding`.`apartment` (`account_id`, `building_id`, `room_number_id`)
 VALUES ('111', '1', '4');
+
 UPDATE `amsbuilding`.`apartment`
 SET `account_id` = '59'
 WHERE (`id` = '7');
@@ -1729,6 +1730,8 @@ INSERT INTO `amsbuilding`.`apartment` (`account_id`, `building_id`, `room_number
 VALUES ('113', '1', '7');
 INSERT INTO `amsbuilding`.`apartment` (`account_id`, `building_id`, `room_number_id`)
 VALUES ('114', '1', '7');
+
+
 UPDATE `amsbuilding`.`apartment`
 SET `account_id` = '60'
 WHERE (`id` = '9');
@@ -1943,20 +1946,6 @@ SET `account_id` = '91'
 WHERE (`id` = '169');
 INSERT INTO `amsbuilding`.`apartment` (`account_id`, `building_id`, `room_number_id`)
 VALUES ('173', '1', '166');
-INSERT INTO `amsbuilding`.`apartment` (`account_id`, `building_id`, `room_number_id`)
-VALUES ('174', '1', '166');
-INSERT INTO `amsbuilding`.`apartment` (`account_id`, `building_id`, `room_number_id`)
-VALUES ('175', '1', '167');
-INSERT INTO `amsbuilding`.`apartment` (`account_id`, `building_id`, `room_number_id`)
-VALUES ('176', '1', '167');
-INSERT INTO `amsbuilding`.`apartment` (`account_id`, `building_id`, `room_number_id`)
-VALUES ('177', '1', '168');
-INSERT INTO `amsbuilding`.`apartment` (`account_id`, `building_id`, `room_number_id`)
-VALUES ('178', '1', '169');
-INSERT INTO `amsbuilding`.`apartment` (`account_id`, `building_id`, `room_number_id`)
-VALUES ('179', '1', '169');
-INSERT INTO `amsbuilding`.`apartment` (`account_id`, `building_id`, `room_number_id`)
-VALUES ('180', '1', '169');
 UPDATE `amsbuilding`.`apartment`
 SET `account_id` = '92'
 WHERE (`id` = '176');
@@ -1969,22 +1958,6 @@ WHERE (`id` = '178');
 UPDATE `amsbuilding`.`apartment`
 SET `account_id` = '95'
 WHERE (`id` = '179');
-INSERT INTO `amsbuilding`.`apartment` (`account_id`, `building_id`, `room_number_id`)
-VALUES ('181', '1', '176');
-INSERT INTO `amsbuilding`.`apartment` (`account_id`, `building_id`, `room_number_id`)
-VALUES ('182', '1', '176');
-INSERT INTO `amsbuilding`.`apartment` (`account_id`, `building_id`, `room_number_id`)
-VALUES ('183', '1', '177');
-INSERT INTO `amsbuilding`.`apartment` (`account_id`, `building_id`, `room_number_id`)
-VALUES ('184', '1', '177');
-INSERT INTO `amsbuilding`.`apartment` (`account_id`, `building_id`, `room_number_id`)
-VALUES ('185', '1', '178');
-INSERT INTO `amsbuilding`.`apartment` (`account_id`, `building_id`, `room_number_id`)
-VALUES ('186', '1', '179');
-INSERT INTO `amsbuilding`.`apartment` (`account_id`, `building_id`, `room_number_id`)
-VALUES ('187', '1', '179');
-INSERT INTO `amsbuilding`.`apartment` (`account_id`, `building_id`, `room_number_id`)
-VALUES ('188', '1', '179');
 UPDATE `amsbuilding`.`apartment`
 SET `account_id` = '96'
 WHERE (`id` = '186');
@@ -1997,22 +1970,6 @@ WHERE (`id` = '188');
 UPDATE `amsbuilding`.`apartment`
 SET `account_id` = '99'
 WHERE (`id` = '189');
-INSERT INTO `amsbuilding`.`apartment` (`account_id`, `building_id`, `room_number_id`)
-VALUES ('189', '1', '186');
-INSERT INTO `amsbuilding`.`apartment` (`account_id`, `building_id`, `room_number_id`)
-VALUES ('190', '1', '186');
-INSERT INTO `amsbuilding`.`apartment` (`account_id`, `building_id`, `room_number_id`)
-VALUES ('191', '1', '187');
-INSERT INTO `amsbuilding`.`apartment` (`account_id`, `building_id`, `room_number_id`)
-VALUES ('192', '1', '187');
-INSERT INTO `amsbuilding`.`apartment` (`account_id`, `building_id`, `room_number_id`)
-VALUES ('193', '1', '188');
-INSERT INTO `amsbuilding`.`apartment` (`account_id`, `building_id`, `room_number_id`)
-VALUES ('194', '1', '189');
-INSERT INTO `amsbuilding`.`apartment` (`account_id`, `building_id`, `room_number_id`)
-VALUES ('195', '1', '189');
-INSERT INTO `amsbuilding`.`apartment` (`account_id`, `building_id`, `room_number_id`)
-VALUES ('196', '1', '189');
 UPDATE `amsbuilding`.`apartment`
 SET `account_id` = '100'
 WHERE (`id` = '196');
@@ -2025,21 +1982,3 @@ WHERE (`id` = '198');
 UPDATE `amsbuilding`.`apartment`
 SET `account_id` = '103'
 WHERE (`id` = '199');
-INSERT INTO `amsbuilding`.`apartment` (`account_id`, `building_id`, `room_number_id`)
-VALUES ('197', '1', '196');
-INSERT INTO `amsbuilding`.`apartment` (`account_id`, `building_id`, `room_number_id`)
-VALUES ('198', '1', '196');
-INSERT INTO `amsbuilding`.`apartment` (`account_id`, `building_id`, `room_number_id`)
-VALUES ('199', '1', '197');
-INSERT INTO `amsbuilding`.`apartment` (`account_id`, `building_id`, `room_number_id`)
-VALUES ('200', '1', '197');
-INSERT INTO `amsbuilding`.`apartment` (`account_id`, `building_id`, `room_number_id`)
-VALUES ('201', '1', '198');
-INSERT INTO `amsbuilding`.`apartment` (`account_id`, `building_id`, `room_number_id`)
-VALUES ('202', '1', '198');
-INSERT INTO `amsbuilding`.`apartment` (`account_id`, `building_id`, `room_number_id`)
-VALUES ('203', '1', '199');
-INSERT INTO `amsbuilding`.`apartment` (`account_id`, `building_id`, `room_number_id`)
-VALUES ('204', '1', '199');
-INSERT INTO `amsbuilding`.`apartment` (`account_id`, `building_id`, `room_number_id`)
-VALUES ('205', '1', '199');
