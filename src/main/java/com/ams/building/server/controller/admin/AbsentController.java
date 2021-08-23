@@ -41,9 +41,9 @@ public class AbsentController {
 
     @GetMapping(value = Constants.UrlPath.URL_API_EXPORT_SEARCH_ABSENT)
     public void exportAbsentDetailList(HttpServletResponse httpServletResponse,
-                                       @RequestParam(value = "name", required = false) String name,
-                                       @RequestParam(value = "identifyCard", required = false) String identifyCard,
-                                       @RequestParam(value = "absentType", required = false) Long absentType) {
+                                       @RequestParam(value = "name", required = false, defaultValue = "") String name,
+                                       @RequestParam(value = "identifyCard", required = false, defaultValue = "") String identifyCard,
+                                       @RequestParam(value = "absentType", required = false, defaultValue = "-1") Long absentType) {
         logger.debug("exportAbsentDetailList request : " + name + " - " + identifyCard + " - " + absentType);
         absentService.exportAbsentDetailList(httpServletResponse, name, identifyCard, absentType);
     }

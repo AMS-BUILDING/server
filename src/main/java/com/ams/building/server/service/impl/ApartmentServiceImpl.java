@@ -31,7 +31,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletResponse;
@@ -40,7 +39,6 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
@@ -98,7 +96,7 @@ public class ApartmentServiceImpl implements ApartmentService {
             os.write(bom);
             final PrintWriter w = new PrintWriter(new OutputStreamWriter(os, "UTF-8"));
             w.println("Tòa , Số Phòng , Tên chủ hộ");
-            if (!CollectionUtils.isEmpty((Collection<?>) apartments)) {
+            if (apartments.getTotalElements() > 0) {
                 for (Apartment apartment : apartments) {
                     w.println(writeApartment(apartment));
                 }

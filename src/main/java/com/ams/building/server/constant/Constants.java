@@ -23,11 +23,8 @@ public class Constants {
         }
 
         public static final String URL_API_SEARCH_ABSENT = "/admin/absent/search";
-        public static final String URL_API_EXPORT_SEARCH_ABSENT = "/admin/absent/export";
+        public static final String URL_API_EXPORT_SEARCH_ABSENT = "/mem-ber/absent/export";
         public static final String URL_API_INSERT_ABSENT = "/landlord/absent/add";
-
-        public static final String URL_API_UPDATE_ACCOUNT = "/admin/account/update";
-        public static final String URL_API_GET_ACCOUNT = "/admin/account/get-one";
 
         public static final String URL_API_INSERT_FEEDBACK = "/landlord/feedback/add";
         public static final String URL_API_SEARCH_FEEDBACK = "/admin/feedback/search";
@@ -38,7 +35,7 @@ public class Constants {
         public static final String URL_API_REMOVE_EMPLOYEE = "/admin/employee/remove";
         public static final String URL_API_UPDATE_EMPLOYEE = "/admin/employee/update";
         public static final String URL_API_ADD_EMPLOYEE = "/admin/employee/add";
-        public static final String URL_API_EXPORT_SEARCH_EMPLOYEE = "/manager-service/employee/export";
+        public static final String URL_API_EXPORT_SEARCH_EMPLOYEE = "/mem-ber/employee/export";
 
         public static final String URL_API_LIST_SERVICE = "/manager-service/service/list";
         public static final String URL_API_SEARCH_SERVICE = "/manager-service/service/search";
@@ -68,7 +65,7 @@ public class Constants {
         public static final String URL_API_ADD_APARTMENT_RESIDENT = "/admin/apartment/add/resident";
         public static final String URL_API_DISABLE_APARTMENT = "/admin/resident/remove-person";
         public static final String URL_API_SEARCH_APARTMENT_RESIDENT = "/admin/apartment/search/resident";
-        public static final String URL_API_EXPORT_APARTMENT = "/admin/apartment/export";
+        public static final String URL_API_EXPORT_APARTMENT = "/mem-ber/apartment/export";
         public static final String URL_API_FLOOR_LIST = "/admin/floor/list";
         public static final String URL_API_BLOCK_LIST = "/admin/block/list";
         public static final String URL_API_ROOM_NUMBER_SEARCH = "/admin/room-number/search";
@@ -133,37 +130,11 @@ public class Constants {
         public static final String PROPERTIES_VALIDATION = "validation.properties";
     }
 
-    public class AccountGender {
-        private AccountGender() {
-        }
-
-        public static final String GENDER_MALE = "Name";
-        public static final String GENDER_FEMALE = "Nữ";
-
-    }
-
     public class ResidentCard {
         private ResidentCard() {
         }
 
         public static final String PRICE = "50000";
-    }
-
-    public class StatusResidentCard {
-        private StatusResidentCard() {
-        }
-
-        public static final String SUCCESS = "Thành công";
-    }
-
-    public class Servicename {
-        public Servicename() {
-        }
-
-        public static final String GIAT_LA = "giặt là";
-        public static final String XET_NGHIEM_COVID = "xét nghiệm covid-19";
-        public static final String VE_SINH_CAN_HO = "vệ sinh căn hộ";
-        public static final String SUA_CHUA = "sửa chữa";
     }
 
     public class GeneralSerivce {
