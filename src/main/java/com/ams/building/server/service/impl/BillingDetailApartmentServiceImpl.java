@@ -1,6 +1,10 @@
 package com.ams.building.server.service.impl;
 
+import com.ams.building.server.bean.ApartmentBilling;
+import com.ams.building.server.constant.StatusCode;
+import com.ams.building.server.dao.ApartmentBillingDAO;
 import com.ams.building.server.dao.DetailApartmentBillingDAO;
+import com.ams.building.server.exception.RestApiException;
 import com.ams.building.server.response.ApiResponse;
 import com.ams.building.server.response.BillingCardTotalResponse;
 import com.ams.building.server.response.BillingResidentCardResponse;
@@ -12,12 +16,18 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+
+import java.util.Objects;
 
 @Service
 public class BillingDetailApartmentServiceImpl implements BillingDetailApartmentService {
 
     @Autowired
     private DetailApartmentBillingDAO detailApartmentBillingDAO;
+
+    @Autowired
+    private ApartmentBillingDAO apartmentBillingDAO;
 
     @Override
     public ApiResponse searchBillingDetailAboutServiceByMonth(Integer page, Integer size, String month) {
@@ -49,6 +59,18 @@ public class BillingDetailApartmentServiceImpl implements BillingDetailApartment
         Page<BillingVehicleCardResponse> cardResponses = detailApartmentBillingDAO.searchBillingDetailAboutVehicleCardByAccountIdAndMonth(accountId, month, pageable);
         ApiResponse response = ApiResponse.builder().totalElement(cardResponses.getTotalElements()).data(cardResponses.toList()).build();
         return response;
+    }
+
+    @Override
+    public void updateStatus(Long id, Long statusId) {
+        if (StringUtils.isEmpty(id) || StringUtils.isEmpty(statusId)) {
+            throw new RestApiException(StatusCode.DATA_EMPTY);
+        }
+        ApartmentBilling billing = apartmentBillingDAO.getDetailApartmentBilling(id);
+        if (Objects.isNull(billing)) {
+            throw new RestApiException(StatusCode.APARTMENT_BILLING_NOT_EXIST);
+        }
+        apartmentBillingDAO.updateStatusBilling(statusId, id);
     }
 
 }

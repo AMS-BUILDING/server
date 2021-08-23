@@ -93,6 +93,7 @@ public class Constants {
         public static final String URL_API_VEHICLE_BY_ACCOUNT_ID_AND_VEHICLE_TYPE = "/manager-service/vehicle-card/search/account-id/vehicle-id";
         public static final String URL_API_FEE_APARTMENT_SEARCH_RESIDENT_CARD = "/admin/fee-apartment/search/resident-card";
         public static final String URL_API_FEE_APARTMENT_SEARCH_VEHICLE_CARD = "/admin/fee-apartment/search/vehicle-card";
+        public static final String URL_API_UPDATE_STATUS_FEE_APARTMENT = "/admin/fee-apartment/update";
 
         public static final String URL_API_LOGIN = "/login";
         public static final String URL_API_PROFILE = "/member/account/profile";

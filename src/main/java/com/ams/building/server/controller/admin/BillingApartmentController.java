@@ -11,6 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -85,4 +87,12 @@ public class BillingApartmentController {
         return response;
     }
 
+    @PostMapping(value = Constants.UrlPath.URL_API_UPDATE_STATUS_FEE_APARTMENT)
+    public ResponseEntity<?> updateStatusBilling(@PathVariable("id") Long id, @RequestParam Long statusId) {
+        logger.debug("updateStatusBilling request : " + id);
+        billingDetailApartmentService.updateStatus(id, statusId);
+        ResponseEntity<String> response = new ResponseEntity<>("Update Status success", HttpStatus.OK);
+        logger.debug("updateStatusBilling response : " + new Gson().toJson(response));
+        return response;
+    }
 }

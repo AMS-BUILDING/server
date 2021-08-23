@@ -12,4 +12,6 @@ public interface BillingDetailApartmentService {
 
     ApiResponse searchBillingDetailAboutVehicleCardByAccountIdAndMonth(Integer page, Integer size, Long accountId, String month);
 
+    void updateStatus(Long id, Long statusId);
+
 }
