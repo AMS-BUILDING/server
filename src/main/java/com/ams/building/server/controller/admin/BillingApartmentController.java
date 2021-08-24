@@ -87,7 +87,7 @@ public class BillingApartmentController {
         return response;
     }
 
-    @PostMapping(value = Constants.UrlPath.URL_API_UPDATE_STATUS_FEE_APARTMENT)
+    @PostMapping(value = Constants.UrlPath.URL_API_UPDATE_STATUS_FEE_APARTMENT + "/{id}")
     public ResponseEntity<?> updateStatusBilling(@PathVariable("id") Long id, @RequestParam Long statusId) {
         logger.debug("updateStatusBilling request : " + id);
         billingDetailApartmentService.updateStatus(id, statusId);
@@ -95,4 +95,5 @@ public class BillingApartmentController {
         logger.debug("updateStatusBilling response : " + new Gson().toJson(response));
         return response;
     }
+
 }

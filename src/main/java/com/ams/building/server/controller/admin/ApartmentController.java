@@ -135,9 +135,9 @@ public class ApartmentController {
         emailService.sendSimpleMessage(residentRequest.getEmail(), PropertiesReader.getProperty(PropertyKeys.SEND_EMAIL_ADD_APARTMENT), content.toString());
     }
 
-    @PostMapping(value = Constants.UrlPath.URL_API_DISABLE_APARTMENT)
-    public ResponseEntity<?> removeResident(@PathVariable("id") Long id) {
-        accountService.delete(id);
+    @PostMapping(value = Constants.UrlPath.URL_API_DISABLE_APARTMENT + "/{id}")
+    public ResponseEntity<?> removeResident(@PathVariable("id") Long id, @RequestParam Long apartmentId) {
+        accountService.delete(id, apartmentId);
         ResponseEntity<String> response = new ResponseEntity<>("remove success", HttpStatus.CREATED);
         return response;
     }

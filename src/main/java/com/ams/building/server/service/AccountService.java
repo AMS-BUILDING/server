@@ -25,7 +25,7 @@ public interface AccountService {
 
     void updateProfile(LoginResponse loginResponse);
 
-    void delete(Long id);
+    void delete(Long id, Long apartmentId);
 
     LoginResponse getById(Long id);
 
