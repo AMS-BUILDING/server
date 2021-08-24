@@ -468,4 +468,16 @@ ALTER TABLE `amsbuilding`.`vehicle_card`
 ALTER TABLE `amsbuilding`.`resident_card`
     ADD COLUMN `is_use` INT NULL DEFAULT 1 AFTER `billing_month`;
 
+ALTER TABLE `amsbuilding`.`notification`
+    ADD COLUMN `account_id` BIGINT NULL AFTER `id`,
+    ADD INDEX `notification_ibfk_1_idx` (`account_id` ASC) VISIBLE;
 
+ALTER TABLE `amsbuilding`.`notification`
+    ADD CONSTRAINT `notification_ibfk_1`
+        FOREIGN KEY (`account_id`)
+            REFERENCES `amsbuilding1`.`account` (`id`)
+            ON DELETE NO ACTION
+            ON UPDATE NO ACTION;
+
+ALTER TABLE `amsbuilding`.`apartment_billing`
+    ADD COLUMN `is_read` TINYINT NULL DEFAULT 0 AFTER `billing_month`;

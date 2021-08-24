@@ -12,4 +12,5 @@ public class ChangePasswordRequest {
     private Long id;
     private String password;
     private String newPassword;
+
 }

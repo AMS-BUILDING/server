@@ -24,7 +24,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletResponse;
@@ -32,7 +31,6 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
@@ -93,7 +91,7 @@ public class AbsentServiceImpl implements AbsentService {
             os.write(bom);
             final PrintWriter w = new PrintWriter(new OutputStreamWriter(os, "UTF-8"));
             w.println("Tên ,Chứng minh thư,Loại đăng kí,Lí do,Quê quán, Số block, Số phòng, Ngày bắt đầu,Ngày kết thúc");
-            if (!CollectionUtils.isEmpty((Collection<?>) absentDetails)) {
+            if (absentDetails.getTotalElements() > 0) {
                 for (AbsentDetail absentDetail : absentDetails) {
                     w.println(writeAbsentDetail(absentDetail));
                 }

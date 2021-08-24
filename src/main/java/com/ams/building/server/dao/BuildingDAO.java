@@ -10,4 +10,5 @@ public interface BuildingDAO extends JpaRepository<Building, Long> {
 
     @Query("SELECT b FROM Building b WHERE b.id =?1")
     Building getDetailById(Long id);
+
 }

@@ -20,7 +20,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletResponse;
@@ -28,7 +27,6 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
@@ -51,7 +49,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     private RoleDAO roleDAO;
 
     @Override
-    public ApiResponse searchAccountByNamePhoneIdentifyCardAndRoleAndPosition(Integer page, Integer size, String name, String phoneNumber, String identifyCard, Long position, String roles) {
+    public ApiResponse searchAccountByNamePhoneIdentifyCardAndRoleAndPosition(Integer page, Integer size, String name, String phoneNumber, String identifyCard, Long position, List<String> roles) {
         Pageable pageable = PageRequest.of(page, size);
         Page<Account> accounts;
         if (position == -1) {
@@ -251,14 +249,14 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public void downloadSearchEmployee(HttpServletResponse response, String name, String phoneNumber, String identifyCard, Long position, String roles) {
+    public void downloadSearchEmployee(HttpServletResponse response, String name, String phoneNumber, String identifyCard, Long position, List<String> roles) {
         try {
             Pageable pageable = PageRequest.of(0, 5000);
             Page<Account> accounts;
-            if (position != -1) {
-                accounts = accountDao.searchAccountByNamePhoneIdentifyCardAndRole(name, identifyCard, phoneNumber, identifyCard, pageable);
+            if (position == -1) {
+                accounts = accountDao.searchAccountByNamePhoneIdentifyCardAndRole(name, phoneNumber, identifyCard, roles, pageable);
             } else {
-                accounts = accountDao.searchAccountByNamePhoneIdentifyCardAndRoleAndPosition(name, identifyCard, phoneNumber, position, roles, pageable);
+                accounts = accountDao.searchAccountByNamePhoneIdentifyCardAndRoleAndPosition(name, phoneNumber, identifyCard, position, roles, pageable);
             }
             String csvFileName = "Employee.csv";
             response.setContentType(Constants.TEXT_CSV);
@@ -271,7 +269,7 @@ public class EmployeeServiceImpl implements EmployeeService {
             os.write(bom);
             final PrintWriter w = new PrintWriter(new OutputStreamWriter(os, "UTF-8"));
             w.println("Tên,Giới tính,Số điện thoại,Email,Ngày tháng năm sinh,Chứng minh thư, Địa chỉ hiện tại, Quê quán, Vị trí ");
-            if (!CollectionUtils.isEmpty((Collection<?>) accounts)) {
+            if (accounts.getTotalElements() > 0) {
                 for (Account account : accounts) {
                     w.println(writeEmployee(account));
                 }
@@ -334,4 +332,5 @@ public class EmployeeServiceImpl implements EmployeeService {
         }
         return content;
     }
+
 }

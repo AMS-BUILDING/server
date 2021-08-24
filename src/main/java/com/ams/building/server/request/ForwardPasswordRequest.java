@@ -11,4 +11,5 @@ public class ForwardPasswordRequest {
 
     private String token;
     private String password;
+
 }

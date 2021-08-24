@@ -13,4 +13,5 @@ public interface DetailSubServiceDAO extends JpaRepository<DetailSubService, Lon
 
     @Query("SELECT d FROM DetailSubService d WHERE d.service.id = ?1")
     List<DetailSubService> getDetailSubServiceBySubServiceId(Long subServiceId);
+
 }

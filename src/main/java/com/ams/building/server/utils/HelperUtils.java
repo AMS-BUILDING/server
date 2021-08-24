@@ -19,6 +19,6 @@ public class HelperUtils {
         Locale localeVN = new Locale("vi", "VN");
         NumberFormat currencyVN = NumberFormat.getCurrencyInstance(localeVN);
         return currencyVN.format(d);
-
     }
+
 }

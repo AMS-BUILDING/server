@@ -21,6 +21,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api")
@@ -40,7 +42,9 @@ public class EmployeeController {
                                             @RequestParam(value = "positionId", required = false, defaultValue = "-1") Long positionId) {
         logger.debug("searchEmployee request : " + name + " - " + identifyCard + " - " + phoneNumber + " - " + positionId);
         Integer pageSize = 5;
-        String roles = String.valueOf(RoleEnum.ROLE_EMPLOYEE);
+        String role = String.valueOf(RoleEnum.ROLE_EMPLOYEE);
+        List<String> roles = new ArrayList<>();
+        roles.add(role);
         ApiResponse apiResponse = employeeService.searchAccountByNamePhoneIdentifyCardAndRoleAndPosition(pageNo, pageSize, name, phoneNumber, identifyCard, positionId, roles);
         ResponseEntity<ApiResponse> response = new ResponseEntity<>(apiResponse, HttpStatus.OK);
         logger.debug("searchEmployee response : " + new Gson().toJson(response));
@@ -89,7 +93,9 @@ public class EmployeeController {
                                      @RequestParam(value = "phoneNumber", required = false, defaultValue = "") String phoneNumber,
                                      @RequestParam(value = "identifyCard", required = false, defaultValue = "") String identifyCard,
                                      @RequestParam(value = "positionId", required = false, defaultValue = "-1") Long positionId) {
-        String roles = String.valueOf(RoleEnum.ROLE_EMPLOYEE);
+        String role = String.valueOf(RoleEnum.ROLE_EMPLOYEE);
+        List<String> roles = new ArrayList<>();
+        roles.add(role);
         employeeService.downloadSearchEmployee(httpServletResponse, name, phoneNumber, identifyCard, positionId, roles);
     }
 

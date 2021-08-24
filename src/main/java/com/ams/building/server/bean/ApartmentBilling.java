@@ -45,4 +45,8 @@ public class ApartmentBilling implements Serializable {
     @Column(name = "billing_month")
     private String billingMonth;
 
+
+    @Column(name = "is_read")
+    private Boolean isRead;
+
 }

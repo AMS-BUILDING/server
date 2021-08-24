@@ -72,7 +72,8 @@ public enum StatusCode {
     VEHICLE_BRANCH_EMPTY(465, PropertiesReader.getProperty(PropertyKeys.VEHICLE_BRANCH_EMPTY)),
     LICENSE_PLATE_EMPTY(466, PropertiesReader.getProperty(PropertyKeys.LICENSE_PLATE_EMPTY)),
     VEHICLE_COLOR_EMPTY(467, PropertiesReader.getProperty(PropertyKeys.VEHICLE_COLOR_EMPTY)),
-    VEHICLE_REGISTER_BEFORE(468, PropertiesReader.getProperty(PropertyKeys.VEHICLE_REGISTER_BEFORE));
+    VEHICLE_REGISTER_BEFORE(468, PropertiesReader.getProperty(PropertyKeys.VEHICLE_REGISTER_BEFORE)),
+    ACCOUNT_CAN_NOT_REMOVE(469, PropertiesReader.getProperty(PropertyKeys.ACCOUNT_CAN_NOT_REMOVE));
 
     private Integer status;
 

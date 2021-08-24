@@ -2,6 +2,7 @@ package com.ams.building.server.service.impl;
 
 import com.ams.building.server.bean.Account;
 import com.ams.building.server.bean.Apartment;
+import com.ams.building.server.bean.Notification;
 import com.ams.building.server.bean.Position;
 import com.ams.building.server.bean.Role;
 import com.ams.building.server.bean.RoomNumber;
@@ -9,6 +10,7 @@ import com.ams.building.server.constant.Constants;
 import com.ams.building.server.constant.StatusCode;
 import com.ams.building.server.dao.AccountDAO;
 import com.ams.building.server.dao.ApartmentDAO;
+import com.ams.building.server.dao.NotificationDAO;
 import com.ams.building.server.exception.RestApiException;
 import com.ams.building.server.request.ApartmentOwnerRequest;
 import com.ams.building.server.request.PasswordRequest;
@@ -50,6 +52,9 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
 
     @Autowired
     private ApartmentDAO apartmentDAO;
+
+    @Autowired
+    private NotificationDAO notificationDAO;
 
     @Override
     public void add(LoginResponse loginResponse) {
@@ -280,15 +285,30 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
         accountDao.save(account);
     }
 
+    @Transactional
     @Override
-    public void delete(Long id) {
-        if (StringUtils.isEmpty(id)) {
+    public void delete(Long id, Long apartmentId) {
+        if (StringUtils.isEmpty(id) || StringUtils.isEmpty(apartmentId)) {
             throw new RestApiException(StatusCode.DATA_EMPTY);
         }
         Account account = accountDao.getAccountById(id);
         if (Objects.isNull(account)) {
             throw new RestApiException(StatusCode.ACCOUNT_NOT_EXIST);
         }
+        Apartment apartment = apartmentDAO.getApartmentById(apartmentId);
+        if (Objects.isNull(apartment)) {
+            throw new RestApiException(StatusCode.APARTMENT_NOT_EXIST);
+        }
+        if (account.getRole().getId() == 3) {
+            throw new RestApiException(StatusCode.ACCOUNT_CAN_NOT_REMOVE);
+        }
+        List<Notification> listNotificationByAccount = notificationDAO.listNotificationByAccountId(id);
+        if (!listNotificationByAccount.isEmpty()) {
+            for (Notification n : listNotificationByAccount) {
+                notificationDAO.deleteById(n.getId());
+            }
+        }
+        apartmentDAO.deleteById(apartmentId);
         accountDao.deleteById(id);
     }
 

@@ -32,4 +32,5 @@ public class ManagementPersonController {
         logger.debug("managementList response: " + new Gson().toJson(response));
         return response;
     }
+
 }

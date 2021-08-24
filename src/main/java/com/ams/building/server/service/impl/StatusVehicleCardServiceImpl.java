@@ -35,4 +35,5 @@ public class StatusVehicleCardServiceImpl implements StatusVehicleCardService {
         response.setStatusName(card.getStatusName());
         return response;
     }
+
 }

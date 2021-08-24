@@ -3,6 +3,7 @@ package com.ams.building.server.sercurity;
 import com.ams.building.server.bean.Account;
 import com.ams.building.server.constant.StatusCode;
 import com.ams.building.server.dao.AccountDAO;
+import com.ams.building.server.dao.ApartmentDAO;
 import com.ams.building.server.exception.JwtCustomException;
 import com.ams.building.server.exception.RestApiException;
 import com.ams.building.server.response.TokenResponse;
@@ -43,6 +44,9 @@ public class JwtTokenProvider {
     @Autowired
     private AccountDAO accountDAO;
 
+    @Autowired
+    private ApartmentDAO apartmentDAO;
+
     @PostConstruct
     protected void init() {
         secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
@@ -66,10 +70,15 @@ public class JwtTokenProvider {
                 .signWith(SignatureAlgorithm.HS256, secretKey)//
                 .compact();
         TokenResponse authenDTO = TokenResponse.builder().build();
+        Long roleId = account.getRole().getId();
         authenDTO.setExpirationTime(validityInMilliseconds);
         authenDTO.setAccessToken(accessToken);
-        authenDTO.setRoleId(account.getRole().getId());
+        authenDTO.setRoleId(roleId);
         authenDTO.setAccountId(account.getId());
+        if (roleId == 3 || roleId == 5) {
+            String roomNumber = apartmentDAO.getApartmentByAccountId(account.getId()).getRoomNumber().getRoomName();
+            authenDTO.setRoomNumber(roomNumber);
+        }
         return authenDTO;
     }
 

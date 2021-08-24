@@ -526,4 +526,5 @@ public class RequestServiceServiceImpl implements RequestServiceService {
         response.setMinutes(minutes);
         return response;
     }
+
 }
