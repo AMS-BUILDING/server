@@ -42,6 +42,6 @@ jobs:
           password: ${{ secrets.PASSWORD }}
           port: ${{ secrets.PORT }}
           script: |
-            sudo systemctl stop yourlure-be
+            sudo systemctl stop deploy-be
             sudo sudo systemctl daemon-reload
-            sudo systemctl start yourlure-be
+            sudo systemctl start deploy-be
