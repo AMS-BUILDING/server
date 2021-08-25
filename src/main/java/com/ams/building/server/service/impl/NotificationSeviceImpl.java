@@ -28,6 +28,7 @@ import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import static com.ams.building.server.utils.DateTimeUtils.DD_MM_YYYY;
 import static com.ams.building.server.utils.DateTimeUtils.HH_MM;
@@ -51,12 +52,10 @@ public class NotificationSeviceImpl implements NotificationService {
 
     @Override
     public ApiResponse searchNotification(String title, Integer page, Integer size) {
-        List<NotificationResponse> notificationDTOList = new ArrayList<>();
         Pageable pageable = PageRequest.of(page, size);
-        Page<Notification> notifications = notificationDAO.searchNotificationByTitle(title, pageable);
-        notifications.forEach(s -> notificationDTOList.add(convert(s)));
+        Page<NotificationResponse> notifications = notificationDAO.searchNotificationByTitle(title, pageable);
         Long totalElements = notifications.getTotalElements();
-        ApiResponse apiResponse = ApiResponse.builder().data(notificationDTOList).totalElement(totalElements).build();
+        ApiResponse apiResponse = ApiResponse.builder().data(notifications.getContent()).totalElement(totalElements).build();
         return apiResponse;
     }
 
@@ -164,13 +163,6 @@ public class NotificationSeviceImpl implements NotificationService {
         Integer totalNotificationGeneral = notificationDAO.countNotificationNotRead(accountId);
         Integer totalNotificationPrivate = apartmentBillingDAO.countNotificationNotReadPrivate(accountId);
         return totalNotificationGeneral + totalNotificationPrivate;
-    }
-
-    private NotificationResponse convert(Notification notification) {
-        NotificationResponse response = NotificationResponse.builder().build();
-        response.setDescription(notification.getDescription());
-        response.setTitle(notification.getTitle());
-        return response;
     }
 
     private NotificationAppResponse convertToNotificationApp(Notification notification) {
