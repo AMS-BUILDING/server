@@ -236,7 +236,6 @@ public class RequestServiceServiceImpl implements RequestServiceService {
             requestService.setStatusServiceRequest(status);
             requestService.setAccount(account);
             requestService.setStartDate(convertStringToDate(requestServiceRequest.getStartDate(), DateTimeUtils.YYYY_MM_DD_HH_MM));
-            requestService.setDescription(requestServiceRequest.getDescription());
             requestService.setEndDate(convertStringToDate(requestServiceRequest.getEndDate(), DateTimeUtils.YYYY_MM_DD_HH_MM));
             requestServiceDAO.save(requestService);
         } else if (requestId == 5L) {
@@ -244,7 +243,6 @@ public class RequestServiceServiceImpl implements RequestServiceService {
             requestService.setStatusServiceRequest(status);
             requestService.setAccount(account);
             requestService.setStartDate(convertStringToDate(requestServiceRequest.getStartDate(), DateTimeUtils.YYYY_MM_DD_HH_MM));
-            requestService.setDescription(requestServiceRequest.getDescription());
             requestService.setEndDate(convertStringToDate(requestServiceRequest.getEndDate(), DateTimeUtils.YYYY_MM_DD_HH_MM));
             requestServiceDAO.save(requestService);
         } else {
@@ -253,7 +251,6 @@ public class RequestServiceServiceImpl implements RequestServiceService {
             requestService.setStatusServiceRequest(status);
             requestService.setAccount(account);
             requestService.setStartDate(convertStringToDate(requestServiceRequest.getStartDate(), DateTimeUtils.YYYY_MM_DD_HH_MM));
-            requestService.setDescription(requestServiceRequest.getDescription());
             requestService.setEndDate(convertStringToDate(requestServiceRequest.getEndDate(), DateTimeUtils.YYYY_MM_DD_HH_MM));
             requestServiceDAO.save(requestService);
         }
@@ -463,7 +460,7 @@ public class RequestServiceServiceImpl implements RequestServiceService {
         }
         response.setId(requestService.getId());
         response.setBlock(apartment.getRoomNumber().getFloorBlock().getBlock().getBlockName());
-        response.setServiceName(requestService.getReasonDetailSubService().getReasonName());
+        response.setServiceName(requestService.getReasonDetailSubService().getDetailSubService().getDetailSubServiceName());
         response.setStatus(requestService.getStatusServiceRequest().getRequestName());
         response.setRoomName(apartment.getRoomNumber().getRoomName());
         response.setName(requestService.getAccount().getName());
