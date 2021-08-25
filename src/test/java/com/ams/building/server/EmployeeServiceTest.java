@@ -4,6 +4,7 @@ import com.ams.building.server.bean.Account;
 import com.ams.building.server.bean.Position;
 import com.ams.building.server.bean.Role;
 import com.ams.building.server.constant.Constants;
+import com.ams.building.server.constant.RoleEnum;
 import com.ams.building.server.constant.StatusCode;
 import com.ams.building.server.dao.AccountDAO;
 import com.ams.building.server.dao.PositionDAO;
@@ -65,18 +66,19 @@ public class EmployeeServiceTest {
 
     @Test
     public void searchAccountByNamePhoneIdentifyCardAndRoleAndPosition() {
-        Mockito.when(accountDao.searchAccountByNamePhoneIdentifyCardAndRole(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyObject()))
+        Mockito.when(accountDao.searchAccountByNamePhoneIdentifyCardAndRole(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyList(), Mockito.anyObject()))
                 .thenReturn(Accounts);
-        Mockito.when(accountDao.searchAccountByNamePhoneIdentifyCardAndRoleAndPosition(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyLong(), Mockito.anyString(), Mockito.anyObject()))
+        Mockito.when(accountDao.searchAccountByNamePhoneIdentifyCardAndRoleAndPosition(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyLong(), Mockito.anyList(), Mockito.anyObject()))
                 .thenReturn(Accounts);
         List<EmployeeResponse> accountDTOS = new ArrayList<>();
         Accounts.forEach(a -> accountDTOS.add(convertEmployee(a)));
         Long totalPage = Accounts.getTotalElements();
 
         ApiResponse response = ApiResponse.builder().data(accountDTOS).totalElement(totalPage).build();
-
-        employeeService.searchAccountByNamePhoneIdentifyCardAndRoleAndPosition(1, 5, "Manh", "0356974585", "026851698716", 3L, "Landlord");
-        employeeService.searchAccountByNamePhoneIdentifyCardAndRoleAndPosition(1, 5, "Manh", "0356974585", "026851698716", -1L, "Landlord");
+        List<String>roles= new ArrayList<>();
+        roles.add(RoleEnum.ROLE_LANDLORD.toString());
+        employeeService.searchAccountByNamePhoneIdentifyCardAndRoleAndPosition(1, 5, "Manh", "0356974585", "026851698716", 3L,roles );
+        employeeService.searchAccountByNamePhoneIdentifyCardAndRoleAndPosition(1, 5, "Manh", "0356974585", "026851698716", -1L, roles);
     }
 
     @Test
@@ -184,9 +186,9 @@ public class EmployeeServiceTest {
 
     @Test
     public void downloadSearchEmployee() {
-        Mockito.when(accountDao.searchAccountByNamePhoneIdentifyCardAndRole(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyObject()))
+        Mockito.when(accountDao.searchAccountByNamePhoneIdentifyCardAndRole(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyList(), Mockito.anyObject()))
                 .thenReturn(Accounts);
-        Mockito.when(accountDao.searchAccountByNamePhoneIdentifyCardAndRoleAndPosition(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyLong(), Mockito.anyString(), Mockito.anyObject()))
+        Mockito.when(accountDao.searchAccountByNamePhoneIdentifyCardAndRoleAndPosition(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyLong(), Mockito.anyList(), Mockito.anyObject()))
                 .thenReturn(Accounts);
         List<EmployeeResponse> accountDTOS = new ArrayList<>();
         Accounts.forEach(a -> accountDTOS.add(convertEmployee(a)));
