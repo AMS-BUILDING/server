@@ -2,8 +2,8 @@ package com.ams.building.server.service.impl;
 
 import com.ams.building.server.dao.AccountDAO;
 import com.ams.building.server.dao.ApartmentDAO;
-import com.ams.building.server.dao.DashboardAccountDao;
-import com.ams.building.server.dao.DashboardRequestServiceDao;
+import com.ams.building.server.dao.DashboardAccountDAO;
+import com.ams.building.server.dao.DashboardRequestServiceDAO;
 import com.ams.building.server.dao.DashboardVehicleCardDAO;
 import com.ams.building.server.dao.RequestServiceDAO;
 import com.ams.building.server.response.DashboardResponse;
@@ -38,10 +38,10 @@ public class DashboardServiceImpl implements DashBoardService {
     private RequestServiceDAO requestServiceDAO;
 
     @Autowired
-    private DashboardRequestServiceDao dashboardRequestServiceDao;
+    private DashboardRequestServiceDAO dashboardRequestServiceDao;
 
     @Autowired
-    private DashboardAccountDao dashboardAccountDao;
+    private DashboardAccountDAO dashboardAccountDao;
 
     @Autowired
     DashboardVehicleCardDAO dashboardVehicleCardDAO;

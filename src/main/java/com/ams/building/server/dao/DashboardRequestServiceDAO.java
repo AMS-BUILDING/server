@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface DashboardRequestServiceDao extends CrudRepository<RequestService, Long> {
+public interface DashboardRequestServiceDAO extends CrudRepository<RequestService, Long> {
 
     @Query(value = "SELECT year (s.start_date) AS date,sum(r.price) AS total FROM service_request s" +
             " join reason_detail_sub_service r" +

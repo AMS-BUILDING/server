@@ -15,11 +15,11 @@ import java.util.List;
 @Repository
 public interface AccountDAO extends JpaRepository<Account, Long> {
 
-    @Query("SELECT a FROM Account a WHERE a.name LIKE CONCAT('%',:name,'%') AND a.phone LIKE CONCAT('%',:phoneNumber,'%') AND a.identifyCard LIKE CONCAT('%',:identifyCard,'%') AND a.role.name IN (:roles) AND a.position.id =:position  ORDER BY a.id")
+    @Query("SELECT a FROM Account a WHERE a.name LIKE CONCAT('%',:name,'%') AND a.phone LIKE CONCAT('%',:phoneNumber,'%') AND a.identifyCard LIKE CONCAT('%',:identifyCard,'%') AND a.role.name IN (:roles) AND a.position.id =:position  ORDER BY a.id DESC")
     Page<Account> searchAccountByNamePhoneIdentifyCardAndRoleAndPosition(@Param("name") String name, @Param("phoneNumber")
             String phoneNumber, @Param("identifyCard") String identifyCard, @Param("position") Long positionId, @Param("roles") List<String> roles, Pageable pageable);
 
-    @Query(" SELECT a FROM Account a WHERE a.name LIKE CONCAT('%',:name,'%') AND a.phone LIKE CONCAT('%',:phoneNumber,'%') AND a.identifyCard LIKE CONCAT('%',:identifyCard,'%') AND a.role.name IN (:roles) ORDER BY a.id")
+    @Query(" SELECT a FROM Account a WHERE a.name LIKE CONCAT('%',:name,'%') AND a.phone LIKE CONCAT('%',:phoneNumber,'%') AND a.identifyCard LIKE CONCAT('%',:identifyCard,'%') AND a.role.name IN (:roles) ORDER BY a.id DESC")
     Page<Account> searchAccountByNamePhoneIdentifyCardAndRole(@Param("name") String name, @Param("phoneNumber")
             String phoneNumber, @Param("identifyCard") String identifyCard, @Param("roles") List<String> roles, Pageable pageable);
 
@@ -40,10 +40,10 @@ public interface AccountDAO extends JpaRepository<Account, Long> {
     @Query("SELECT a FROM Account a WHERE a.role.id IN (1,2)")
     List<Account> managementAccount();
 
-    @Query("SELECT a FROM Account a WHERE a.email IN (:emails)")
+    @Query("SELECT a FROM Account a WHERE a.email IN (:emails) ORDER BY a.id DESC")
     List<Account> getAccountByListEmail(@Param("emails") List<String> emails);
 
-    @Query("SELECT a FROM Account a WHERE a.identifyCard IN (:identifyCards)")
+    @Query("SELECT a FROM Account a WHERE a.identifyCard IN (:identifyCards) ORDER BY a.id DESC")
     List<Account> getAccountByListIdentifyCard(@Param("identifyCards") List<String> identifyCards);
 
     @Query("SELECT count(a.id) FROM Account a where a.enabled is not null ")
