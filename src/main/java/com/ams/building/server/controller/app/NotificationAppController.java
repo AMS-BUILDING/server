@@ -30,7 +30,10 @@ public class NotificationAppController {
 
     @GetMapping(value = Constants.UrlPath.URL_API_LIST_NOTIFICATION)
     public ResponseEntity<?> listNotificationGeneral() {
-        List<NotificationAppResponse> notificationAppControllers = notificationService.listNotificationAppGeneral();
+        UserPrincipal currentUser = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication()
+                .getPrincipal();
+        Long accountId = currentUser.getId();
+        List<NotificationAppResponse> notificationAppControllers = notificationService.listNotificationAppGeneral(accountId);
         ResponseEntity<List<NotificationAppResponse>> response = new ResponseEntity<>(notificationAppControllers, HttpStatus.OK);
         logger.debug("listNotificationGeneral response : " + new Gson().toJson(response));
         return response;

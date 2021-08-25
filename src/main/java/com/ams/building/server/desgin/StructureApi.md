@@ -64,6 +64,7 @@
 ```
 
 *Output*
+
 ```java
 Update profile success
 ```
@@ -110,12 +111,14 @@ Download image success
 | newPassword      | new pass of user    |true|String |
 
 *Example*
+
 ```java
 {
         "oldPassword": "123456aA@",
         "newPassword": "123456aA@"
         }
 ```
+
 *Output*
 
 ```java
@@ -123,7 +126,9 @@ Change password success
 ```
 
 ## 7. Absent
+
 ### 7.1 Search Absent
+
 #### GET : localhost:8080/api/admin/absent/search
 
 | Request Param      | Description | Require| Default Value|Data type|
@@ -134,6 +139,7 @@ Change password success
 | pageNo      | Page No   |true|0|Integer|
 
 *Output*
+
 ```java
 "totalElement": 9,
         "data": [
@@ -202,6 +208,7 @@ Change password success
 ```
 
 ### 7.2 Export  Absent
+
 #### GET : localhost:8080/api/admin/absent/export
 
 | Request Param      | Description | Require| Default Value|Data type|
@@ -211,6 +218,7 @@ Change password success
 | absentType      | Type : Tạm Trú or Tạm Vắng   |true|-1|Long|
 
 *Output*
+
 ```java
 Tên ,Chứng minh thư,Loại đăng kí,Lí do,Quê quán, Số block, Số phòng, Ngày bắt đầu,Ngày kết thúc
         hang,163448995,tạm trú,aaaa,aaaaa,A1,A102,06/06/2020,06/06/2020
@@ -225,9 +233,11 @@ Tên ,Chứng minh thư,Loại đăng kí,Lí do,Quê quán, Số block, Số ph
 ```
 
 ### 7.3 Add  Absent
+
 #### POST : localhost:8080/api/landlord/absent/add
 
 *Requets Body: Example*
+
 ```java
 {
         "name": "Nguyễn Thúy An",
@@ -243,11 +253,15 @@ Tên ,Chứng minh thư,Loại đăng kí,Lí do,Quê quán, Số block, Số ph
 ```
 
 *Output*
+
 ```java
 Add success
 ```
+
 ## 8. Employee
+
 ### 8.1 Search Employee
+
 #### GET: localhost:8080/api/manager-service/employee/search
 
 | Request Param      | Description | Require| Default Value|Data type| 
@@ -257,6 +271,7 @@ Add success
 | phoneNumber      | Type : Tạm Trú or Tạm Vắng   |true|-1|Long|
 
 *Output*
+
 ```java
 {
         "totalElement": 5,
@@ -326,6 +341,7 @@ Add success
 ```
 
 ### 8.2 Detail Employee
+
 #### GET: localhost:8080/api/manager-service/employee/get-one/{id}
 
 | Path Variable     | Description | Require| Default Value|Data type| 
@@ -333,6 +349,7 @@ Add success
 | id      | id of employee     |true| |Long |
 
 *Output*
+
 ```java
 {
         "id": 32,
@@ -349,8 +366,11 @@ Add success
 ```
 
 ### 8.3 Add Employee
+
 #### POST: localhost:8080/api/admin/employee/add
+
 *Example Request Body*
+
 ```java
 {
         "name":"Nguyễn Văn B",
@@ -366,8 +386,11 @@ Add success
 ```
 
 ### 8.4 Update Employee
+
 #### POST: localhost:8080/api/admin/employee/update/{id}
+
 *Example Request Body*
+
 ```java
 {
         "name":"Nguyễn 32",
@@ -382,19 +405,23 @@ Add success
 ```
 
 *Output*
+
 ```java
 Update Employee success
 ```
 
 ### 8.5 Remove Employee
+
 #### POST: localhost:8080/api/admin/employee/remove/{id}
 
 *Output*
+
 ```java
 Remove Employee success
 ```
 
 ### 8.6 Export Employee
+
 #### GET: localhost:8080/api/admin/employee/export
 
 | Request Param      | Description | Require| Default Value|Data type| 
@@ -404,6 +431,7 @@ Remove Employee success
 | phoneNumber      | Type : Tạm Trú or Tạm Vắng   |true|-1|Long|
 
 *Output*
+
 ```java
 Tên,Giới tính,Số điện thoại,Email,Ngày tháng năm sinh,Chứng minh thư, Địa chỉ hiện tại, Quê quán, Vị trí
         Nguyễn 32,Male,0987456321,a@gmail.com,16/04/1999,163446325,Hà nội,Nam Định,nhân viên kĩ thuật
@@ -415,8 +443,11 @@ Tên,Giới tính,Số điện thoại,Email,Ngày tháng năm sinh,Chứng minh
 ```
 
 ## 9. Feedback
+
 ### 9.1 Search Feedback
+
 #### GET: localhost:8080/api/admin/feedback/search
+
 | Request Param      | Description | Require| Default Value|Data type| 
 | ----------- | ----------- |-----|-----|----|
 | title      | title     |true|"  "|String |
@@ -429,6 +460,7 @@ Tên,Giới tính,Số điện thoại,Email,Ngày tháng năm sinh,Chứng minh
 ```
 
 *Output*
+
 ```java
 {
         "totalElement": 3,
@@ -459,8 +491,11 @@ Tên,Giới tính,Số điện thoại,Email,Ngày tháng năm sinh,Chứng minh
 ```
 
 ### 9.2 Add Feedback
+
 #### POST: localhost:8080/api/landlord/feedback/add
+
 *Example*
+
 ```java
 {
         "accountId":2,
@@ -470,16 +505,19 @@ Tên,Giới tính,Số điện thoại,Email,Ngày tháng năm sinh,Chứng minh
 ```
 
 *Output*
+
 ```java
 Adđ feed back success
 ```
 
 ### 10. Position
+
 #### GET : localhost:8080/api/manager-service/position/search
 
 | Param    | Description | Require| Default Value|Data type| 
 | ----------- | ----------- |-----|-----|----|
 | show      | check type position     |true|true |Boolean |
+
 ```
 
 *Output*
@@ -529,11 +567,15 @@ Adđ feed back success
 ```
 
 ## 11. Service
-###Web
+
+### Web
+
 #### 11.1 List Service
+
 ##### GET : localhost:8080/api/manager-service/service/list
 
 *Output*
+
 ```java
 [
         {
@@ -546,10 +588,13 @@ Adđ feed back success
         }
         ]
 ```
+
 #### 11.2 List Sub Service
+
 ##### GET : localhost:8080/api/manager-service/service/search
 
 *Output*
+
 ```java
 {
         "totalElement": 9,
@@ -584,8 +629,11 @@ Adđ feed back success
 ```
 
 ### 12.Service Request
+
 #### 12.1: Search Service Request
+
 ##### GET : localhost:8080/api/manager-service/request-service/search
+
 | Param    | Description | Require| Default Value|Data type| 
 | ----------- | ----------- |-----|-----|----|
 | name      | name of user     |true| " "  |String |
@@ -593,6 +641,7 @@ Adđ feed back success
 | statusId      | status of service requets     |true| -1 |String |
 
 *Output*:
+
 ```java
 {
         "totalElement": 9,
@@ -627,9 +676,11 @@ Adđ feed back success
 ```
 
 #### 12.2: Detail Service Request
+
 ##### GET : localhost:8080/api/manager-service/request-service/get-one/{id}
 
 *Output*:
+
 ```java
 {
     "id": 1,
@@ -643,23 +694,27 @@ Adđ feed back success
 ```
 
 #### 12.3: Update Status  Service Request
+
 ##### POST : localhost:8080/api/landlord/request-service/update/{id}?statusId=3
 
 *Output*:
+
 ```java
 "Update success
 ```
 
-
 ### 13. Apartment
+
 #### 13.1 Search Resident By Name RoomNumber And Phone
 
 ##### GET: http://localhost:8080/api/admin/apartment/search/resident
+
 | Param    | Description | Require| Default Value|Data type| 
 | ----------- | ----------- |-----|-----|----|
 | roomNumber      | Room Number of Resident     |true| "  "  |String |
 
 *Output*:
+
 ```java
 {
     "totalElement": 3,
@@ -714,9 +769,11 @@ Adđ feed back success
 ```
 
 #### 13.2 Search Apartment By Owner
+
 ##### GET:localhost:8080/api/admin/apartment/search
 
 *Output*
+
 ```java
 {
     "totalElement": 2,
@@ -741,10 +798,12 @@ Adđ feed back success
 }
 ```
 
-### 13.3 Export Apartment 
+### 13.3 Export Apartment
+
 #### GET: localhost:8080/api/admin/apartment/export
 
 *Output*
+
 ```java
 Tòa , Số Phòng , Tên chủ hộ
 A1 , A102 , f
@@ -752,20 +811,25 @@ A1 , A103 , Nguyễn Thúy Hằng
 ```
 
 ### 13.4:Remove Resident
+
 #### POST: /localhost:8080/api/admin/apartment/disable/owner
+
 | Param    | Description | Require| Default Value|Data type| 
 | ----------- | ----------- |-----|-----|----|
 | ownerId      | id of resident    |true| " "  |Long |
 
 *Output*
+
 ```java
 Remove success
 ```
 
 ### 13.5 Update Resident
+
 #### POST: localhost:8080/api/admin/resident/update
 
 *Example:*
+
 ```java
 {
     "accountId": 34,
@@ -782,14 +846,17 @@ Remove success
 ```
 
 *Output*
+
 ```java
 Update success
 ```
 
 ### 13.5 Add Resident Role = Resident
+
 #### POST: localhost:8080/api/admin/apartment/add/resident
 
 *Example:*
+
 ```java
 {
     "apartmentId": 1,
@@ -821,14 +888,17 @@ Update success
 ```
 
 *Output*
+
 ```java
 Add success
 ```
 
 ### 13.6 Add Resident Role = Owner
+
 #### POST: localhost:8080/api/admin/apartment/add/owner
 
 *Example:*
+
 ```java
 {
     "apartmentId": 1,
@@ -844,6 +914,7 @@ Add success
 ```
 
 *Output*
+
 ```java
 Add success
 ```

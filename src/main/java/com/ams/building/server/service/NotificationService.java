@@ -12,7 +12,7 @@ public interface NotificationService {
 
     void addNotification(NotificationRequest request);
 
-    List<NotificationAppResponse> listNotificationAppGeneral();
+    List<NotificationAppResponse> listNotificationAppGeneral(Long accountId);
 
     void updateStatus(Long accountId);
 

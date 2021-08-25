@@ -87,9 +87,9 @@ public class NotificationSeviceImpl implements NotificationService {
     }
 
     @Override
-    public List<NotificationAppResponse> listNotificationAppGeneral() {
+    public List<NotificationAppResponse> listNotificationAppGeneral(Long accountId) {
         List<NotificationAppResponse> notificationDTOList = new ArrayList<>();
-        List<Notification> notifications = notificationDAO.listNotification();
+        List<Notification> notifications = notificationDAO.listNotification(accountId);
         notifications.forEach(s -> notificationDTOList.add(convertToNotificationApp(s)));
         return notificationDTOList;
     }
