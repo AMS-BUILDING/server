@@ -28,7 +28,6 @@ import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 import static com.ams.building.server.utils.DateTimeUtils.DD_MM_YYYY;
 import static com.ams.building.server.utils.DateTimeUtils.HH_MM;
@@ -55,7 +54,11 @@ public class NotificationSeviceImpl implements NotificationService {
         Pageable pageable = PageRequest.of(page, size);
         Page<NotificationResponse> notifications = notificationDAO.searchNotificationByTitle(title, pageable);
         Long totalElements = notifications.getTotalElements();
-        ApiResponse apiResponse = ApiResponse.builder().data(notifications.getContent()).totalElement(totalElements).build();
+        List<NotificationResponse> responses = new ArrayList<>();
+        for (int i = notifications.getContent().size() - 1; i >= 0; i--) {
+            responses.add(notifications.getContent().get(i));
+        }
+        ApiResponse apiResponse = ApiResponse.builder().data(responses).totalElement(totalElements).build();
         return apiResponse;
     }
 

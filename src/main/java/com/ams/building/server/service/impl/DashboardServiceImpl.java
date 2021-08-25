@@ -51,9 +51,14 @@ public class DashboardServiceImpl implements DashBoardService {
         DashboardResponse response = DashboardResponse.builder()
                 .numberOfAccount(accountDAO.countAccountEnable())
                 .numberOfEmptyApartment(apartmentDAO.countEmptyApartment())
-                .totalRevenue(requestServiceDAO.totalRevenue())
                 .totalServiceRequest(requestServiceDAO.totalServiceRequest())
                 .build();
+        Double total = requestServiceDAO.totalRevenue();
+        if (total != null) {
+            response.setTotalRevenue(total);
+        } else {
+            response.setTotalRevenue(0D);
+        }
         return response;
     }
 
