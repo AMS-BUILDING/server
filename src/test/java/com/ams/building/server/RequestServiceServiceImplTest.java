@@ -35,6 +35,7 @@ import com.ams.building.server.dao.VehicleCardDAO;
 import com.ams.building.server.exception.RestApiException;
 import com.ams.building.server.response.ApiResponse;
 import com.ams.building.server.response.DetailServiceRequestResponse;
+import com.ams.building.server.response.DetailSubServiceClientResponse;
 import com.ams.building.server.response.ReasonDetailSubServiceResponse;
 import com.ams.building.server.response.RequestServiceClientResponse;
 import com.ams.building.server.response.RequestServiceResponse;
@@ -242,6 +243,48 @@ public class RequestServiceServiceImplTest {
         requestServiceServiceImpl.detailServiceRequest(1L, 1L);
     }
 
+    @Test
+    public void getPriceByReasonDetailSubServiceId() {
+        Mockito.when(reasonDetailSubServiceDAO.getReasonDetailSubServiceById(Mockito.any())).thenReturn(reasonDetailSubService);
+
+        requestServiceServiceImpl.getPriceByReasonDetailSubServiceId(1L);
+    }
+
+    List<ReasonDetailSubService> reasonDetailSubServices = Arrays.asList(reasonDetailSubService);
+
+    @Test
+    public void getListReasonByDetailSubServiceId() {
+
+        Mockito.when(reasonDetailSubServiceDAO.getListReasonByDetailSubServiceId(Mockito.any())).thenReturn(reasonDetailSubServices);
+
+        List<ReasonDetailSubServiceResponse> responses = new ArrayList<>();
+        reasonDetailSubServices.forEach(r -> responses.add(convertReasonDetailSubService(r)));
+        requestServiceServiceImpl.getListReasonByDetailSubServiceId(1l);
+
+
+    }
+
+
+    List<DetailSubService> detailSubServices = Arrays.asList(detailSubService);
+
+    @Test
+    public void getDetailSubServiceBySubServiceId() {
+
+        Mockito.when(detailSubServiceDAO.getDetailSubServiceBySubServiceId(Mockito.any())).thenReturn(detailSubServices);
+
+        List<DetailSubServiceClientResponse> responses = new ArrayList<>();
+        detailSubServices.forEach(detailSubService -> responses.add(convertDetailSubServiceToDetailSubServiceClientResponse(detailSubService)));
+        requestServiceServiceImpl.getDetailSubServiceBySubServiceId(1L);
+    }
+
+    private DetailSubServiceClientResponse convertDetailSubServiceToDetailSubServiceClientResponse(DetailSubService detailSubService) {
+        DetailSubServiceClientResponse response = DetailSubServiceClientResponse.builder()
+                .id(detailSubService.getId())
+                .detailSubServiceName(detailSubService.getDetailSubServiceName())
+                .build();
+        return response;
+    }
+
 
     @Test
     public void findRequestServiceByAccountId() {
@@ -376,6 +419,8 @@ public class RequestServiceServiceImplTest {
 
 
 
+
+
     private RequestServiceClientResponse convertRequestServiceToRequestServiceClientResponse(RequestService requestService) {
         String serviceName = requestService.getReasonDetailSubService().getDetailSubService().getService().getSubServiceName();
         Date currentTime = new Date();
@@ -384,7 +429,7 @@ public class RequestServiceServiceImplTest {
         if (Objects.isNull(account)) {
             throw new RestApiException(StatusCode.ACCOUNT_NOT_EXIST);
         }
-        Mockito.when(apartmentDAO.getApartmentByAccountId(Mockito.any(), Mockito.any())).thenReturn(apartment);
+        Mockito.when(apartmentDAO.getApartmentByAccountId(Mockito.any())).thenReturn(apartment);
         if (Objects.isNull(apartment)) {
             throw new RestApiException(StatusCode.APARTMENT_NOT_EXIST);
         }
