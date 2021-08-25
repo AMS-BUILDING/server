@@ -7,7 +7,7 @@ use
 CREATE TABLE `amsbuilding`.`role`
 (
     `id`        BIGINT      NOT NULL AUTO_INCREMENT,
-    `role_name` VARCHAR(45) NULL,
+    `name` VARCHAR(45) NULL,
     PRIMARY KEY (`id`)
 );
 
