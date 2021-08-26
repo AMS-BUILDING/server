@@ -291,7 +291,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         response.setPhone(account.getPhone());
         response.setCurrentAddress(account.getCurrentAddress());
         String[] dobs = account.getDob().split("-");
-        if (dobs.length > 0) {
+        if (dobs.length > 1) {
             response.setDob(dobs[2] + "/" + dobs[1] + "/" + dobs[0]);
         } else {
             response.setDob(account.getDob());

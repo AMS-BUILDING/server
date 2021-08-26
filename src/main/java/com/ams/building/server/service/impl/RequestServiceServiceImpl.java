@@ -460,7 +460,11 @@ public class RequestServiceServiceImpl implements RequestServiceService {
         }
         response.setId(requestService.getId());
         response.setBlock(apartment.getRoomNumber().getFloorBlock().getBlock().getBlockName());
-        response.setServiceName(requestService.getReasonDetailSubService().getDetailSubService().getDetailSubServiceName());
+        if (requestService.getReasonDetailSubService().getId() < 7) {
+            response.setServiceName(requestService.getReasonDetailSubService().getReasonName());
+        } else {
+            response.setServiceName(requestService.getReasonDetailSubService().getDetailSubService().getService().getSubServiceName() + " " + requestService.getReasonDetailSubService().getDetailSubService().getDetailSubServiceName().toLowerCase());
+        }
         response.setStatus(requestService.getStatusServiceRequest().getRequestName());
         response.setRoomName(apartment.getRoomNumber().getRoomName());
         response.setName(requestService.getAccount().getName());
