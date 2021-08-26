@@ -189,7 +189,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         if (request.getPosition() < 0 || request.getPosition() > 4) {
             throw new RestApiException(StatusCode.POSITION_NOT_RIGHT_WITH_EMPLOYEE);
         }
-        if (!isEmail(request.getEmail().trim())) {
+        if (isEmail(request.getEmail().trim()) == false) {
             throw new RestApiException(StatusCode.EMAIL_NOT_RIGHT_FORMAT);
         }
         if (!isPhoneNumber(request.getPhoneNumber().trim())) {
