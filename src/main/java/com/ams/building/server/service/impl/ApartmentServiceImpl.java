@@ -113,8 +113,12 @@ public class ApartmentServiceImpl implements ApartmentService {
     public ApiResponse accountOfApartment(String name, String roomNumber, String phone, Integer page, Integer size) {
         List<AccountResponse> residentResponses = new ArrayList<>();
         Pageable pageable = PageRequest.of(page, size);
-        Page<Apartment> apartments = apartmentDAO.searchResidentByNameRoomNumberAndPhone(name, roomNumber, phone, pageable);
-
+        Page<Apartment> apartments;
+        if (!phone.isEmpty()) {
+            apartments = apartmentDAO.searchResidentByNameRoomNumberAndPhone(name, roomNumber, phone, pageable);
+        } else {
+            apartments = apartmentDAO.searchResidentByNameRoomNumber(name, roomNumber, pageable);
+        }
         for (Apartment apartment : apartments) {
             AccountResponse response = convertApartmentToAccountResponse(apartment);
             residentResponses.add(response);

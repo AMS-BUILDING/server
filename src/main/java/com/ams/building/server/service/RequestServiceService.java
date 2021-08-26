@@ -38,4 +38,6 @@ public interface RequestServiceService {
 
     void updateStatusRequestByTypeRequest(Long statusId, Long requestId, Long typeRequest);
 
+    List<Integer>listHours();
+
 }

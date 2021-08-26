@@ -41,6 +41,7 @@ import org.springframework.util.StringUtils;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
@@ -55,8 +56,6 @@ import static com.ams.building.server.utils.DateTimeUtils.convertStringToDate;
 @Transactional
 @Service
 public class RequestServiceServiceImpl implements RequestServiceService {
-
-    private static final Logger logger = Logger.getLogger(RequestServiceServiceImpl.class);
 
     @Autowired
     private StatusRequestServiceDAO statusRequestServiceDAO;
@@ -209,6 +208,22 @@ public class RequestServiceServiceImpl implements RequestServiceService {
             }
             residentCardDAO.updateStatus(statusId, requestId);
         }
+    }
+
+    @Override
+    public List<Integer> listHours() {
+        Calendar now = Calendar.getInstance();
+        int hour = now.get(Calendar.HOUR_OF_DAY);
+        int minute = now.get(Calendar.MINUTE);
+        List<Integer> hours = new ArrayList<>();
+        int start = hour;
+        if (minute != 0) {
+            start = hour + 1;
+        }
+        for (int i = start; i <= 24; i++) {
+            hours.add(i);
+        }
+        return hours;
     }
 
     @Override

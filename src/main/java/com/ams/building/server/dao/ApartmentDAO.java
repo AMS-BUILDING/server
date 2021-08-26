@@ -23,6 +23,9 @@ public interface ApartmentDAO extends JpaRepository<Apartment, Long> {
     @Query("SELECT  a FROM Apartment a WHERE a.account.name LIKE %?1% AND a.roomNumber.roomName LIKE %?2% AND a.account.phone LIKE %?3% ORDER BY a.id DESC ")
     Page<Apartment> searchResidentByNameRoomNumberAndPhone(String name, String roomNumber, String phone, Pageable pageable);
 
+    @Query("SELECT  a FROM Apartment a WHERE a.account.name LIKE %?1% AND a.roomNumber.roomName LIKE %?2% ORDER BY a.id DESC ")
+    Page<Apartment> searchResidentByNameRoomNumber(String name, String roomNumber, Pageable pageable);
+
     @Query("SELECT a FROM Apartment a WHERE a.roomNumber.floorBlock.block.id = :blockId AND a.roomNumber.floorBlock.floor.id = :floorId AND a.account IS NULL ORDER BY a.id DESC")
     List<Apartment> searchRoomNumberByBlockAndFloorNullAccount(@Param("blockId") Long blockId, @Param("floorId") Long floorId);
 
@@ -37,5 +40,8 @@ public interface ApartmentDAO extends JpaRepository<Apartment, Long> {
 
     @Query("SELECT COUNT(a.id) FROM Apartment a WHERE a.account IS NULL ")
     Long countEmptyApartment();
+
+    @Query("SELECT a FROM Apartment a WHERE a.account.id IN (:accountIds)")
+    List<Apartment> apartmentByListAccountId(@Param("accountIds") List<Long> accounts);
 
 }

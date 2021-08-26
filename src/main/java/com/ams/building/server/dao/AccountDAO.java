@@ -58,4 +58,8 @@ public interface AccountDAO extends JpaRepository<Account, Long> {
     @Query("SELECT a FROM Account a WHERE a.role.id IN (3,5)")
     List<Account> getAccountByRoles();
 
+
+    @Query("SELECT a FROM Account a WHERE a.role.id = 3")
+    List<Account> getAccountByRoleLandol();
+
 }

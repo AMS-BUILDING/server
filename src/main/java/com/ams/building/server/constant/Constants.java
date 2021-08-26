@@ -120,6 +120,7 @@ public class Constants {
 
         public static final String URL_API_UPDATE_REQUEST_SERVICE_APP = "/landlord/request-service/update-app";
         public static final String URL_API_NOTIFICATION_FEE_APARTMENT = "/tenant/notification-fee-apartment";
+        public static final String URL_API_LIST_HOURS = "/tenant/list-hour";
 
     }
 

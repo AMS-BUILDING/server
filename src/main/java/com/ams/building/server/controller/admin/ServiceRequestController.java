@@ -78,5 +78,11 @@ public class ServiceRequestController {
         logger.debug("serviceRequestInApp : response " + new Gson().toJson(response));
         return response;
     }
+    @GetMapping(Constants.UrlPath.URL_API_LIST_HOURS)
+    public ResponseEntity<?>listHourActive(){
+        List<Integer> hours = requestServiceService.listHours();
+        ResponseEntity<List<Integer>> response = new ResponseEntity<>(hours, HttpStatus.OK);
+        return response;
+    }
 
 }

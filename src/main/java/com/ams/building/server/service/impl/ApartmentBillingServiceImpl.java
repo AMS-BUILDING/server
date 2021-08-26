@@ -4,8 +4,6 @@ import com.ams.building.server.bean.Account;
 import com.ams.building.server.bean.Apartment;
 import com.ams.building.server.bean.ApartmentBilling;
 import com.ams.building.server.bean.DetailApartmentBilling;
-import com.ams.building.server.bean.RequestService;
-import com.ams.building.server.bean.ResidentCard;
 import com.ams.building.server.bean.RoomNumber;
 import com.ams.building.server.bean.VehicleCard;
 import com.ams.building.server.constant.Constants;
@@ -33,6 +31,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import static com.ams.building.server.utils.HelperUtils.formatCurrentMoney;
 import static com.ams.building.server.utils.HelperUtils.formatDoubleNUmber;
@@ -135,7 +134,7 @@ public class ApartmentBillingServiceImpl implements ApartmentBillingService {
     @Override
     public void checkAndInsertBillingInMonth() {
         // Insert 4 table
-        // vehicle card, resident card, apartment billing, detail apartment
+        // vehicle card, apartment billing, detail apartment
         // lay them thong tin cua request service
 
         Calendar cal = Calendar.getInstance();
@@ -165,23 +164,14 @@ public class ApartmentBillingServiceImpl implements ApartmentBillingService {
             // add vehicle card to month
             vehicleCardDAO.save(newVehicleCard);
         }
-//        List<String>accountVehicleCard=vehicleCardByBillingMonth.stream().collect()
-        // 2. Add Resident Card
-        List<ResidentCard> residentCardByBillingMonth = residentCardDAO.residentCardByBillingMonth(billingMonth);
-        for (ResidentCard residentCard : residentCardByBillingMonth) {
-            ResidentCard newResidentCard = new ResidentCard();
-            newResidentCard.setAccount(residentCard.getAccount());
-            newResidentCard.setStatusResidentCard(residentCard.getStatusResidentCard());
-            newResidentCard.setCardCode(residentCard.getCardCode());
-            newResidentCard.setPrice(residentCard.getPrice());
-            newResidentCard.setBillingMonth(billingMonth);
-            newResidentCard.setIsUse(1);
-            // add vehicle card to month
-            residentCardDAO.save(newResidentCard);
-        }
-        // Get thong tin tu bang service request
+
+        // Get thong tin
         String[] billingMonthList = billingMonth.split("/");
-        List<RequestService> serviceRequestsByMonth = requestServiceDAO.requestServiceByMonth(billingMonthList[0], billingMonthList[1]);
+        List<Account> accounts = accountDAO.getAccountByRoleLandol();
+        List<Long> accountIds = accounts.stream().map(Account::getId).distinct()
+                .collect(Collectors.toList());
+        List<Apartment> apartments = apartmentDAO.apartmentByListAccountId(accountIds);
+        
 
     }
 
