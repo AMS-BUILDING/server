@@ -210,7 +210,9 @@ public class EmployeeServiceImpl implements EmployeeService {
         if (Objects.nonNull(searchAccountByEmail)) {
             throw new RestApiException(StatusCode.EMAIL_REGISTER_BEFORE);
         }
-        String yearDob = request.getDob().split("/")[2];
+        String[] age1 = request.getDob().split("-");
+        String ageStr = age1[2] + "/" + age1[1] + "/" + age1[0];
+        String yearDob = ageStr.split("/")[2];
         Calendar cal = Calendar.getInstance();
         int year = cal.get(Calendar.YEAR);
         int age = year - Integer.valueOf(yearDob);
@@ -220,7 +222,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         Account account = new Account();
         account.setIdentifyCard(request.getIdentifyCard());
         account.setEmail(request.getEmail().trim());
-        account.setDob(request.getDob().trim());
+        account.setDob(ageStr);
         account.setGender(request.getGender());
         account.setHomeTown(request.getHomeTown());
         account.setPhone(request.getPhoneNumber());
