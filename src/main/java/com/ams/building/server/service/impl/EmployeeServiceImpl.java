@@ -133,6 +133,18 @@ public class EmployeeServiceImpl implements EmployeeService {
                 throw new RestApiException(StatusCode.PHONE_REGISTER_BEFORE);
             }
         }
+//        String[] age1 = request.getDob().split("-");
+//        if (age1.length > 1) {
+//            String out = age1[2] + "/" + age1[1] + "/" + age1[0];
+//            String yearDob = out.split("/")[2];
+//            Calendar cal = Calendar.getInstance();
+//            int year = cal.get(Calendar.YEAR);
+//            int age = year - Integer.valueOf(yearDob);
+//            if (age < 18) {
+//                throw new RestApiException(StatusCode.EMPLOYEE_NOT_WORKING);
+//            }
+//            currentAccount.setDob(out);
+//        } else {
         String yearDob = request.getDob().split("/")[2];
         Calendar cal = Calendar.getInstance();
         int year = cal.get(Calendar.YEAR);
@@ -140,7 +152,9 @@ public class EmployeeServiceImpl implements EmployeeService {
         if (age < 18) {
             throw new RestApiException(StatusCode.EMPLOYEE_NOT_WORKING);
         }
-        currentAccount.setDob(request.getDob().trim());
+        currentAccount.setDob(request.getDob());
+//        }
+
         currentAccount.setGender(request.getGender());
         currentAccount.setHomeTown(request.getHomeTown().trim());
         currentAccount.setPhone(request.getPhoneNumber().trim());
@@ -210,19 +224,38 @@ public class EmployeeServiceImpl implements EmployeeService {
         if (Objects.nonNull(searchAccountByEmail)) {
             throw new RestApiException(StatusCode.EMAIL_REGISTER_BEFORE);
         }
-        String[] age1 = request.getDob().split("-");
-        String ageStr = age1[2] + "/" + age1[1] + "/" + age1[0];
-        String yearDob = ageStr.split("/")[2];
+        Account account = new Account();
+//        String[] age1 = request.getDob().split("-");
+//        if (age1.length > 1) {
+//            String out = age1[2] + "/" + age1[1] + "/" + age1[0];
+//            String yearDob = out.split("/")[2];
+//            Calendar cal = Calendar.getInstance();
+//            int year = cal.get(Calendar.YEAR);
+//            int age = year - Integer.valueOf(yearDob);
+//            if (age < 18) {
+//                throw new RestApiException(StatusCode.EMPLOYEE_NOT_WORKING);
+//            }
+//            account.setDob(out);
+//        } else {
+//            String yearDob = request.getDob().split("/")[2];
+//            Calendar cal = Calendar.getInstance();
+//            int year = cal.get(Calendar.YEAR);
+//            int age = year - Integer.valueOf(yearDob);
+//            if (age < 18) {
+//                throw new RestApiException(StatusCode.EMPLOYEE_NOT_WORKING);
+//            }
+//            account.setDob(request.getDob());
+//        }
+        String yearDob = request.getDob().split("/")[2];
         Calendar cal = Calendar.getInstance();
         int year = cal.get(Calendar.YEAR);
         int age = year - Integer.valueOf(yearDob);
         if (age < 18) {
             throw new RestApiException(StatusCode.EMPLOYEE_NOT_WORKING);
         }
-        Account account = new Account();
+        account.setDob(request.getDob());
         account.setIdentifyCard(request.getIdentifyCard());
         account.setEmail(request.getEmail().trim());
-        account.setDob(ageStr);
         account.setGender(request.getGender());
         account.setHomeTown(request.getHomeTown());
         account.setPhone(request.getPhoneNumber());
@@ -292,12 +325,12 @@ public class EmployeeServiceImpl implements EmployeeService {
         response.setEmail(account.getEmail());
         response.setPhone(account.getPhone());
         response.setCurrentAddress(account.getCurrentAddress());
-        String[] dobs = account.getDob().split("-");
-        if (dobs.length > 1) {
-            response.setDob(dobs[2] + "/" + dobs[1] + "/" + dobs[0]);
-        } else {
-            response.setDob(account.getDob());
-        }
+//        String[] dobs = account.getDob().split("/");
+//        if (dobs.length > 1) {
+//            response.setDob(dobs[2] + "-" + dobs[1] + "-" + dobs[0]);
+//        } else {
+//        }
+        response.setDob(account.getDob());
         response.setHomeTown(account.getHomeTown());
         response.setIdentifyCard(account.getIdentifyCard());
         response.setGender(account.getGender());

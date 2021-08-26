@@ -633,6 +633,10 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
         if (Objects.nonNull(currentAccountDuplicate)) {
             throw new RestApiException(StatusCode.IDENTIFY_CARD_DUPLICATE);
         }
+        List<String> phones = accountDao.getAccountByPhoneNumber(ownerRequest.getPhone());
+        if (phones.size() > 0) {
+            throw new RestApiException(StatusCode.PHONE_REGISTER_BEFORE);
+        }
     }
 
     @Override
@@ -643,6 +647,7 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
         // Get identifyCar, email to check
         List<String> emailList = new ArrayList<>();
         List<String> identifyCardList = new ArrayList<>();
+        List<String> phoneNumberList = new ArrayList<>();
 
         residentRequestList.forEach(request -> {
             // Validate request format
@@ -662,7 +667,7 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
             }
             if (!StringUtils.isEmpty(request.getPhone())) {
                 if (!isPhoneNumber(request.getPhone().trim())) {
-                    throw new RestApiException(StatusCode.PHONE_EMPTY);
+                    throw new RestApiException(StatusCode.PHONE_NUMBER_NOT_RIGHT_FORMAT);
                 }
             }
             if (!StringUtils.isEmpty(request.getEmail())) {
@@ -676,15 +681,20 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
             if (!StringUtils.isEmpty(request.getIdentifyCard())) {
                 identifyCardList.add(request.getIdentifyCard());
             }
+            if (!StringUtils.isEmpty(request.getPhone())) {
+                phoneNumberList.add(request.getPhone());
+            }
         });
 
         // add owner to list
         emailList.add(ownerRequest.getEmail());
         identifyCardList.add(ownerRequest.getIdentifyCard());
+        phoneNumberList.add(ownerRequest.getPhone());
 
         // remove element duplicate in list
         List<String> identifyCardListDistinct = identifyCardList.stream().distinct().collect(Collectors.toList());
         List<String> emailListDistinct = emailList.stream().distinct().collect(Collectors.toList());
+        List<String> phoneNumberListDistinct = phoneNumberList.stream().distinct().collect(Collectors.toList());
 
         // check duplicate email , identify card in list resident
         if (emailList.size() != emailListDistinct.size()) {
@@ -693,11 +703,16 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
         if (identifyCardList.size() != identifyCardListDistinct.size()) {
             throw new RestApiException(StatusCode.DUPLICATE_IDENTIFY_CARD_IN_LIST_RESIDENT);
         }
+        if (phoneNumberList.size() != phoneNumberListDistinct.size()) {
+            throw new RestApiException(StatusCode.DUPLICATE_PHONE_NUMBER_IN_LIST_RESIDENT);
+        }
         // Get Map list email, identify
         Map<String, Account> accountMapByEmail = accountDao.getAccountByListEmail(emailListDistinct).stream()
                 .collect(Collectors.toMap(Account::getEmail, account -> account));
         Map<String, Account> accountMapByIdentifyCard = accountDao.getAccountByListIdentifyCard(identifyCardListDistinct).stream()
                 .collect(Collectors.toMap(Account::getIdentifyCard, account -> account));
+        Map<String, Account> accountMapByPhoneNumber = accountDao.getAccountByPhoneNumberList(phoneNumberListDistinct).stream()
+                .collect(Collectors.toMap(Account::getPhone, account -> account));
 
         for (ResidentRequest request : residentRequestList) {
             // Validate duplicate email or identify in DB
@@ -708,6 +723,10 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
             Account accountByIdentifyCard = accountMapByIdentifyCard.get(request.getIdentifyCard());
             if (Objects.nonNull(accountByIdentifyCard)) {
                 throw new RestApiException(StatusCode.IDENTIFY_CARD_DUPLICATE);
+            }
+            Account accountByPhoneNumber = accountMapByPhoneNumber.get(request.getPhone());
+            if (Objects.nonNull(accountByPhoneNumber)) {
+                throw new RestApiException(StatusCode.PHONE_REGISTER_BEFORE);
             }
         }
     }

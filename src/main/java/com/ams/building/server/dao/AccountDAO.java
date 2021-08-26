@@ -46,6 +46,9 @@ public interface AccountDAO extends JpaRepository<Account, Long> {
     @Query("SELECT a FROM Account a WHERE a.identifyCard IN (:identifyCards) ORDER BY a.id DESC")
     List<Account> getAccountByListIdentifyCard(@Param("identifyCards") List<String> identifyCards);
 
+    @Query("SELECT a FROM Account a WHERE a.phone IN (:phoneNumber) ORDER BY a.id DESC")
+    List<Account> getAccountByPhoneNumberList(@Param("phoneNumber") List<String> phoneNumber);
+
     @Query("SELECT count(a.id) FROM Account a where a.role.id IN(3,5) ")
     Long countAccountEnable();
 

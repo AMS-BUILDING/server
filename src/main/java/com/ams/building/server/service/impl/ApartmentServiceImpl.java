@@ -421,6 +421,12 @@ public class ApartmentServiceImpl implements ApartmentService {
                 .email(account.getEmail())
                 .relationShip(position == null ? "Chủ hộ" : position.getName())
                 .build();
+//        String[] dobs = account.getDob().split("/");
+//        if (dobs.length > 1) {
+//            response.setDob(dobs[2] + "-" + dobs[1] + "-" + dobs[0]);
+//        } else {
+//            response.setDob(account.getDob());
+//        }
         return response;
     }
 
