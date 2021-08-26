@@ -27,6 +27,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Objects;
 
@@ -132,13 +133,13 @@ public class EmployeeServiceImpl implements EmployeeService {
                 throw new RestApiException(StatusCode.PHONE_REGISTER_BEFORE);
             }
         }
-//        String yearDob = request.getDob().split("/")[2];
-//        Calendar cal = Calendar.getInstance();
-//        int year = cal.get(Calendar.YEAR);
-//        int age = year - Integer.valueOf(yearDob);
-//        if (age < 18) {
-//            throw new RestApiException(StatusCode.EMPLOYEE_NOT_WORKING);
-//        }
+        String yearDob = request.getDob().split("/")[2];
+        Calendar cal = Calendar.getInstance();
+        int year = cal.get(Calendar.YEAR);
+        int age = year - Integer.valueOf(yearDob);
+        if (age < 18) {
+            throw new RestApiException(StatusCode.EMPLOYEE_NOT_WORKING);
+        }
         currentAccount.setDob(request.getDob().trim());
         currentAccount.setGender(request.getGender());
         currentAccount.setHomeTown(request.getHomeTown().trim());
@@ -209,13 +210,13 @@ public class EmployeeServiceImpl implements EmployeeService {
         if (Objects.nonNull(searchAccountByEmail)) {
             throw new RestApiException(StatusCode.EMAIL_REGISTER_BEFORE);
         }
-//        String yearDob = request.getDob().split("/")[2];
-//        Calendar cal = Calendar.getInstance();
-//        int year = cal.get(Calendar.YEAR);
-//        int age = year - Integer.valueOf(yearDob);
-//        if (age < 18) {
-//            throw new RestApiException(StatusCode.EMPLOYEE_NOT_WORKING);
-//        }
+        String yearDob = request.getDob().split("/")[2];
+        Calendar cal = Calendar.getInstance();
+        int year = cal.get(Calendar.YEAR);
+        int age = year - Integer.valueOf(yearDob);
+        if (age < 18) {
+            throw new RestApiException(StatusCode.EMPLOYEE_NOT_WORKING);
+        }
         Account account = new Account();
         account.setIdentifyCard(request.getIdentifyCard());
         account.setEmail(request.getEmail().trim());
@@ -289,7 +290,12 @@ public class EmployeeServiceImpl implements EmployeeService {
         response.setEmail(account.getEmail());
         response.setPhone(account.getPhone());
         response.setCurrentAddress(account.getCurrentAddress());
-        response.setDob(account.getDob());
+        String[] dobs = account.getDob().split("-");
+        if (dobs.length > 0) {
+            response.setDob(dobs[2] + "/" + dobs[1] + "/" + dobs[0]);
+        } else {
+            response.setDob(account.getDob());
+        }
         response.setHomeTown(account.getHomeTown());
         response.setIdentifyCard(account.getIdentifyCard());
         response.setGender(account.getGender());
