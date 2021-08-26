@@ -48,7 +48,7 @@ public class AccountController {
 
     @PostMapping(Constants.UrlPath.URL_API_UPDATE_PROFILE_ACCOUNT)
     public ResponseEntity<?> updateAccountProfile(@ModelAttribute LoginResponse accountDTO) {
-        accountDTO.setImage(FileStore.getFilePath(accountDTO.getMultipartFile(), "-user"));
+//        accountDTO.setImage(FileStore.getFilePath(accountDTO.getMultipartFile(), "-user"));
         accountService.updateProfile(accountDTO);
         ResponseEntity<String> response = new ResponseEntity<>("Update profile success", HttpStatus.OK);
         return response;

@@ -240,7 +240,7 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
             throw new RestApiException(StatusCode.DOB_EMPTY);
         }
         if (!StringUtils.isEmpty(accountDTO.getIdentifyCard())) {
-            if (!isIdentifyCard(accountDTO.getIdentifyCard())) {
+            if (!isIdentifyCard(accountDTO.getIdentifyCard().trim())) {
                 throw new RestApiException(StatusCode.IDENTIFY_CARD_NOT_RIGHT);
             }
             if (!account.getIdentifyCard().equalsIgnoreCase(accountDTO.getIdentifyCard())) {
@@ -473,7 +473,7 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
             if (StringUtils.isEmpty(residentRequest.getPhone())) {
                 throw new RestApiException(StatusCode.PHONE_EMPTY);
             }
-            if (!isPhoneNumber(residentRequest.getPhone())) {
+            if (!isPhoneNumber(residentRequest.getPhone().trim())) {
                 throw new RestApiException(StatusCode.PHONE_NUMBER_NOT_RIGHT_FORMAT);
             }
             if (!account.getPhone().equalsIgnoreCase(residentRequest.getPhone())) {
@@ -485,7 +485,7 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
 
         } else {
             if (!StringUtils.isEmpty(residentRequest.getIdentifyCard())) {
-                if (!isIdentifyCard(residentRequest.getIdentifyCard())) {
+                if (!isIdentifyCard(residentRequest.getIdentifyCard().trim())) {
                     throw new RestApiException(StatusCode.IDENTIFY_CARD_NOT_RIGHT);
                 }
                 if (!residentRequest.getIdentifyCard().equalsIgnoreCase(account.getIdentifyCard())) {
@@ -499,7 +499,7 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
                 account.setIdentifyCard(null);
             }
             if (!StringUtils.isEmpty(residentRequest.getPhone())) {
-                if (!isPhoneNumber(residentRequest.getPhone())) {
+                if (!isPhoneNumber(residentRequest.getPhone().trim())) {
                     throw new RestApiException(StatusCode.PHONE_NUMBER_NOT_RIGHT_FORMAT);
                 }
                 if (!residentRequest.getPhone().equalsIgnoreCase(account.getPhone())) {
@@ -513,7 +513,7 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
                 account.setPhone(null);
             }
             if (!StringUtils.isEmpty(residentRequest.getEmail())) {
-                if (!isEmail(residentRequest.getEmail())) {
+                if (!isEmail(residentRequest.getEmail().trim())) {
                     throw new RestApiException(StatusCode.EMAIL_NOT_RIGHT_FORMAT);
                 }
                 if (!residentRequest.getEmail().equalsIgnoreCase(account.getEmail())) {
@@ -656,12 +656,12 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
                 throw new RestApiException(StatusCode.DOB_EMPTY);
             }
             if (!StringUtils.isEmpty(request.getIdentifyCard())) {
-                if (!isIdentifyCard(request.getIdentifyCard())) {
+                if (!isIdentifyCard(request.getIdentifyCard().trim())) {
                     throw new RestApiException(StatusCode.IDENTIFY_CARD_NOT_RIGHT);
                 }
             }
             if (!StringUtils.isEmpty(request.getPhone())) {
-                if (!isPhoneNumber(request.getPhone())) {
+                if (!isPhoneNumber(request.getPhone().trim())) {
                     throw new RestApiException(StatusCode.PHONE_EMPTY);
                 }
             }

@@ -189,13 +189,13 @@ public class EmployeeServiceImpl implements EmployeeService {
         if (request.getPosition() < 0 || request.getPosition() > 4) {
             throw new RestApiException(StatusCode.POSITION_NOT_RIGHT_WITH_EMPLOYEE);
         }
-        if (!isEmail(request.getEmail())) {
+        if (!isEmail(request.getEmail().trim())) {
             throw new RestApiException(StatusCode.EMAIL_NOT_RIGHT_FORMAT);
         }
-        if (!isPhoneNumber(request.getPhoneNumber())) {
+        if (!isPhoneNumber(request.getPhoneNumber().trim())) {
             throw new RestApiException(StatusCode.PHONE_NUMBER_NOT_RIGHT_FORMAT);
         }
-        if (!isIdentifyCard(request.getIdentifyCard())) {
+        if (!isIdentifyCard(request.getIdentifyCard().trim())) {
             throw new RestApiException(StatusCode.IDENTIFY_CARD_NOT_RIGHT);
         }
         Account searchAccountByIdentify = accountDao.getAccountByIdentify(request.getIdentifyCard());
