@@ -34,7 +34,7 @@ public interface DetailApartmentBillingDAO extends JpaRepository<DetailApartment
     @Query("SELECT new com.ams.building.server.response.BillingServiceResponse(dab.id,dab.apartmentBilling.apartment.roomNumber.floorBlock.block.blockName,dab.apartmentBilling.apartment.roomNumber.roomName,dab.reasonDetailSubService.detailSubService.service.subServiceName,dab.reasonDetailSubService.price,dab.billingMonth) FROM DetailApartmentBilling dab WHERE dab.billingMonth=?1 ORDER BY dab.id DESC")
     Page<BillingServiceResponse> searchBillingDetailAboutServiceByMonth(String month, Pageable pageable);
 
-    @Query("SELECT new com.ams.building.server.response.BillingCardTotalResponse(dab.id,dab.account.id,dab.apartmentBilling.apartment.roomNumber.floorBlock.block.blockName,dab.apartmentBilling.apartment.roomNumber.roomName,SUM(dab.vehiclePrice),SUM(dab.residentPrice),dab.billingMonth) FROM DetailApartmentBilling dab WHERE dab.billingMonth=?1 GROUP BY dab.billingMonth,dab.account.id ORDER BY dab.id DESC")
+    @Query("SELECT new com.ams.building.server.response.BillingCardTotalResponse(dab.id,dab.account.id,dab.apartmentBilling.apartment.roomNumber.floorBlock.block.blockName,dab.apartmentBilling.apartment.roomNumber.roomName,SUM(dab.vehiclePrice),SUM(dab.residentPrice),dab.billingMonth) FROM DetailApartmentBilling dab WHERE dab.billingMonth=?1 ORDER BY dab.id DESC")
     Page<BillingCardTotalResponse> searchBillingDetailAboutCardByMonth(String month, Pageable pageable);
 
     @Query("SELECT new com.ams.building.server.response.BillingResidentCardResponse(dab.residentCard.id,dab.residentCard.cardCode) FROM DetailApartmentBilling dab WHERE dab.account.id=?1 AND dab.billingMonth=?2  ORDER BY dab.id DESC ")
