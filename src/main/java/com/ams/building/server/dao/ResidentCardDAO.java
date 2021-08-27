@@ -32,6 +32,9 @@ public interface ResidentCardDAO extends JpaRepository<ResidentCard, Long> {
     @Query("SELECT r FROM ResidentCard r WHERE r.billingMonth =?1 AND r.isUse = 1 ORDER BY r.id DESC")
     List<ResidentCard> residentCardByBillingMonth(String billingMonth);
 
+    @Query("SELECT r FROM ResidentCard r WHERE r.billingMonth =?1 AND r.statusResidentCard.id = 3 ORDER BY r.id DESC")
+    List<ResidentCard> residentCardByBillingMonthAndStatus(String billingMonth);
+
     @Query("SELECT r FROM ResidentCard r WHERE r.account.id=?1  ORDER BY r.id DESC")
     List<ResidentCard> checkRegisterCard(Long accountId);
 

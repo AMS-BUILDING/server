@@ -16,10 +16,10 @@ import java.util.List;
 @Repository
 public interface RequestServiceDAO extends JpaRepository<RequestService, Long> {
 
-    @Query("SELECT r FROM RequestService r WHERE r.account.name LIKE CONCAT('%',:accountName,'%') AND r.reasonDetailSubService.reasonName LIKE CONCAT('%',:serviceName,'%') ORDER BY r.id")
+    @Query("SELECT r FROM RequestService r WHERE r.account.name LIKE CONCAT('%',:accountName,'%') AND r.reasonDetailSubService.reasonName LIKE CONCAT('%',:serviceName,'%') ORDER BY r.id DESC")
     Page<RequestService> requestServicesNotStatus(@Param("accountName") String accountName, @Param("serviceName") String serviceName, Pageable pageable);
 
-    @Query("SELECT r FROM RequestService r WHERE r.account.name LIKE CONCAT('%',:accountName,'%') AND r.reasonDetailSubService.reasonName LIKE CONCAT('%',:serviceName,'%') AND r.statusServiceRequest.id =:statusId ORDER BY r.id")
+    @Query("SELECT r FROM RequestService r WHERE r.account.name LIKE CONCAT('%',:accountName,'%') AND r.reasonDetailSubService.reasonName LIKE CONCAT('%',:serviceName,'%') AND r.statusServiceRequest.id =:statusId ORDER BY r.id DESC")
     Page<RequestService> requestServicesWithStatus(@Param("accountName") String accountName, @Param("serviceName") String serviceName, @Param("statusId") Long status, Pageable pageable);
 
     @Transactional
@@ -45,10 +45,13 @@ public interface RequestServiceDAO extends JpaRepository<RequestService, Long> {
     @Query("SELECT count(r.id) FROM RequestService r WHERE r.statusServiceRequest.id = 3")
     Long totalServiceRequest();
 
-    @Query("SELECT r FROM RequestService  r WHERE r.statusServiceRequest.id=3 AND MONTH(r.dateRequest)=?1 AND YEAR(r.dateRequest)=?2 ORDER BY r.id  ")
+    @Query("SELECT r FROM RequestService  r WHERE r.statusServiceRequest.id=3 AND MONTH(r.dateRequest)=?1 AND YEAR(r.dateRequest)=?2 ORDER BY r.id DESC  ")
     List<RequestService> requestServiceByMonth(String month, String year);
 
-    @Query("SELECT r FROM RequestService  r WHERE r.statusServiceRequest.id IN(1,2.3)  ORDER BY r.id  ")
-    List<RequestService> serviceRequestNotSuccessByMonth();
+    @Query("SELECT r FROM RequestService  r WHERE r.statusServiceRequest.id IN(1,2) AND r.billingMonth =?1 ORDER BY r.id  DESC")
+    List<RequestService> serviceRequestNotSuccessByMonth(String billingMonth);
+
+    @Query("SELECT r FROM RequestService  r WHERE r.statusServiceRequest.id = 3 AND r.billingMonth =?1 ORDER BY r.id  DESC")
+    List<RequestService> requestServiceByBillingMonthAndStatus(String billingMonth);
 
 }

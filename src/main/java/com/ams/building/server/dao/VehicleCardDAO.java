@@ -46,7 +46,10 @@ public interface VehicleCardDAO extends JpaRepository<VehicleCard, Long> {
     @Query("SELECT v FROM VehicleCard v WHERE v.account.id =?1 AND v.statusVehicleCard.id <> 3 AND v.billingMonth=?2 ORDER BY v.id DESC")
     List<VehicleCard> vehicleCardRegister(Long accountId, String billingMonth);
 
-    @Query("SELECT v FROM VehicleCard v WHERE v.billingMonth=?1  ORDER BY v.id DESC")
+    @Query("SELECT v FROM VehicleCard v WHERE v.billingMonth=?1 AND v.isUse = 1 ORDER BY v.id DESC")
     List<VehicleCard> vehicleCardByBillingMonth(String billingMonth);
+
+    @Query("SELECT v FROM VehicleCard v WHERE v.billingMonth=?1 AND v.statusVehicleCard.id =3  ORDER BY v.id DESC")
+    List<VehicleCard> vehicleCardByBillingMonthAndStatus(String billingMonth);
 
 }

@@ -33,7 +33,6 @@ import static com.ams.building.server.utils.DateTimeUtils.DD_MM_YYYY;
 import static com.ams.building.server.utils.DateTimeUtils.HH_MM;
 import static com.ams.building.server.utils.DateTimeUtils.convertDateToStringWithTimezone;
 
-@Transactional
 @Service
 public class NotificationSeviceImpl implements NotificationService {
 

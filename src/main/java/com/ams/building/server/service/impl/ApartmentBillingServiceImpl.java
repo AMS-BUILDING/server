@@ -7,6 +7,7 @@ import com.ams.building.server.bean.DetailApartmentBilling;
 import com.ams.building.server.bean.RequestService;
 import com.ams.building.server.bean.ResidentCard;
 import com.ams.building.server.bean.RoomNumber;
+import com.ams.building.server.bean.StatusApartmentBilling;
 import com.ams.building.server.bean.VehicleCard;
 import com.ams.building.server.constant.Constants;
 import com.ams.building.server.constant.StatusCode;
@@ -18,6 +19,9 @@ import com.ams.building.server.dao.RequestServiceDAO;
 import com.ams.building.server.dao.ResidentCardDAO;
 import com.ams.building.server.dao.VehicleCardDAO;
 import com.ams.building.server.exception.RestApiException;
+import com.ams.building.server.response.BillingDetailResponse;
+import com.ams.building.server.response.BillingResponse;
+import com.ams.building.server.response.BillingTotalResponse;
 import com.ams.building.server.response.NotificationFeeApartmentResponse;
 import com.ams.building.server.response.ServiceNameFeeApartmentResponse;
 import com.ams.building.server.service.ApartmentBillingService;
@@ -31,7 +35,9 @@ import javax.mail.MessagingException;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -135,8 +141,8 @@ public class ApartmentBillingServiceImpl implements ApartmentBillingService {
     @Transactional
     @Override
     public void checkAndInsertBillingInMonth() {
-        // Insert 4 table
-        // vehicle card, apartment billing, detail apartment
+        // Insert 5 table
+        // vehicle card,resident card, service request, apartment billing, detail apartment
         // lay them thong tin cua request service
 
         // Get Last Month
@@ -163,55 +169,148 @@ public class ApartmentBillingServiceImpl implements ApartmentBillingService {
         // 1. Vehicle card
         List<VehicleCard> vehicleCardByBillingMonth = vehicleCardDAO.vehicleCardByBillingMonth(billingMonth);
         for (VehicleCard vehicleCard : vehicleCardByBillingMonth) {
-            if (vehicleCard.getIsUse() == 1) {
-                VehicleCard newVehicleCard = new VehicleCard();
-                newVehicleCard.setVehicle(vehicleCard.getVehicle());
-                newVehicleCard.setAccount(vehicleCard.getAccount());
-                newVehicleCard.setStatusVehicleCard(vehicleCard.getStatusVehicleCard());
-                newVehicleCard.setVehicleBranch(vehicleCard.getVehicleBranch());
-                newVehicleCard.setLicensePlate(vehicleCard.getLicensePlate());
-                newVehicleCard.setVehicleColor(vehicleCard.getVehicleColor());
-                newVehicleCard.setBillingMonth(billingMonthCurrent);
-                newVehicleCard.setIsUse(1);
-                // add vehicle card to month
-                vehicleCardDAO.save(newVehicleCard);
-            }
+            VehicleCard newVehicleCard = new VehicleCard();
+            newVehicleCard.setVehicle(vehicleCard.getVehicle());
+            newVehicleCard.setAccount(vehicleCard.getAccount());
+            newVehicleCard.setStatusVehicleCard(vehicleCard.getStatusVehicleCard());
+            newVehicleCard.setVehicleBranch(vehicleCard.getVehicleBranch());
+            newVehicleCard.setLicensePlate(vehicleCard.getLicensePlate());
+            newVehicleCard.setVehicleColor(vehicleCard.getVehicleColor());
+            newVehicleCard.setBillingMonth(billingMonthCurrent);
+            newVehicleCard.setIsUse(1);
+            newVehicleCard.setStartDate(new Date());
+            // add vehicle card to month
+            vehicleCardDAO.save(newVehicleCard);
         }
 
         // 2. Resident card
         List<ResidentCard> residentCardByBillingMonth = residentCardDAO.residentCardByBillingMonth(billingMonth);
         for (ResidentCard residentCard : residentCardByBillingMonth) {
-            if (residentCard.getIsUse() == 1) {
-                ResidentCard newResidentCard = new ResidentCard();
-                newResidentCard.setAccount(residentCard.getAccount());
-                newResidentCard.setBillingMonth(billingMonthCurrent);
-                newResidentCard.setIsUse(1);
-                newResidentCard.setStatusResidentCard(residentCard.getStatusResidentCard());
-                newResidentCard.setCardCode(residentCard.getCardCode());
-                if (residentCard.getStatusResidentCard().getId() == 3) {
-                    newResidentCard.setPrice(0D);
-                } else {
-                    newResidentCard.setPrice(residentCard.getPrice());
-                }
-                // add resident card to month
-                residentCardDAO.save(newResidentCard);
+            ResidentCard newResidentCard = new ResidentCard();
+            newResidentCard.setAccount(residentCard.getAccount());
+            newResidentCard.setBillingMonth(billingMonthCurrent);
+            newResidentCard.setIsUse(1);
+            newResidentCard.setStatusResidentCard(residentCard.getStatusResidentCard());
+            newResidentCard.setCardCode(residentCard.getCardCode());
+            if (residentCard.getStatusResidentCard().getId() == 3) {
+                newResidentCard.setPrice(0D);
+            } else {
+                newResidentCard.setPrice(residentCard.getPrice());
             }
+            // add resident card to month
+            residentCardDAO.save(newResidentCard);
         }
 
-        List<RequestService> requestServices = requestServiceDAO.serviceRequestNotSuccessByMonth();
+        // 3. Request Service
+        List<RequestService> serviceRequestNotSuccessByMonth = requestServiceDAO.serviceRequestNotSuccessByMonth(billingMonth);
+        for (RequestService requestService : serviceRequestNotSuccessByMonth) {
+            RequestService newRequest = new RequestService();
+            newRequest.setBillingMonth(billingMonthCurrent);
+            newRequest.setStatusServiceRequest(requestService.getStatusServiceRequest());
+            newRequest.setAccount(requestService.getAccount());
+            if (requestService.getStartDate() != null) {
+                newRequest.setStartDate(requestService.getStartDate());
+            }
+            if (requestService.getEndDate() != null) {
+                newRequest.setEndDate(requestService.getEndDate());
+            }
+            if (requestService.getDateRequest() != null) {
+                newRequest.setDateRequest(requestService.getDateRequest());
+            }
+            newRequest.setReasonDetailSubService(requestService.getReasonDetailSubService());
+            requestServiceDAO.save(newRequest);
+        }
 
         // Get thong tin
-        String[] billingMonthList = billingMonth.split("/");
+        // 1. Get thong tin tu bang vehicle+ resident + request  : account id + tien + status success + billing month
+        List<VehicleCard> vehicleCardsCalculatePrice = vehicleCardDAO.vehicleCardByBillingMonthAndStatus(billingMonth);
+        List<ResidentCard> residentCardCalculatePrice = residentCardDAO.residentCardByBillingMonthAndStatus(billingMonth);
+        List<RequestService> requestServiceCalculatePrice = requestServiceDAO.requestServiceByBillingMonthAndStatus(billingMonth);
 
-        // get Account Id From List Resident + Carc + request
-        List<Account> accountFromVehicleList = vehicleCardByBillingMonth.stream().map(VehicleCard::getAccount).distinct().collect(Collectors.toList());
-        List<Long> accountIdFromVehicleList = accountFromVehicleList.stream().map(Account::getId).distinct().collect(Collectors.toList());
+        // 2. Insert table billing detail
+        // insert vehicle to billing detail
+        List<BillingResponse> billingResponses = new ArrayList<>();
+        for (VehicleCard card : vehicleCardsCalculatePrice) {
+            DetailApartmentBilling billing = new DetailApartmentBilling();
+            billing.setAccount(card.getAccount());
+            billing.setVehicleCard(card);
+            billing.setVehicleName(card.getVehicleBranch());
+            billing.setVehiclePrice(card.getVehicle().getPrice());
+            billing.setBillingMonth(billingMonth);
+            detailApartmentBillingDAO.save(billing);
+            BillingResponse response = BillingResponse.builder().build();
+            response.setAccountId(card.getAccount().getId());
+            response.setPrice(card.getVehicle().getPrice());
+            billingResponses.add(response);
+        }
+        // Insert resident card to billing detail
+        for (ResidentCard card : residentCardCalculatePrice) {
+            DetailApartmentBilling billing = new DetailApartmentBilling();
+            billing.setAccount(card.getAccount());
+            billing.setBillingMonth(billingMonth);
+            billing.setResidentCard(card);
+            billing.setResidentCode(card.getCardCode());
+            billing.setResidentPrice(card.getPrice());
+            detailApartmentBillingDAO.save(billing);
+            BillingResponse response = BillingResponse.builder().build();
+            response.setAccountId(card.getAccount().getId());
+            response.setPrice(card.getPrice());
+            billingResponses.add(response);
+        }
+        // Insert service to billing detail
+        for (RequestService requestService : requestServiceCalculatePrice) {
+            DetailApartmentBilling billing = new DetailApartmentBilling();
+            billing.setAccount(requestService.getAccount());
+            billing.setBillingMonth(billingMonth);
+            billing.setReasonDetailSubService(requestService.getReasonDetailSubService());
+            billing.setSubServicePrice(requestService.getReasonDetailSubService().getPrice());
+            billing.setSubServiceName(requestService.getReasonDetailSubService().getReasonName());
+            detailApartmentBillingDAO.save(billing);
+            BillingResponse response = BillingResponse.builder().build();
+            response.setAccountId(requestService.getAccount().getId());
+            response.setPrice(requestService.getReasonDetailSubService().getPrice());
+            billingResponses.add(response);
+        }
 
-////        List<Long> accountIds = accounts.stream().map(Account::getId).distinct()
-//                .collect(Collectors.toList());
-//        List<Apartment> apartments = apartmentDAO.apartmentByListAccountId(accountIds);
+        // Insert apartment billing
+        List<BillingTotalResponse> totalResponses = new ArrayList<>();
+        Map<Long, List<BillingResponse>> result = billingResponses.stream().collect(Collectors.groupingBy(BillingResponse::getAccountId));
+        for (Map.Entry<Long, List<BillingResponse>> entry : result.entrySet()) {
+            List<BillingResponse> responses = entry.getValue();
+            Double sum = responses.stream()
+                    .mapToDouble(value -> value.getPrice())
+                    .sum();
+            BillingTotalResponse totalResponse = BillingTotalResponse.builder().build();
+            Apartment apartment = apartmentDAO.getApartmentByAccountId(responses.get(0).getAccountId());
+            totalResponse.setApartmentId(apartment.getId());
+            totalResponse.setTotalPrice(sum);
+            totalResponses.add(totalResponse);
+        }
+        // Insert Apartment
+        StatusApartmentBilling status = new StatusApartmentBilling();
+        status.setId(1L);
+        List<BillingDetailResponse> responses = new ArrayList<>();
+        for (BillingTotalResponse response : totalResponses) {
+            ApartmentBilling apartmentBilling = new ApartmentBilling();
+            Apartment apartment = apartmentDAO.getById(response.getApartmentId());
+            apartmentBilling.setApartment(apartment);
+            apartmentBilling.setTotalPrice(response.getTotalPrice());
+            apartmentBilling.setIsRead(false);
+            apartmentBilling.setBillingMonth(billingMonth);
+            apartmentBilling.setStatusApartmentBilling(status);
+            ApartmentBilling addApartment = apartmentBillingDAO.save(apartmentBilling);
+            BillingDetailResponse response1 = BillingDetailResponse.builder().build();
+            response1.setApartmentId(addApartment.getId());
+            response1.setAccountId(apartment.getAccount().getId());
+            responses.add(response1);
+        }
 
-
+        for (BillingDetailResponse response : responses) {
+            List<DetailApartmentBilling> detailApartmentBillingByAccountIdAndMonth = detailApartmentBillingDAO.detailApartmentBillingByAccountIdAndMonth(response.getAccountId(), billingMonth);
+            for (DetailApartmentBilling billing : detailApartmentBillingByAccountIdAndMonth) {
+                detailApartmentBillingDAO.updateDetailBilling(response.getApartmentId(), billing.getId());
+            }
+        }
     }
 
     @Override
