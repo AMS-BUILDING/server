@@ -170,6 +170,7 @@ public class VehicleCardServiceImpl implements VehicleCardService {
             vehicleCard.setLicensePlate(request.getLicensePlate().trim());
             vehicleCard.setVehicleColor(request.getVehicleColor().trim());
             vehicleCard.setBillingMonth(billingMonth.trim());
+            vehicleCard.setIsUse(1);
             VehicleCard card = vehicleCardDAO.save(vehicleCard);
             ids.add(card.getId());
         }

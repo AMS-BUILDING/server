@@ -4,6 +4,8 @@ import com.ams.building.server.bean.Account;
 import com.ams.building.server.bean.Apartment;
 import com.ams.building.server.bean.ApartmentBilling;
 import com.ams.building.server.bean.DetailApartmentBilling;
+import com.ams.building.server.bean.RequestService;
+import com.ams.building.server.bean.ResidentCard;
 import com.ams.building.server.bean.RoomNumber;
 import com.ams.building.server.bean.VehicleCard;
 import com.ams.building.server.constant.Constants;
@@ -137,6 +139,7 @@ public class ApartmentBillingServiceImpl implements ApartmentBillingService {
         // vehicle card, apartment billing, detail apartment
         // lay them thong tin cua request service
 
+        // Get Last Month
         Calendar cal = Calendar.getInstance();
         int month = cal.get(Calendar.MONTH);
         int year = cal.get(Calendar.YEAR);
@@ -149,29 +152,65 @@ public class ApartmentBillingServiceImpl implements ApartmentBillingService {
             billingMonth = month + "/" + year;
         }
 
+        // Current Month
+        String billingMonthCurrent;
+        if (month >= 0 && month <= 8) {
+            billingMonthCurrent = "0" + (month + 1) + "/" + year;
+        } else {
+            billingMonthCurrent = (month + 1) + "/" + year;
+        }
+
         // 1. Vehicle card
         List<VehicleCard> vehicleCardByBillingMonth = vehicleCardDAO.vehicleCardByBillingMonth(billingMonth);
         for (VehicleCard vehicleCard : vehicleCardByBillingMonth) {
-            VehicleCard newVehicleCard = new VehicleCard();
-            newVehicleCard.setVehicle(vehicleCard.getVehicle());
-            newVehicleCard.setAccount(vehicleCard.getAccount());
-            newVehicleCard.setStatusVehicleCard(vehicleCard.getStatusVehicleCard());
-            newVehicleCard.setVehicleBranch(vehicleCard.getVehicleBranch());
-            newVehicleCard.setLicensePlate(vehicleCard.getLicensePlate());
-            newVehicleCard.setVehicleColor(vehicleCard.getVehicleColor());
-            newVehicleCard.setBillingMonth(billingMonth);
-            newVehicleCard.setIsUse(1);
-            // add vehicle card to month
-            vehicleCardDAO.save(newVehicleCard);
+            if (vehicleCard.getIsUse() == 1) {
+                VehicleCard newVehicleCard = new VehicleCard();
+                newVehicleCard.setVehicle(vehicleCard.getVehicle());
+                newVehicleCard.setAccount(vehicleCard.getAccount());
+                newVehicleCard.setStatusVehicleCard(vehicleCard.getStatusVehicleCard());
+                newVehicleCard.setVehicleBranch(vehicleCard.getVehicleBranch());
+                newVehicleCard.setLicensePlate(vehicleCard.getLicensePlate());
+                newVehicleCard.setVehicleColor(vehicleCard.getVehicleColor());
+                newVehicleCard.setBillingMonth(billingMonthCurrent);
+                newVehicleCard.setIsUse(1);
+                // add vehicle card to month
+                vehicleCardDAO.save(newVehicleCard);
+            }
         }
+
+        // 2. Resident card
+        List<ResidentCard> residentCardByBillingMonth = residentCardDAO.residentCardByBillingMonth(billingMonth);
+        for (ResidentCard residentCard : residentCardByBillingMonth) {
+            if (residentCard.getIsUse() == 1) {
+                ResidentCard newResidentCard = new ResidentCard();
+                newResidentCard.setAccount(residentCard.getAccount());
+                newResidentCard.setBillingMonth(billingMonthCurrent);
+                newResidentCard.setIsUse(1);
+                newResidentCard.setStatusResidentCard(residentCard.getStatusResidentCard());
+                newResidentCard.setCardCode(residentCard.getCardCode());
+                if (residentCard.getStatusResidentCard().getId() == 3) {
+                    newResidentCard.setPrice(0D);
+                } else {
+                    newResidentCard.setPrice(residentCard.getPrice());
+                }
+                // add resident card to month
+                residentCardDAO.save(newResidentCard);
+            }
+        }
+
+        List<RequestService> requestServices = requestServiceDAO.serviceRequestNotSuccessByMonth();
 
         // Get thong tin
         String[] billingMonthList = billingMonth.split("/");
-        List<Account> accounts = accountDAO.getAccountByRoleLandol();
-        List<Long> accountIds = accounts.stream().map(Account::getId).distinct()
-                .collect(Collectors.toList());
-        List<Apartment> apartments = apartmentDAO.apartmentByListAccountId(accountIds);
-        
+
+        // get Account Id From List Resident + Carc + request
+        List<Account> accountFromVehicleList = vehicleCardByBillingMonth.stream().map(VehicleCard::getAccount).distinct().collect(Collectors.toList());
+        List<Long> accountIdFromVehicleList = accountFromVehicleList.stream().map(Account::getId).distinct().collect(Collectors.toList());
+
+////        List<Long> accountIds = accounts.stream().map(Account::getId).distinct()
+//                .collect(Collectors.toList());
+//        List<Apartment> apartments = apartmentDAO.apartmentByListAccountId(accountIds);
+
 
     }
 

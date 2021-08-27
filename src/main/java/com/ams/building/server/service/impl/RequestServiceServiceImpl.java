@@ -31,7 +31,6 @@ import com.ams.building.server.response.ServiceAddResponse;
 import com.ams.building.server.response.StatusServiceResponse;
 import com.ams.building.server.service.RequestServiceService;
 import com.ams.building.server.utils.DateTimeUtils;
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -240,6 +239,16 @@ public class RequestServiceServiceImpl implements RequestServiceService {
         StatusServiceRequest status = new StatusServiceRequest();
         status.setId(3L);
 
+        Calendar cal = Calendar.getInstance();
+        int month = cal.get(Calendar.MONTH);
+        int year = cal.get(Calendar.YEAR);
+        String billingMonth;
+        if (month >= 0 && month <= 8) {
+            billingMonth = "0" + (month + 1) + "/" + year;
+        } else {
+            billingMonth = (month + 1) + "/" + year;
+        }
+
         Account account = new Account();
         account.setId(requestServiceRequest.getAccountId());
         if (requestId <= 4L) {
@@ -252,6 +261,7 @@ public class RequestServiceServiceImpl implements RequestServiceService {
             requestService.setAccount(account);
             requestService.setStartDate(convertStringToDate(requestServiceRequest.getStartDate(), DateTimeUtils.YYYY_MM_DD_HH_MM));
             requestService.setEndDate(convertStringToDate(requestServiceRequest.getEndDate(), DateTimeUtils.YYYY_MM_DD_HH_MM));
+            requestService.setBillingMonth(billingMonth);
             requestServiceDAO.save(requestService);
         } else if (requestId == 5L) {
             requestService.setReasonDetailSubService(reason);
@@ -259,6 +269,7 @@ public class RequestServiceServiceImpl implements RequestServiceService {
             requestService.setAccount(account);
             requestService.setStartDate(convertStringToDate(requestServiceRequest.getStartDate(), DateTimeUtils.YYYY_MM_DD_HH_MM));
             requestService.setEndDate(convertStringToDate(requestServiceRequest.getEndDate(), DateTimeUtils.YYYY_MM_DD_HH_MM));
+            requestService.setBillingMonth(billingMonth);
             requestServiceDAO.save(requestService);
         } else {
             requestService.setReasonDetailSubService(reason);
@@ -267,6 +278,7 @@ public class RequestServiceServiceImpl implements RequestServiceService {
             requestService.setAccount(account);
             requestService.setStartDate(convertStringToDate(requestServiceRequest.getStartDate(), DateTimeUtils.YYYY_MM_DD_HH_MM));
             requestService.setEndDate(convertStringToDate(requestServiceRequest.getEndDate(), DateTimeUtils.YYYY_MM_DD_HH_MM));
+            requestService.setBillingMonth(billingMonth);
             requestServiceDAO.save(requestService);
         }
         id = requestService.getId();
@@ -303,9 +315,18 @@ public class RequestServiceServiceImpl implements RequestServiceService {
 
     @Override
     public List<RequestServiceClientResponse> findRequestServiceByAccountId(Long accountId) {
+        Calendar cal = Calendar.getInstance();
+        int month = cal.get(Calendar.MONTH);
+        int year = cal.get(Calendar.YEAR);
+        String billingMonth;
+        if (month >= 0 && month <= 8) {
+            billingMonth = "0" + (month + 1) + "/" + year;
+        } else {
+            billingMonth = (month + 1) + "/" + year;
+        }
         List<RequestServiceClientResponse> response = new ArrayList<>();
-        List<RequestService> requestServices = requestServiceDAO.findRequestServiceByAccountId(accountId);
-        List<VehicleCard> requestVehicleCard = vehicleCardDAO.vehicleCardRegister(accountId);
+        List<RequestService> requestServices = requestServiceDAO.findRequestServiceByAccountId(accountId, billingMonth);
+        List<VehicleCard> requestVehicleCard = vehicleCardDAO.vehicleCardRegister(accountId, billingMonth);
         List<Long> status = new ArrayList<>();
         status.add(1L);
         status.add(2L);

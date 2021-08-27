@@ -12,7 +12,6 @@ public class RequestServiceRequest {
     private Long reasonDetailSubServiceId;
     private Long accountId;
     private String startDate;
-    private String description;
     private String endDate;
 
 }
