@@ -119,7 +119,15 @@ public class VehicleCardServiceImpl implements VehicleCardService {
         if (Objects.isNull(vehicle)) {
             throw new RestApiException(StatusCode.VEHICLE_NOT_EXIST);
         }
-        List<VehicleCard> vehicleCards = vehicleCardDAO.vehicleListByAccountIdAndTypeId(id, vehicleTypeId);
+        Calendar cal = Calendar.getInstance();
+        int month = cal.get(Calendar.MONTH) + 1;
+        int year = cal.get(Calendar.YEAR);
+        String monthStr = String.valueOf(month);
+        if (month < 10) {
+            monthStr = "0" + month;
+        }
+        String billingMonth = monthStr + "/" + year;
+        List<VehicleCard> vehicleCards = vehicleCardDAO.vehicleListByAccountIdAndTypeId(id, vehicleTypeId, billingMonth);
         List<VehicleTypeResponse> responses = new ArrayList<>();
         vehicleCards.forEach(c -> responses.add(convertToVehicleTypeResponse(c)));
         return responses;
