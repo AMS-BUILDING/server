@@ -41,7 +41,7 @@ public class ApartmentBillingSchedule {
     }
 
     /**
-     * Send Mail To Remid For  Resident About Fee Service In Month.
+     * Send Mail To Remind For  Resident About Fee Service In Month.
      * Mail will send 5rd in month.
      */
     @Scheduled(cron = "0 9 5 * * ?")
