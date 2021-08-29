@@ -11,7 +11,6 @@ import com.ams.building.server.response.LoginResponse;
 import com.ams.building.server.response.UserPrincipal;
 import com.ams.building.server.service.AccountService;
 import com.ams.building.server.service.EmailService;
-import com.ams.building.server.utils.FileStore;
 import com.ams.building.server.utils.PropertiesReader;
 import com.ams.building.server.utils.RandomNumber;
 import org.apache.log4j.Logger;

@@ -79,7 +79,7 @@ public class ResidentCardServiceImpl implements ResidentCardService {
     }
 
     @Override
-    public void  removeResidentCard(Long id) {
+    public void removeResidentCard(Long id) {
         if (StringUtils.isEmpty(id)) {
             throw new RestApiException(StatusCode.DATA_EMPTY);
         }

@@ -165,7 +165,7 @@ public class ApartmentBillingServiceImpl implements ApartmentBillingService {
         } else {
             billingMonthCurrent = (month + 1) + "/" + year;
         }
-
+        List<VehicleCard> listAddVehicleCard = new ArrayList<>();
         // 1. Vehicle card
         List<VehicleCard> vehicleCardByBillingMonth = vehicleCardDAO.vehicleCardByBillingMonth(billingMonth);
         for (VehicleCard vehicleCard : vehicleCardByBillingMonth) {
@@ -179,11 +179,13 @@ public class ApartmentBillingServiceImpl implements ApartmentBillingService {
             newVehicleCard.setBillingMonth(billingMonthCurrent);
             newVehicleCard.setIsUse(1);
             newVehicleCard.setStartDate(new Date());
-            // add vehicle card to month
-            vehicleCardDAO.save(newVehicleCard);
+            listAddVehicleCard.add(newVehicleCard);
         }
+        // add vehicle card to month
+        vehicleCardDAO.saveAllAndFlush(listAddVehicleCard);
 
         // 2. Resident card
+        List<ResidentCard> listAddResidentCard = new ArrayList<>();
         List<ResidentCard> residentCardByBillingMonth = residentCardDAO.residentCardByBillingMonth(billingMonth);
         for (ResidentCard residentCard : residentCardByBillingMonth) {
             ResidentCard newResidentCard = new ResidentCard();
@@ -197,11 +199,13 @@ public class ApartmentBillingServiceImpl implements ApartmentBillingService {
             } else {
                 newResidentCard.setPrice(residentCard.getPrice());
             }
-            // add resident card to month
-            residentCardDAO.save(newResidentCard);
+            listAddResidentCard.add(newResidentCard);
         }
+        // add resident card to month
+        residentCardDAO.saveAllAndFlush(listAddResidentCard);
 
         // 3. Request Service
+        List<RequestService> listDataRequestService = new ArrayList<>();
         List<RequestService> serviceRequestNotSuccessByMonth = requestServiceDAO.serviceRequestNotSuccessByMonth(billingMonth);
         for (RequestService requestService : serviceRequestNotSuccessByMonth) {
             RequestService newRequest = new RequestService();
@@ -218,8 +222,9 @@ public class ApartmentBillingServiceImpl implements ApartmentBillingService {
                 newRequest.setDateRequest(requestService.getDateRequest());
             }
             newRequest.setReasonDetailSubService(requestService.getReasonDetailSubService());
-            requestServiceDAO.save(newRequest);
+            listDataRequestService.add(newRequest);
         }
+        requestServiceDAO.saveAllAndFlush(listDataRequestService);
 
         // Get thong tin
         // 1. Get thong tin tu bang vehicle+ resident + request  : account id + tien + status success + billing month
