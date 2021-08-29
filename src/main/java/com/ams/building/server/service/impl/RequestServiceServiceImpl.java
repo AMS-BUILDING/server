@@ -24,6 +24,7 @@ import com.ams.building.server.request.RequestServiceRequest;
 import com.ams.building.server.response.ApiResponse;
 import com.ams.building.server.response.DetailServiceRequestResponse;
 import com.ams.building.server.response.DetailSubServiceClientResponse;
+import com.ams.building.server.response.HourResponse;
 import com.ams.building.server.response.ReasonDetailSubServiceResponse;
 import com.ams.building.server.response.RequestServiceClientResponse;
 import com.ams.building.server.response.RequestServiceResponse;
@@ -210,17 +211,24 @@ public class RequestServiceServiceImpl implements RequestServiceService {
     }
 
     @Override
-    public List<Integer> listHours() {
+    public List<HourResponse> listHours() {
         Calendar now = Calendar.getInstance();
         int hour = now.get(Calendar.HOUR_OF_DAY);
         int minute = now.get(Calendar.MINUTE);
-        List<Integer> hours = new ArrayList<>();
+        List<HourResponse> hours = new ArrayList<>();
         int start = hour;
         if (minute != 0) {
             start = hour + 1;
         }
         for (int i = start; i <= 24; i++) {
-            hours.add(i);
+            HourResponse response = HourResponse.builder().build();
+            response.setLabel(i + "h");
+            if (i >= 1 && i <= 9) {
+                response.setValue("0" + i + ":00");
+            } else {
+                response.setValue(i + ":00");
+            }
+            hours.add(response);
         }
         return hours;
     }

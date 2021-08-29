@@ -2,6 +2,7 @@ package com.ams.building.server.controller.admin;
 
 import com.ams.building.server.constant.Constants;
 import com.ams.building.server.response.ApiResponse;
+import com.ams.building.server.response.HourResponse;
 import com.ams.building.server.response.RequestServiceClientResponse;
 import com.ams.building.server.response.RequestServiceResponse;
 import com.ams.building.server.response.StatusServiceResponse;
@@ -80,8 +81,8 @@ public class ServiceRequestController {
     }
     @GetMapping(Constants.UrlPath.URL_API_LIST_HOURS)
     public ResponseEntity<?>listHourActive(){
-        List<Integer> hours = requestServiceService.listHours();
-        ResponseEntity<List<Integer>> response = new ResponseEntity<>(hours, HttpStatus.OK);
+        List<HourResponse> hours = requestServiceService.listHours();
+        ResponseEntity<List<HourResponse>> response = new ResponseEntity<>(hours, HttpStatus.OK);
         return response;
     }
 
