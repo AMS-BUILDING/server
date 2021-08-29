@@ -134,12 +134,21 @@ public class RequestServiceServiceImpl implements RequestServiceService {
         if (Objects.isNull(account)) {
             throw new RestApiException(StatusCode.ACCOUNT_NOT_EXIST);
         }
+        Calendar cal = Calendar.getInstance();
+        int month = cal.get(Calendar.MONTH);
+        int year = cal.get(Calendar.YEAR);
+        String billingMonth;
+        if (month >= 0 && month <= 8) {
+            billingMonth = "0" + (month + 1) + "/" + year;
+        } else {
+            billingMonth = (month + 1) + "/" + year;
+        }
         List<Long> status = new ArrayList<>();
         status.add(statusId);
         List<Integer> isUses = new ArrayList<>();
         isUses.add(1);
         isUses.add(0);
-        List<ResidentCard> residentCards = residentCardDAO.residentCardRegister(id, status, isUses);
+        List<ResidentCard> residentCards = residentCardDAO.residentCardRegister(id, status, billingMonth, isUses);
         List<RequestService> requestServiceByAccountId = requestServiceDAO.requestServiceByAccountId(id, statusId);
         List<RequestServiceClientResponse> responses = new ArrayList<>();
         requestServiceByAccountId.forEach(s -> responses.add(convertToHistoryResponse(s)));
@@ -340,7 +349,7 @@ public class RequestServiceServiceImpl implements RequestServiceService {
         status.add(2L);
         List<Integer> isUses = new ArrayList<>();
         isUses.add(1);
-        List<ResidentCard> residentCards = residentCardDAO.residentCardRegister(accountId, status, isUses);
+        List<ResidentCard> residentCards = residentCardDAO.residentCardRegister(accountId, status, billingMonth, isUses);
         for (RequestService requestService : requestServices) {
             RequestServiceClientResponse requestServiceClientResponse = convertRequestServiceToRequestServiceClientResponse(requestService);
             response.add(requestServiceClientResponse);
