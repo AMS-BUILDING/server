@@ -73,8 +73,8 @@ public class Constants {
         public static final String URL_API_VALIDATE_OWNER = "/admin/validate/owner";
         public static final String URL_API_VALIDATE_RESIDENT = "/admin/validate/resident";
 
-        public static final String URL_API_SEARCH_DETAIL_SUB_SERVICE = "/landlord/detail_sub_service/search";
-        public static final String URL_API_SEARCH_REASON_DETAIL_SUB_SERVICE = "/landlord/reason_detail_sub_service/search";
+        public static final String URL_API_SEARCH_DETAIL_SUB_SERVICE = "/tenant/detail_sub_service/search";
+        public static final String URL_API_SEARCH_REASON_DETAIL_SUB_SERVICE = "/tenant/reason_detail_sub_service/search";
         public static final String URL_API_SERVICE_REQUEST_PRICE = "/landlord/service_request/price";
         public static final String URL_API_ADD_SERVICE_REQUEST = "/landlord/service_request/add";
         public static final String URL_API_TYPE_APARTMENT = "/landlord/type_apartment";
