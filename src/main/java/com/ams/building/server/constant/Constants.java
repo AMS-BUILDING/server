@@ -83,7 +83,7 @@ public class Constants {
         public static final String URL_API_ADD_VEHICLE_CARD_CLIENT = "/landlord/vehicle_card/add";
         public static final String URL_API_STATUS_SERVICE_REQUEST = "/landlord/status_request";
 
-        public static final String URL_API_LIST_NOTIFICATION = "/landlord/notifications";
+        public static final String URL_API_LIST_NOTIFICATION = "/tenant/notifications";
         public static final String URL_API_LIST_NOTIFICATION_PRIVATE = "/landlord/notifications/private";
         public static final String URL_API_LIST_NOTIFICATION_NUMBER = "/landlord/notifications/numbers";
         public static final String URL_API_UDPATE_NOTIFICATION = "/landlord/update-status";
