@@ -61,6 +61,7 @@ public class NotificationSeviceImpl implements NotificationService {
         return apiResponse;
     }
 
+    @Transactional
     @Override
     public void addNotification(NotificationRequest request) {
         if (Objects.isNull(request) || (StringUtils.isEmpty(request.getDescription()) && StringUtils.isEmpty(request.getTitle())))
@@ -75,14 +76,16 @@ public class NotificationSeviceImpl implements NotificationService {
         if (accounts.isEmpty()) {
             throw new RestApiException(StatusCode.ACCOUNT_NOT_EXIST);
         }
+        List<Notification> dataInsert = new ArrayList<>();
         for (Account account : accounts) {
             Notification notification = new Notification();
             notification.setDescription(request.getDescription().trim());
             notification.setTitle(request.getTitle().trim());
             notification.setAccount(account);
             notification.setIsRead(false);
-            notificationDAO.save(notification);
+            dataInsert.add(notification);
         }
+        notificationDAO.saveAllAndFlush(dataInsert);
     }
 
     @Override
