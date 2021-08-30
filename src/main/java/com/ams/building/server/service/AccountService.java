@@ -29,10 +29,6 @@ public interface AccountService {
 
     LoginResponse getById(Long id);
 
-    Long count();
-
-    AccountAppResponse detailAccountApp(Long id);
-
     void changePassword(Long id, PasswordRequest request);
 
     void validateApartmentOwner(ApartmentOwnerRequest ownerRequest);

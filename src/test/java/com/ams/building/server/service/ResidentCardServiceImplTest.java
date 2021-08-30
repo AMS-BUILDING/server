@@ -87,20 +87,10 @@ public class ResidentCardServiceImplTest {
     @Test
     public void getResidentCardByAccountId() {
         List<ResidentCardResponse> cardResponses = new ArrayList<>();
-
         Calendar cal = Calendar.getInstance();
         int month = cal.get(Calendar.MONTH) + 1;
-        int year = cal.get(Calendar.YEAR);
-        String monthStr = String.valueOf(month);
-        if (month < 10) {
-            monthStr = "0" + month;
-        }
-
         Mockito.when(residentCardDAO.searchResidentCardByAccountId(Mockito.any(), Mockito.anyString(), Mockito.anyObject())).thenReturn(residentCards);
-
         residentCards.forEach(s -> cardResponses.add(convertToCardResponse(s)));
-        Long totalPage = residentCards.getTotalElements();
-
         residentCardServiceImpl.getResidentCardByAccountId(1, 5, 1L);
     }
 

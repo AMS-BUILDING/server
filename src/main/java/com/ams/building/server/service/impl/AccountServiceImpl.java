@@ -86,7 +86,7 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
             throw new RestApiException(StatusCode.EMAIL_NOT_RIGHT_FORMAT);
         }
         if (!isIdentifyCard(loginResponse.getIdentifyCard())) {
-            throw new RestApiException(StatusCode.IDENTIFY_CARD_EMPTY);
+            throw new RestApiException(StatusCode.IDENTIFY_CARD_NOT_RIGHT);
         }
         if (!isPhoneNumber(loginResponse.getPhone())) {
             throw new RestApiException(StatusCode.PHONE_NUMBER_NOT_RIGHT_FORMAT);
@@ -219,11 +219,6 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
 
     @Override
     public void updateProfile(LoginResponse accountDTO) {
-        UserPrincipal currentUser = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication()
-                .getPrincipal();
-
-        Account account = accountDao.getAccountById(currentUser.getId());
-
         if (Objects.isNull(accountDTO)) {
             throw new RestApiException(StatusCode.DATA_EMPTY);
         }
@@ -239,6 +234,11 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
         if (StringUtils.isEmpty(accountDTO.getDob())) {
             throw new RestApiException(StatusCode.DOB_EMPTY);
         }
+        UserPrincipal currentUser = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication()
+                .getPrincipal();
+
+        Account account = accountDao.getAccountById(currentUser.getId());
+
         if (!StringUtils.isEmpty(accountDTO.getIdentifyCard())) {
             if (!isIdentifyCard(accountDTO.getIdentifyCard().trim())) {
                 throw new RestApiException(StatusCode.IDENTIFY_CARD_NOT_RIGHT);
@@ -323,11 +323,6 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
         }
         LoginResponse response = convertToAccountResponse(account);
         return response;
-    }
-
-    @Override
-    public Long count() {
-        return accountDao.count();
     }
 
     @Override
@@ -550,19 +545,6 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
     }
 
     @Override
-    public AccountAppResponse detailAccountApp(Long id) {
-        if (Objects.isNull(id)) {
-            throw new RestApiException(StatusCode.DATA_EMPTY);
-        }
-        Account account = accountDao.getAccountById(id);
-        if (Objects.isNull(account)) {
-            throw new RestApiException(StatusCode.ACCOUNT_NOT_EXIST);
-        }
-        AccountAppResponse response = convertToAccountApp(account);
-        return response;
-    }
-
-    @Override
     public void changePassword(Long id, PasswordRequest request) {
         if (StringUtils.isEmpty(id)) {
             throw new RestApiException(StatusCode.DATA_EMPTY);
@@ -742,29 +724,6 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
         }
         Long roleId = account.getRole().getId();
         return roleId;
-    }
-
-    private AccountAppResponse convertToAccountApp(Account account) {
-        AccountAppResponse response = AccountAppResponse.builder().build();
-        Apartment apartment = apartmentDAO.getApartmentByAccountId(account.getId());
-        if (Objects.isNull(apartment)) {
-            throw new RestApiException(StatusCode.APARTMENT_NOT_EXIST);
-        }
-        RoomNumber roomNumber = apartment.getRoomNumber();
-        if (Objects.isNull(roomNumber)) {
-            throw new RestApiException(StatusCode.ROOM_NUMBER_NOT_EXIST);
-        }
-        response.setId(account.getId());
-        response.setName(account.getName());
-        response.setRoomNumber(roomNumber.getRoomName());
-        response.setDob(account.getDob());
-        response.setIdentifyCard(account.getIdentifyCard());
-        response.setEmail(account.getEmail());
-        response.setPhoneNumber(account.getPhone());
-        response.setCurrentAddress(account.getCurrentAddress());
-        response.setImageAvatar(account.getImage());
-        response.setPassword(PasswordGenerator.getHashString(account.getPassword()));
-        return response;
     }
 
     private Long addResident(ResidentRequest residentRequest) {

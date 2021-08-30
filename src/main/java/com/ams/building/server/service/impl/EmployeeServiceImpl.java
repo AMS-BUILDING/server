@@ -133,18 +133,6 @@ public class EmployeeServiceImpl implements EmployeeService {
                 throw new RestApiException(StatusCode.PHONE_REGISTER_BEFORE);
             }
         }
-//        String[] age1 = request.getDob().split("-");
-//        if (age1.length > 1) {
-//            String out = age1[2] + "/" + age1[1] + "/" + age1[0];
-//            String yearDob = out.split("/")[2];
-//            Calendar cal = Calendar.getInstance();
-//            int year = cal.get(Calendar.YEAR);
-//            int age = year - Integer.valueOf(yearDob);
-//            if (age < 18) {
-//                throw new RestApiException(StatusCode.EMPLOYEE_NOT_WORKING);
-//            }
-//            currentAccount.setDob(out);
-//        } else {
         String yearDob = request.getDob().split("/")[2];
         Calendar cal = Calendar.getInstance();
         int year = cal.get(Calendar.YEAR);
@@ -153,8 +141,6 @@ public class EmployeeServiceImpl implements EmployeeService {
             throw new RestApiException(StatusCode.EMPLOYEE_NOT_WORKING);
         }
         currentAccount.setDob(request.getDob());
-//        }
-
         currentAccount.setGender(request.getGender());
         currentAccount.setHomeTown(request.getHomeTown().trim());
         currentAccount.setPhone(request.getPhoneNumber().trim());
@@ -225,27 +211,6 @@ public class EmployeeServiceImpl implements EmployeeService {
             throw new RestApiException(StatusCode.EMAIL_REGISTER_BEFORE);
         }
         Account account = new Account();
-//        String[] age1 = request.getDob().split("-");
-//        if (age1.length > 1) {
-//            String out = age1[2] + "/" + age1[1] + "/" + age1[0];
-//            String yearDob = out.split("/")[2];
-//            Calendar cal = Calendar.getInstance();
-//            int year = cal.get(Calendar.YEAR);
-//            int age = year - Integer.valueOf(yearDob);
-//            if (age < 18) {
-//                throw new RestApiException(StatusCode.EMPLOYEE_NOT_WORKING);
-//            }
-//            account.setDob(out);
-//        } else {
-//            String yearDob = request.getDob().split("/")[2];
-//            Calendar cal = Calendar.getInstance();
-//            int year = cal.get(Calendar.YEAR);
-//            int age = year - Integer.valueOf(yearDob);
-//            if (age < 18) {
-//                throw new RestApiException(StatusCode.EMPLOYEE_NOT_WORKING);
-//            }
-//            account.setDob(request.getDob());
-//        }
         String yearDob = request.getDob().split("/")[2];
         Calendar cal = Calendar.getInstance();
         int year = cal.get(Calendar.YEAR);
@@ -296,10 +261,8 @@ public class EmployeeServiceImpl implements EmployeeService {
             }
             String csvFileName = "Employee.csv";
             response.setContentType(Constants.TEXT_CSV);
-            // creates mock data
             String headerValue = String.format("attachment; filename=\"%s\"", csvFileName);
             response.setHeader(Constants.HEADER_KEY, headerValue);
-            // uses the Super CSV API to generate CSV data from the model data
             final byte[] bom = new byte[]{(byte) 239, (byte) 187, (byte) 191};
             OutputStream os = response.getOutputStream();
             os.write(bom);
@@ -325,11 +288,6 @@ public class EmployeeServiceImpl implements EmployeeService {
         response.setEmail(account.getEmail());
         response.setPhone(account.getPhone());
         response.setCurrentAddress(account.getCurrentAddress());
-//        String[] dobs = account.getDob().split("/");
-//        if (dobs.length > 1) {
-//            response.setDob(dobs[2] + "-" + dobs[1] + "-" + dobs[0]);
-//        } else {
-//        }
         response.setDob(account.getDob());
         response.setHomeTown(account.getHomeTown());
         response.setIdentifyCard(account.getIdentifyCard());
@@ -370,6 +328,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
         } catch (Exception e) {
             logger.error("writeEmployee error", e);
+            throw new RestApiException(StatusCode.ERROR_UNKNOWN);
         }
         return content;
     }

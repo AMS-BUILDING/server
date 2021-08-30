@@ -101,25 +101,6 @@ public class DashboardServiceImpl implements DashBoardService {
         return response;
     }
 
-    private DashboardTypeAccountResponseConvert dashboardTypeAccountResponseToDashboardTypeAccountResponseConvert(DashboardTypeAccountResponse request) {
-        DashboardTypeAccountResponseConvert response = DashboardTypeAccountResponseConvert.builder()
-                .type(request.getType())
-                .total(request.getTotal())
-                .build();
-        if (request.getType().equalsIgnoreCase("65")) {
-            response.setColor("#37AE8D");
-        } else if (request.getType().equalsIgnoreCase("120")) {
-            response.setColor("#275464");
-        } else if (request.getType().equalsIgnoreCase("150")) {
-            response.setColor("#8D7F96");
-        } else if (request.getType().equalsIgnoreCase("200")) {
-            response.setColor("#6F515B");
-        } else {
-            response.setColor("#028186");
-        }
-        return response;
-    }
-
     @Override
     public List<DashboardResponseTotalConvert> monthlyVehicle() {
         List<DashboardResponseTotal> monthlyVehicle = dashboardVehicleCardDAO.monthlyVehicle();
@@ -155,6 +136,25 @@ public class DashboardServiceImpl implements DashBoardService {
                 .total(request.getTotal())
                 .color("#37AE8D")
                 .build();
+        return response;
+    }
+
+    private DashboardTypeAccountResponseConvert dashboardTypeAccountResponseToDashboardTypeAccountResponseConvert(DashboardTypeAccountResponse request) {
+        DashboardTypeAccountResponseConvert response = DashboardTypeAccountResponseConvert.builder()
+                .type(request.getType())
+                .total(request.getTotal())
+                .build();
+        if (request.getType().equalsIgnoreCase("65")) {
+            response.setColor("#37AE8D");
+        } else if (request.getType().equalsIgnoreCase("120")) {
+            response.setColor("#275464");
+        } else if (request.getType().equalsIgnoreCase("150")) {
+            response.setColor("#8D7F96");
+        } else if (request.getType().equalsIgnoreCase("200")) {
+            response.setColor("#6F515B");
+        } else {
+            response.setColor("#028186");
+        }
         return response;
     }
 

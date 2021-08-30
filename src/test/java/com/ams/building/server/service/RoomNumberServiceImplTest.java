@@ -48,7 +48,6 @@ public class RoomNumberServiceImplTest {
 
     List<Apartment> apartments = Arrays.asList(apartment);
 
-
     @Test
     public void roomNumberList() {
         Mockito.when(apartmentDAO.searchRoomNumberByBlockAndFloorNullAccount(Mockito.any(), Mockito.any())).thenReturn(apartments);
