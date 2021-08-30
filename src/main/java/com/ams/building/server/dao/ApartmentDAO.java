@@ -17,7 +17,7 @@ public interface ApartmentDAO extends JpaRepository<Apartment, Long> {
     @Query("SELECT a FROM Apartment a WHERE a.account.id =?1 AND a.account.role.name=?2")
     Apartment getApartmentByAccountId(Long accountId, String role);
 
-    @Query("SELECT a FROM Apartment a WHERE a.account.name LIKE CONCAT('%',:householderName,'%') AND a.roomNumber.roomName LIKE CONCAT('%',:roomNumber,'%') AND a.account.enabled = true AND a.account.role.name ='ROLE_LANDLORD' ORDER BY a.id DESC")
+    @Query("SELECT a FROM Apartment a WHERE a.account.name LIKE CONCAT('%',:householderName,'%') AND a.roomNumber.roomName LIKE CONCAT('%',:roomNumber,'%') AND a.account.enabled = true AND a.account.role.name ='ROLE_LANDLORD' ORDER BY a.id ")
     Page<Apartment> searchApartmentByRoomNumberHouseholderName(@Param("householderName") String householderName, @Param("roomNumber") String roomNumber, Pageable pageable);
 
     @Query("SELECT  a FROM Apartment a WHERE a.account.name LIKE %?1% AND a.roomNumber.roomName LIKE %?2% AND a.account.phone LIKE %?3% ORDER BY a.id DESC ")

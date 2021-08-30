@@ -64,6 +64,7 @@ public class LoginController {
             throw new RestApiException(StatusCode.EMAIL_NOT_RIGHT_FORMAT);
         }
         try {
+            // Kiem tra tai khoan ton tai khong
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
             return jwtTokenProvider.createToken(request.getUsername());
         } catch (AuthenticationException e) {

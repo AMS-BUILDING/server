@@ -92,6 +92,7 @@ public class ServerApplication {
         return new AuditorAwareImpl();
     }
 
+    /* Cau hinh de cong khi de cho fe goi api */
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
