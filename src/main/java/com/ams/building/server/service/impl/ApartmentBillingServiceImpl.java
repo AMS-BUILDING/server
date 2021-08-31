@@ -103,13 +103,16 @@ public class ApartmentBillingServiceImpl implements ApartmentBillingService {
         NotificationFeeApartmentResponse response = NotificationFeeApartmentResponse.builder().build();
         response.setGeneralFeeName(Constants.NotificationFeeName.FEE_GENERAL_NAME);
         response.setFeeGeneralFee(fee.toString());
+        if (feeVehicle != null) {
+            response.setVehicleName(Constants.NotificationFeeName.FEE_VEHICLE_NAME);
+            response.setFeeVehicleName(formatDoubleNUmber(feeVehicle));
+        }
 
-        response.setVehicleName(Constants.NotificationFeeName.FEE_VEHICLE_NAME);
-        response.setFeeVehicleName(formatDoubleNUmber(feeVehicle));
-
-        if (feeApartment != 0F) {
-            response.setApartmentCardName(Constants.NotificationFeeName.FEE_APARTMENT_CARD_NAME);
-            response.setFeeApartmentCard(formatDoubleNUmber(feeApartment));
+        if (feeApartment != null) {
+            if(feeApartment != 0F){
+                response.setApartmentCardName(Constants.NotificationFeeName.FEE_APARTMENT_CARD_NAME);
+                response.setFeeApartmentCard(formatDoubleNUmber(feeApartment));
+            }
         }
         response.setId(billings.get(0).getApartmentBilling().getId());
         Double total = billings.get(0).getApartmentBilling().getTotalPrice();

@@ -6,6 +6,7 @@ import com.ams.building.server.bean.Block;
 import com.ams.building.server.bean.FloorBlock;
 import com.ams.building.server.bean.RoomNumber;
 import com.ams.building.server.bean.StatusApartmentBilling;
+import com.ams.building.server.constant.Constants;
 import com.ams.building.server.constant.StatusCode;
 import com.ams.building.server.dao.ApartmentBillingDAO;
 import com.ams.building.server.exception.RestApiException;
@@ -66,10 +67,14 @@ public class BillingApartmentServiceImpl implements BillingApartmentService {
         if (Objects.isNull(status)) {
             throw new RestApiException(StatusCode.STATUS_NOT_EXIST);
         }
+        String apartmentSquarMetter = apartment.getRoomNumber().getTypeApartment().getTypeName();
+        Long squarMetter = Long.valueOf(apartmentSquarMetter);
+        Long fee = Long.valueOf(Constants.GeneralSerivce.FEE_GENERAL_SERVICE) * squarMetter;
+        Double total = fee.doubleValue() + billing.getTotalPrice();
         response.setId(billing.getId());
         response.setBlockName(block.getBlockName());
         response.setRoomNumber(roomNumber.getRoomName());
-        response.setTotalPrice(formatDoubleNUmber(billing.getTotalPrice()));
+        response.setTotalPrice(formatDoubleNUmber(total));
         response.setBillingMonth(billing.getBillingMonth());
         response.setStatusName(status.getStatusName());
         return response;
