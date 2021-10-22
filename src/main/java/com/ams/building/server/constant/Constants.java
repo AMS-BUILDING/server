@@ -11,9 +11,9 @@ public class Constants {
 
     public static final String HEADER_KEY = "Content-Disposition";
 
-    public static final String DEFAULT_PASSWORD = "$2a$12$vh2FQgxSpUARxQiQK1bjXeILadCSYzT.w04Up6IcG6Dg5InXiRQc.";
+    public static final String DEFAULT_PASSWORD = "$2a$12$JGEFQf1mRIKD.Mbg6WXSt.2MiKzplrG/Ok8qgqmDonc0Z5.0beGEi";
 
-    public static final String DEFAULT_PASSWORD_ENCODE = "123456";
+    public static final String DEFAULT_PASSWORD_ENCODE = "123456aA@";
 
     public static final String DEFAULT_AVATAR = "avatar_default.png";
 
@@ -73,8 +73,8 @@ public class Constants {
         public static final String URL_API_VALIDATE_OWNER = "/admin/validate/owner";
         public static final String URL_API_VALIDATE_RESIDENT = "/admin/validate/resident";
 
-        public static final String URL_API_SEARCH_DETAIL_SUB_SERVICE = "/landlord/detail_sub_service/search";
-        public static final String URL_API_SEARCH_REASON_DETAIL_SUB_SERVICE = "/landlord/reason_detail_sub_service/search";
+        public static final String URL_API_SEARCH_DETAIL_SUB_SERVICE = "/tenant/detail_sub_service/search";
+        public static final String URL_API_SEARCH_REASON_DETAIL_SUB_SERVICE = "/tenant/reason_detail_sub_service/search";
         public static final String URL_API_SERVICE_REQUEST_PRICE = "/landlord/service_request/price";
         public static final String URL_API_ADD_SERVICE_REQUEST = "/landlord/service_request/add";
         public static final String URL_API_TYPE_APARTMENT = "/landlord/type_apartment";
@@ -120,6 +120,7 @@ public class Constants {
 
         public static final String URL_API_UPDATE_REQUEST_SERVICE_APP = "/landlord/request-service/update-app";
         public static final String URL_API_NOTIFICATION_FEE_APARTMENT = "/tenant/notification-fee-apartment";
+        public static final String URL_API_LIST_HOURS = "/tenant/list-hour";
 
     }
 

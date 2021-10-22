@@ -10,10 +10,10 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface AbsentDetailDAO extends JpaRepository<AbsentDetail, Long> {
 
-    @Query("SELECT ad FROM AbsentDetail ad WHERE ad.name LIKE %?1% AND ad.identifyCard LIKE %?2% AND ad.absentType.id =?3 ORDER BY ad.id")
+    @Query("SELECT ad FROM AbsentDetail ad WHERE ad.name LIKE %?1% AND ad.identifyCard LIKE %?2% AND ad.absentType.id =?3 ORDER BY ad.id DESC")
     Page<AbsentDetail> absentList(String name, String identifyCard, Long absentType, Pageable pageable);
 
-    @Query("SELECT ad FROM AbsentDetail ad WHERE ad.name LIKE %?1% AND ad.identifyCard LIKE %?2%  ORDER BY ad.id")
+    @Query("SELECT ad FROM AbsentDetail ad WHERE ad.name LIKE %?1% AND ad.identifyCard LIKE %?2%  ORDER BY ad.id DESC")
     Page<AbsentDetail> absentListNotByAbsentType(String name, String identifyCard, Pageable pageable);
 
     @Query("SELECT ad FROM AbsentDetail ad WHERE  ad.identifyCard =?1 AND ad.absentType.id =?2")

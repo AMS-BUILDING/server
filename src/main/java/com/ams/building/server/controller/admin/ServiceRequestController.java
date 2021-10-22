@@ -2,6 +2,7 @@ package com.ams.building.server.controller.admin;
 
 import com.ams.building.server.constant.Constants;
 import com.ams.building.server.response.ApiResponse;
+import com.ams.building.server.response.HourResponse;
 import com.ams.building.server.response.RequestServiceClientResponse;
 import com.ams.building.server.response.RequestServiceResponse;
 import com.ams.building.server.response.StatusServiceResponse;
@@ -76,6 +77,13 @@ public class ServiceRequestController {
         List<RequestServiceClientResponse> serviceResponses = requestServiceService.historyServiceResponse(id, statusId);
         ResponseEntity<List<RequestServiceClientResponse>> response = new ResponseEntity<>(serviceResponses, HttpStatus.OK);
         logger.debug("serviceRequestInApp : response " + new Gson().toJson(response));
+        return response;
+    }
+
+    @GetMapping(Constants.UrlPath.URL_API_LIST_HOURS)
+    public ResponseEntity<?> listHourActive() {
+        List<HourResponse> hours = requestServiceService.listHours();
+        ResponseEntity<List<HourResponse>> response = new ResponseEntity<>(hours, HttpStatus.OK);
         return response;
     }
 

@@ -27,6 +27,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Objects;
 
@@ -132,14 +133,14 @@ public class EmployeeServiceImpl implements EmployeeService {
                 throw new RestApiException(StatusCode.PHONE_REGISTER_BEFORE);
             }
         }
-//        String yearDob = request.getDob().split("/")[2];
-//        Calendar cal = Calendar.getInstance();
-//        int year = cal.get(Calendar.YEAR);
-//        int age = year - Integer.valueOf(yearDob);
-//        if (age < 18) {
-//            throw new RestApiException(StatusCode.EMPLOYEE_NOT_WORKING);
-//        }
-        currentAccount.setDob(request.getDob().trim());
+        String yearDob = request.getDob().split("/")[2];
+        Calendar cal = Calendar.getInstance();
+        int year = cal.get(Calendar.YEAR);
+        int age = year - Integer.valueOf(yearDob);
+        if (age < 18) {
+            throw new RestApiException(StatusCode.EMPLOYEE_NOT_WORKING);
+        }
+        currentAccount.setDob(request.getDob());
         currentAccount.setGender(request.getGender());
         currentAccount.setHomeTown(request.getHomeTown().trim());
         currentAccount.setPhone(request.getPhoneNumber().trim());
@@ -188,13 +189,13 @@ public class EmployeeServiceImpl implements EmployeeService {
         if (request.getPosition() < 0 || request.getPosition() > 4) {
             throw new RestApiException(StatusCode.POSITION_NOT_RIGHT_WITH_EMPLOYEE);
         }
-        if (!isEmail(request.getEmail())) {
+        if (isEmail(request.getEmail().trim()) == false) {
             throw new RestApiException(StatusCode.EMAIL_NOT_RIGHT_FORMAT);
         }
-        if (!isPhoneNumber(request.getPhoneNumber())) {
+        if (!isPhoneNumber(request.getPhoneNumber().trim())) {
             throw new RestApiException(StatusCode.PHONE_NUMBER_NOT_RIGHT_FORMAT);
         }
-        if (!isIdentifyCard(request.getIdentifyCard())) {
+        if (!isIdentifyCard(request.getIdentifyCard().trim())) {
             throw new RestApiException(StatusCode.IDENTIFY_CARD_NOT_RIGHT);
         }
         Account searchAccountByIdentify = accountDao.getAccountByIdentify(request.getIdentifyCard());
@@ -209,17 +210,17 @@ public class EmployeeServiceImpl implements EmployeeService {
         if (Objects.nonNull(searchAccountByEmail)) {
             throw new RestApiException(StatusCode.EMAIL_REGISTER_BEFORE);
         }
-//        String yearDob = request.getDob().split("/")[2];
-//        Calendar cal = Calendar.getInstance();
-//        int year = cal.get(Calendar.YEAR);
-//        int age = year - Integer.valueOf(yearDob);
-//        if (age < 18) {
-//            throw new RestApiException(StatusCode.EMPLOYEE_NOT_WORKING);
-//        }
         Account account = new Account();
+        String yearDob = request.getDob().split("/")[2];
+        Calendar cal = Calendar.getInstance();
+        int year = cal.get(Calendar.YEAR);
+        int age = year - Integer.valueOf(yearDob);
+        if (age < 18) {
+            throw new RestApiException(StatusCode.EMPLOYEE_NOT_WORKING);
+        }
+        account.setDob(request.getDob());
         account.setIdentifyCard(request.getIdentifyCard());
         account.setEmail(request.getEmail().trim());
-        account.setDob(request.getDob().trim());
         account.setGender(request.getGender());
         account.setHomeTown(request.getHomeTown());
         account.setPhone(request.getPhoneNumber());
@@ -260,10 +261,8 @@ public class EmployeeServiceImpl implements EmployeeService {
             }
             String csvFileName = "Employee.csv";
             response.setContentType(Constants.TEXT_CSV);
-            // creates mock data
             String headerValue = String.format("attachment; filename=\"%s\"", csvFileName);
             response.setHeader(Constants.HEADER_KEY, headerValue);
-            // uses the Super CSV API to generate CSV data from the model data
             final byte[] bom = new byte[]{(byte) 239, (byte) 187, (byte) 191};
             OutputStream os = response.getOutputStream();
             os.write(bom);
@@ -329,6 +328,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
         } catch (Exception e) {
             logger.error("writeEmployee error", e);
+            throw new RestApiException(StatusCode.ERROR_UNKNOWN);
         }
         return content;
     }

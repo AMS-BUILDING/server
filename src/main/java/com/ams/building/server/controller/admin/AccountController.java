@@ -11,7 +11,6 @@ import com.ams.building.server.response.LoginResponse;
 import com.ams.building.server.response.UserPrincipal;
 import com.ams.building.server.service.AccountService;
 import com.ams.building.server.service.EmailService;
-import com.ams.building.server.utils.FileStore;
 import com.ams.building.server.utils.PropertiesReader;
 import com.ams.building.server.utils.RandomNumber;
 import org.apache.log4j.Logger;
@@ -48,7 +47,7 @@ public class AccountController {
 
     @PostMapping(Constants.UrlPath.URL_API_UPDATE_PROFILE_ACCOUNT)
     public ResponseEntity<?> updateAccountProfile(@ModelAttribute LoginResponse accountDTO) {
-        accountDTO.setImage(FileStore.getFilePath(accountDTO.getMultipartFile(), "-user"));
+//        accountDTO.setImage(FileStore.getFilePath(accountDTO.getMultipartFile(), "-user"));
         accountService.updateProfile(accountDTO);
         ResponseEntity<String> response = new ResponseEntity<>("Update profile success", HttpStatus.OK);
         return response;

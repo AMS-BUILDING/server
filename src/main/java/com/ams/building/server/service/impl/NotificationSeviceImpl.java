@@ -33,7 +33,6 @@ import static com.ams.building.server.utils.DateTimeUtils.DD_MM_YYYY;
 import static com.ams.building.server.utils.DateTimeUtils.HH_MM;
 import static com.ams.building.server.utils.DateTimeUtils.convertDateToStringWithTimezone;
 
-@Transactional
 @Service
 public class NotificationSeviceImpl implements NotificationService {
 
@@ -51,15 +50,18 @@ public class NotificationSeviceImpl implements NotificationService {
 
     @Override
     public ApiResponse searchNotification(String title, Integer page, Integer size) {
-        List<NotificationResponse> notificationDTOList = new ArrayList<>();
         Pageable pageable = PageRequest.of(page, size);
-        Page<Notification> notifications = notificationDAO.searchNotificationByTitle(title, pageable);
-        notifications.forEach(s -> notificationDTOList.add(convert(s)));
+        Page<NotificationResponse> notifications = notificationDAO.searchNotificationByTitle(title, pageable);
         Long totalElements = notifications.getTotalElements();
-        ApiResponse apiResponse = ApiResponse.builder().data(notificationDTOList).totalElement(totalElements).build();
+        List<NotificationResponse> responses = new ArrayList<>();
+        for (int i = notifications.getContent().size() - 1; i >= 0; i--) {
+            responses.add(notifications.getContent().get(i));
+        }
+        ApiResponse apiResponse = ApiResponse.builder().data(responses).totalElement(totalElements).build();
         return apiResponse;
     }
 
+    @Transactional
     @Override
     public void addNotification(NotificationRequest request) {
         if (Objects.isNull(request) || (StringUtils.isEmpty(request.getDescription()) && StringUtils.isEmpty(request.getTitle())))
@@ -74,20 +76,22 @@ public class NotificationSeviceImpl implements NotificationService {
         if (accounts.isEmpty()) {
             throw new RestApiException(StatusCode.ACCOUNT_NOT_EXIST);
         }
+        List<Notification> dataInsert = new ArrayList<>();
         for (Account account : accounts) {
             Notification notification = new Notification();
             notification.setDescription(request.getDescription().trim());
             notification.setTitle(request.getTitle().trim());
             notification.setAccount(account);
             notification.setIsRead(false);
-            notificationDAO.save(notification);
+            dataInsert.add(notification);
         }
+        notificationDAO.saveAllAndFlush(dataInsert);
     }
 
     @Override
-    public List<NotificationAppResponse> listNotificationAppGeneral() {
+    public List<NotificationAppResponse> listNotificationAppGeneral(Long accountId) {
         List<NotificationAppResponse> notificationDTOList = new ArrayList<>();
-        List<Notification> notifications = notificationDAO.listNotification();
+        List<Notification> notifications = notificationDAO.listNotification(accountId);
         notifications.forEach(s -> notificationDTOList.add(convertToNotificationApp(s)));
         return notificationDTOList;
     }
@@ -164,13 +168,6 @@ public class NotificationSeviceImpl implements NotificationService {
         Integer totalNotificationGeneral = notificationDAO.countNotificationNotRead(accountId);
         Integer totalNotificationPrivate = apartmentBillingDAO.countNotificationNotReadPrivate(accountId);
         return totalNotificationGeneral + totalNotificationPrivate;
-    }
-
-    private NotificationResponse convert(Notification notification) {
-        NotificationResponse response = NotificationResponse.builder().build();
-        response.setDescription(notification.getDescription());
-        response.setTitle(notification.getTitle());
-        return response;
     }
 
     private NotificationAppResponse convertToNotificationApp(Notification notification) {

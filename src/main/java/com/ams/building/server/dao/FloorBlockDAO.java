@@ -12,7 +12,7 @@ import java.util.List;
 public interface FloorBlockDAO extends JpaRepository<FloorBlock, Long> {
 
     @Query("SELECT distinct new com.ams.building.server.response.FloorResponse(a.roomNumber.floorBlock.floor.id,a.roomNumber.floorBlock.floor.floorName) " +
-            " FROM Apartment a WHERE  a.account IS NULL AND a.roomNumber.floorBlock.block.id=?1 ")
+            " FROM Apartment a WHERE  a.account IS NULL AND a.roomNumber.floorBlock.block.id=?1  ")
     List<FloorResponse> floorBlockByBlockId(Long blockId);
 
 }

@@ -45,8 +45,8 @@ public class RequestService implements Serializable {
     @JoinColumn(name = "account_id", referencedColumnName = "id")
     private Account account;
 
-    @Column(name = "description")
-    private String description;
+    @Column(name = "billing_month")
+    private String billingMonth;
 
     @Column(name = "start_date")
     private Date startDate;

@@ -21,19 +21,19 @@ public interface ApartmentBillingDAO extends JpaRepository<ApartmentBilling, Lon
     @Query("SELECT a FROM ApartmentBilling a WHERE a.billingMonth =?1 AND a.apartment.account.id =?2 ")
     ApartmentBilling getDetailByMonth(String billingMonth, Long accountId);
 
-    @Query("SELECT ab FROM ApartmentBilling ab WHERE ab.billingMonth=?1 ORDER BY ab.id")
+    @Query("SELECT ab FROM ApartmentBilling ab WHERE ab.billingMonth=?1 ORDER BY ab.id DESC")
     Page<ApartmentBilling> searchApartmentBillingByMonth(String month, Pageable pageable);
 
-    @Query("SELECT a FROM ApartmentBilling a WHERE a.billingMonth =?1")
+    @Query("SELECT a FROM ApartmentBilling a WHERE a.billingMonth =?1 ORDER BY a.id DESC")
     List<ApartmentBilling> listApartmentBillingByMonth(String billingMonth);
 
-    @Query("SELECT a FROM ApartmentBilling a WHERE a.billingMonth =?1 AND a.statusApartmentBilling.id=1")
+    @Query("SELECT a FROM ApartmentBilling a WHERE a.billingMonth =?1 AND a.statusApartmentBilling.id=1 ORDER BY a.id DESC")
     List<ApartmentBilling> listApartmentBillingByMonthNotPayment(String billingMonth);
 
     @Query("SELECT COUNT(a.id) FROM ApartmentBilling a WHERE a.isRead = false AND a.apartment.account.id=?1")
     Integer countNotificationNotReadPrivate(Long accountId);
 
-    @Query("SELECT a FROM ApartmentBilling a WHERE a.isRead = false AND a.apartment.account.id=?1")
+    @Query("SELECT a FROM ApartmentBilling a WHERE a.isRead = false AND a.apartment.account.id=?1 ORDER BY a.id DESC")
     List<ApartmentBilling> listApartmentBillingNotRead(Long accountId);
 
     @Query("SELECT a FROM ApartmentBilling a WHERE a.id=?1 ")

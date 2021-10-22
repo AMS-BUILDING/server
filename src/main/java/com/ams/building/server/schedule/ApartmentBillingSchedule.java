@@ -16,8 +16,12 @@ public class ApartmentBillingSchedule {
     @Autowired
     private ApartmentBillingService service;
 
-    //    @Scheduled(cron = "1 * * * * ?")
-    @Scheduled(cron = "0 0 1 * * ?")
+    /**
+     * Check And Auto Insert Billing In Month.
+     * In the 1rd when 00:00 AM will auto insert to calculate billing for resident
+     */
+    //@Scheduled(cron = "1 * * * * ?")
+//    @Scheduled(cron = "0 0 1 * * ?")
     public void checkAndInsertBillingInMonth() {
         try {
             service.checkAndInsertBillingInMonth();
@@ -30,7 +34,7 @@ public class ApartmentBillingSchedule {
      * Send Mail To Resident About Fee Service In Month.
      * Mail will send 1rd in month.
      */
-    @Scheduled(cron = "0 9 1 * * ?")
+//    @Scheduled(cron = "0 9 1 * * ?")
 //    @Scheduled(cron = "1 * * * * ?")
     public void sendEmailToNotificationForResidentAboutFeeServiceInMonth() {
         try {
@@ -41,11 +45,11 @@ public class ApartmentBillingSchedule {
     }
 
     /**
-     * Send Mail To Remid For  Resident About Fee Service In Month.
+     * Send Mail To Remind For  Resident About Fee Service In Month.
      * Mail will send 5rd in month.
      */
-    @Scheduled(cron = "0 9 5 * * ?")
-//    @Scheduled(cron = "2 * * * * ?")
+//    @Scheduled(cron = "0 9 5 * * ?")
+//    @Scheduled(cron = "1 * * * * ?")
     public void sendMailRemindForResident() {
         try {
             service.sendMailRemindForResident();

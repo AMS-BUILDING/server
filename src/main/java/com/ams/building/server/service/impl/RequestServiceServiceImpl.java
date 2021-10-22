@@ -24,6 +24,7 @@ import com.ams.building.server.request.RequestServiceRequest;
 import com.ams.building.server.response.ApiResponse;
 import com.ams.building.server.response.DetailServiceRequestResponse;
 import com.ams.building.server.response.DetailSubServiceClientResponse;
+import com.ams.building.server.response.HourResponse;
 import com.ams.building.server.response.ReasonDetailSubServiceResponse;
 import com.ams.building.server.response.RequestServiceClientResponse;
 import com.ams.building.server.response.RequestServiceResponse;
@@ -31,7 +32,6 @@ import com.ams.building.server.response.ServiceAddResponse;
 import com.ams.building.server.response.StatusServiceResponse;
 import com.ams.building.server.service.RequestServiceService;
 import com.ams.building.server.utils.DateTimeUtils;
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -41,6 +41,7 @@ import org.springframework.util.StringUtils;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
@@ -55,8 +56,6 @@ import static com.ams.building.server.utils.DateTimeUtils.convertStringToDate;
 @Transactional
 @Service
 public class RequestServiceServiceImpl implements RequestServiceService {
-
-    private static final Logger logger = Logger.getLogger(RequestServiceServiceImpl.class);
 
     @Autowired
     private StatusRequestServiceDAO statusRequestServiceDAO;
@@ -135,12 +134,21 @@ public class RequestServiceServiceImpl implements RequestServiceService {
         if (Objects.isNull(account)) {
             throw new RestApiException(StatusCode.ACCOUNT_NOT_EXIST);
         }
+        Calendar cal = Calendar.getInstance();
+        int month = cal.get(Calendar.MONTH);
+        int year = cal.get(Calendar.YEAR);
+        String billingMonth;
+        if (month >= 0 && month <= 8) {
+            billingMonth = "0" + (month + 1) + "/" + year;
+        } else {
+            billingMonth = (month + 1) + "/" + year;
+        }
         List<Long> status = new ArrayList<>();
         status.add(statusId);
         List<Integer> isUses = new ArrayList<>();
         isUses.add(1);
         isUses.add(0);
-        List<ResidentCard> residentCards = residentCardDAO.residentCardRegister(id, status, isUses);
+        List<ResidentCard> residentCards = residentCardDAO.residentCardRegister(id, status, billingMonth, isUses);
         List<RequestService> requestServiceByAccountId = requestServiceDAO.requestServiceByAccountId(id, statusId);
         List<RequestServiceClientResponse> responses = new ArrayList<>();
         requestServiceByAccountId.forEach(s -> responses.add(convertToHistoryResponse(s)));
@@ -212,6 +220,29 @@ public class RequestServiceServiceImpl implements RequestServiceService {
     }
 
     @Override
+    public List<HourResponse> listHours() {
+        Calendar now = Calendar.getInstance();
+        int hour = now.get(Calendar.HOUR_OF_DAY);
+        int minute = now.get(Calendar.MINUTE);
+        List<HourResponse> hours = new ArrayList<>();
+        int start = hour;
+        if (minute != 0) {
+            start = hour + 1;
+        }
+        for (int i = start; i <= 24; i++) {
+            HourResponse response = HourResponse.builder().build();
+            response.setLabel(i + "h");
+            if (i >= 1 && i <= 9) {
+                response.setValue("0" + i + ":00");
+            } else {
+                response.setValue(i + ":00");
+            }
+            hours.add(response);
+        }
+        return hours;
+    }
+
+    @Override
     public ServiceAddResponse addRequestServiceSuccessStatus(RequestServiceRequest requestServiceRequest) {
         Long id;
         if (Objects.isNull(requestServiceRequest)) {
@@ -225,6 +256,16 @@ public class RequestServiceServiceImpl implements RequestServiceService {
         StatusServiceRequest status = new StatusServiceRequest();
         status.setId(3L);
 
+        Calendar cal = Calendar.getInstance();
+        int month = cal.get(Calendar.MONTH);
+        int year = cal.get(Calendar.YEAR);
+        String billingMonth;
+        if (month >= 0 && month <= 8) {
+            billingMonth = "0" + (month + 1) + "/" + year;
+        } else {
+            billingMonth = (month + 1) + "/" + year;
+        }
+
         Account account = new Account();
         account.setId(requestServiceRequest.getAccountId());
         if (requestId <= 4L) {
@@ -236,16 +277,16 @@ public class RequestServiceServiceImpl implements RequestServiceService {
             requestService.setStatusServiceRequest(status);
             requestService.setAccount(account);
             requestService.setStartDate(convertStringToDate(requestServiceRequest.getStartDate(), DateTimeUtils.YYYY_MM_DD_HH_MM));
-            requestService.setDescription(requestServiceRequest.getDescription());
             requestService.setEndDate(convertStringToDate(requestServiceRequest.getEndDate(), DateTimeUtils.YYYY_MM_DD_HH_MM));
+            requestService.setBillingMonth(billingMonth);
             requestServiceDAO.save(requestService);
         } else if (requestId == 5L) {
             requestService.setReasonDetailSubService(reason);
             requestService.setStatusServiceRequest(status);
             requestService.setAccount(account);
             requestService.setStartDate(convertStringToDate(requestServiceRequest.getStartDate(), DateTimeUtils.YYYY_MM_DD_HH_MM));
-            requestService.setDescription(requestServiceRequest.getDescription());
             requestService.setEndDate(convertStringToDate(requestServiceRequest.getEndDate(), DateTimeUtils.YYYY_MM_DD_HH_MM));
+            requestService.setBillingMonth(billingMonth);
             requestServiceDAO.save(requestService);
         } else {
             requestService.setReasonDetailSubService(reason);
@@ -253,8 +294,8 @@ public class RequestServiceServiceImpl implements RequestServiceService {
             requestService.setStatusServiceRequest(status);
             requestService.setAccount(account);
             requestService.setStartDate(convertStringToDate(requestServiceRequest.getStartDate(), DateTimeUtils.YYYY_MM_DD_HH_MM));
-            requestService.setDescription(requestServiceRequest.getDescription());
             requestService.setEndDate(convertStringToDate(requestServiceRequest.getEndDate(), DateTimeUtils.YYYY_MM_DD_HH_MM));
+            requestService.setBillingMonth(billingMonth);
             requestServiceDAO.save(requestService);
         }
         id = requestService.getId();
@@ -291,15 +332,24 @@ public class RequestServiceServiceImpl implements RequestServiceService {
 
     @Override
     public List<RequestServiceClientResponse> findRequestServiceByAccountId(Long accountId) {
+        Calendar cal = Calendar.getInstance();
+        int month = cal.get(Calendar.MONTH);
+        int year = cal.get(Calendar.YEAR);
+        String billingMonth;
+        if (month >= 0 && month <= 8) {
+            billingMonth = "0" + (month + 1) + "/" + year;
+        } else {
+            billingMonth = (month + 1) + "/" + year;
+        }
         List<RequestServiceClientResponse> response = new ArrayList<>();
-        List<RequestService> requestServices = requestServiceDAO.findRequestServiceByAccountId(accountId);
-        List<VehicleCard> requestVehicleCard = vehicleCardDAO.vehicleCardRegister(accountId);
+        List<RequestService> requestServices = requestServiceDAO.findRequestServiceByAccountId(accountId, billingMonth);
+        List<VehicleCard> requestVehicleCard = vehicleCardDAO.vehicleCardRegister(accountId, billingMonth);
         List<Long> status = new ArrayList<>();
         status.add(1L);
         status.add(2L);
         List<Integer> isUses = new ArrayList<>();
         isUses.add(1);
-        List<ResidentCard> residentCards = residentCardDAO.residentCardRegister(accountId, status, isUses);
+        List<ResidentCard> residentCards = residentCardDAO.residentCardRegister(accountId, status, billingMonth, isUses);
         for (RequestService requestService : requestServices) {
             RequestServiceClientResponse requestServiceClientResponse = convertRequestServiceToRequestServiceClientResponse(requestService);
             response.add(requestServiceClientResponse);
@@ -463,7 +513,11 @@ public class RequestServiceServiceImpl implements RequestServiceService {
         }
         response.setId(requestService.getId());
         response.setBlock(apartment.getRoomNumber().getFloorBlock().getBlock().getBlockName());
-        response.setServiceName(requestService.getReasonDetailSubService().getReasonName());
+        if (requestService.getReasonDetailSubService().getId() < 7) {
+            response.setServiceName(requestService.getReasonDetailSubService().getReasonName());
+        } else {
+            response.setServiceName(requestService.getReasonDetailSubService().getDetailSubService().getService().getSubServiceName() + " " + requestService.getReasonDetailSubService().getDetailSubService().getDetailSubServiceName().toLowerCase());
+        }
         response.setStatus(requestService.getStatusServiceRequest().getRequestName());
         response.setRoomName(apartment.getRoomNumber().getRoomName());
         response.setName(requestService.getAccount().getName());

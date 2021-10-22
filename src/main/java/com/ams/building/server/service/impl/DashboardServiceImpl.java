@@ -2,8 +2,8 @@ package com.ams.building.server.service.impl;
 
 import com.ams.building.server.dao.AccountDAO;
 import com.ams.building.server.dao.ApartmentDAO;
-import com.ams.building.server.dao.DashboardAccountDao;
-import com.ams.building.server.dao.DashboardRequestServiceDao;
+import com.ams.building.server.dao.DashboardAccountDAO;
+import com.ams.building.server.dao.DashboardRequestServiceDAO;
 import com.ams.building.server.dao.DashboardVehicleCardDAO;
 import com.ams.building.server.dao.RequestServiceDAO;
 import com.ams.building.server.response.DashboardResponse;
@@ -18,11 +18,9 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
-@Transactional
 @Service
 public class DashboardServiceImpl implements DashBoardService {
 
@@ -38,10 +36,10 @@ public class DashboardServiceImpl implements DashBoardService {
     private RequestServiceDAO requestServiceDAO;
 
     @Autowired
-    private DashboardRequestServiceDao dashboardRequestServiceDao;
+    private DashboardRequestServiceDAO dashboardRequestServiceDao;
 
     @Autowired
-    private DashboardAccountDao dashboardAccountDao;
+    private DashboardAccountDAO dashboardAccountDao;
 
     @Autowired
     DashboardVehicleCardDAO dashboardVehicleCardDAO;
@@ -51,9 +49,14 @@ public class DashboardServiceImpl implements DashBoardService {
         DashboardResponse response = DashboardResponse.builder()
                 .numberOfAccount(accountDAO.countAccountEnable())
                 .numberOfEmptyApartment(apartmentDAO.countEmptyApartment())
-                .totalRevenue(requestServiceDAO.totalRevenue())
                 .totalServiceRequest(requestServiceDAO.totalServiceRequest())
                 .build();
+        Double total = requestServiceDAO.totalRevenue();
+        if (total != null) {
+            response.setTotalRevenue(total);
+        } else {
+            response.setTotalRevenue(0D);
+        }
         return response;
     }
 
@@ -98,25 +101,6 @@ public class DashboardServiceImpl implements DashBoardService {
         return response;
     }
 
-    private DashboardTypeAccountResponseConvert dashboardTypeAccountResponseToDashboardTypeAccountResponseConvert(DashboardTypeAccountResponse request) {
-        DashboardTypeAccountResponseConvert response = DashboardTypeAccountResponseConvert.builder()
-                .type(request.getType())
-                .total(request.getTotal())
-                .build();
-        if (request.getType().equalsIgnoreCase("65")) {
-            response.setColor("#37AE8D");
-        } else if (request.getType().equalsIgnoreCase("120")) {
-            response.setColor("#275464");
-        } else if (request.getType().equalsIgnoreCase("150")) {
-            response.setColor("#8D7F96");
-        } else if (request.getType().equalsIgnoreCase("200")) {
-            response.setColor("#6F515B");
-        } else {
-            response.setColor("#028186");
-        }
-        return response;
-    }
-
     @Override
     public List<DashboardResponseTotalConvert> monthlyVehicle() {
         List<DashboardResponseTotal> monthlyVehicle = dashboardVehicleCardDAO.monthlyVehicle();
@@ -152,6 +136,25 @@ public class DashboardServiceImpl implements DashBoardService {
                 .total(request.getTotal())
                 .color("#37AE8D")
                 .build();
+        return response;
+    }
+
+    private DashboardTypeAccountResponseConvert dashboardTypeAccountResponseToDashboardTypeAccountResponseConvert(DashboardTypeAccountResponse request) {
+        DashboardTypeAccountResponseConvert response = DashboardTypeAccountResponseConvert.builder()
+                .type(request.getType())
+                .total(request.getTotal())
+                .build();
+        if (request.getType().equalsIgnoreCase("65")) {
+            response.setColor("#37AE8D");
+        } else if (request.getType().equalsIgnoreCase("120")) {
+            response.setColor("#275464");
+        } else if (request.getType().equalsIgnoreCase("150")) {
+            response.setColor("#8D7F96");
+        } else if (request.getType().equalsIgnoreCase("200")) {
+            response.setColor("#6F515B");
+        } else {
+            response.setColor("#028186");
+        }
         return response;
     }
 

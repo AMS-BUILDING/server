@@ -28,17 +28,6 @@ public class AccountAppController {
     @Autowired
     private AccountService accountService;
 
-    @GetMapping(Constants.UrlPath.URL_API_DETAIL_ACCOUNT)
-    public ResponseEntity<?> detailAccountApp() {
-        UserPrincipal currentUser = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication()
-                .getPrincipal();
-        Long id = currentUser.getId();
-        AccountAppResponse accountAppResponse = accountService.detailAccountApp(id);
-        ResponseEntity<AccountAppResponse> response = new ResponseEntity<>(accountAppResponse, HttpStatus.OK);
-        logger.debug("detailAccountApp response: " + new Gson().toJson(response));
-        return response;
-    }
-
     @PostMapping(Constants.UrlPath.URL_API_CHANGE_PASSWORD_APP)
     public ResponseEntity<?> changePassword(@RequestBody PasswordRequest request) {
         logger.debug("changePassword request: " + new Gson().toJson(request));

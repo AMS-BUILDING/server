@@ -15,7 +15,7 @@ import java.util.List;
 
 public class FileStore {
 
-    public static String UPLOAD_FOLDER = "C:\\image\\";
+    public static String UPLOAD_FOLDER = "/root/image/";
 
     public static List<String> getFilePaths(List<MultipartFile> multipartFiles, String prefix) {
         List<String> images = new ArrayList<String>();

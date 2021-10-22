@@ -4,6 +4,7 @@ import com.ams.building.server.request.RequestServiceRequest;
 import com.ams.building.server.response.ApiResponse;
 import com.ams.building.server.response.DetailServiceRequestResponse;
 import com.ams.building.server.response.DetailSubServiceClientResponse;
+import com.ams.building.server.response.HourResponse;
 import com.ams.building.server.response.ReasonDetailSubServiceResponse;
 import com.ams.building.server.response.RequestServiceClientResponse;
 import com.ams.building.server.response.RequestServiceResponse;
@@ -37,5 +38,7 @@ public interface RequestServiceService {
     DetailServiceRequestResponse detailServiceRequest(Long serviceRequestId, Long typeRequest);
 
     void updateStatusRequestByTypeRequest(Long statusId, Long requestId, Long typeRequest);
+
+    List<HourResponse> listHours();
 
 }

@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface FeedbackDAO extends JpaRepository<Feedback, Long> {
 
-    @Query("SELECT f FROM Feedback f WHERE f.account.name LIKE CONCAT('%',:name,'%') ORDER BY f.id")
+    @Query("SELECT f FROM Feedback f WHERE f.account.name LIKE CONCAT('%',:name,'%') ORDER BY f.id DESC")
     Page<Feedback> findFeedbacksByName(@Param("name") String name, Pageable pageable);
 
 }

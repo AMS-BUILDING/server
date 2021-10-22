@@ -86,7 +86,7 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
             throw new RestApiException(StatusCode.EMAIL_NOT_RIGHT_FORMAT);
         }
         if (!isIdentifyCard(loginResponse.getIdentifyCard())) {
-            throw new RestApiException(StatusCode.IDENTIFY_CARD_EMPTY);
+            throw new RestApiException(StatusCode.IDENTIFY_CARD_NOT_RIGHT);
         }
         if (!isPhoneNumber(loginResponse.getPhone())) {
             throw new RestApiException(StatusCode.PHONE_NUMBER_NOT_RIGHT_FORMAT);
@@ -219,11 +219,6 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
 
     @Override
     public void updateProfile(LoginResponse accountDTO) {
-        UserPrincipal currentUser = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication()
-                .getPrincipal();
-
-        Account account = accountDao.getAccountById(currentUser.getId());
-
         if (Objects.isNull(accountDTO)) {
             throw new RestApiException(StatusCode.DATA_EMPTY);
         }
@@ -239,8 +234,13 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
         if (StringUtils.isEmpty(accountDTO.getDob())) {
             throw new RestApiException(StatusCode.DOB_EMPTY);
         }
+        UserPrincipal currentUser = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication()
+                .getPrincipal();
+
+        Account account = accountDao.getAccountById(currentUser.getId());
+
         if (!StringUtils.isEmpty(accountDTO.getIdentifyCard())) {
-            if (!isIdentifyCard(accountDTO.getIdentifyCard())) {
+            if (!isIdentifyCard(accountDTO.getIdentifyCard().trim())) {
                 throw new RestApiException(StatusCode.IDENTIFY_CARD_NOT_RIGHT);
             }
             if (!account.getIdentifyCard().equalsIgnoreCase(accountDTO.getIdentifyCard())) {
@@ -323,11 +323,6 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
         }
         LoginResponse response = convertToAccountResponse(account);
         return response;
-    }
-
-    @Override
-    public Long count() {
-        return accountDao.count();
     }
 
     @Override
@@ -473,7 +468,7 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
             if (StringUtils.isEmpty(residentRequest.getPhone())) {
                 throw new RestApiException(StatusCode.PHONE_EMPTY);
             }
-            if (!isPhoneNumber(residentRequest.getPhone())) {
+            if (!isPhoneNumber(residentRequest.getPhone().trim())) {
                 throw new RestApiException(StatusCode.PHONE_NUMBER_NOT_RIGHT_FORMAT);
             }
             if (!account.getPhone().equalsIgnoreCase(residentRequest.getPhone())) {
@@ -485,7 +480,7 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
 
         } else {
             if (!StringUtils.isEmpty(residentRequest.getIdentifyCard())) {
-                if (!isIdentifyCard(residentRequest.getIdentifyCard())) {
+                if (!isIdentifyCard(residentRequest.getIdentifyCard().trim())) {
                     throw new RestApiException(StatusCode.IDENTIFY_CARD_NOT_RIGHT);
                 }
                 if (!residentRequest.getIdentifyCard().equalsIgnoreCase(account.getIdentifyCard())) {
@@ -499,7 +494,7 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
                 account.setIdentifyCard(null);
             }
             if (!StringUtils.isEmpty(residentRequest.getPhone())) {
-                if (!isPhoneNumber(residentRequest.getPhone())) {
+                if (!isPhoneNumber(residentRequest.getPhone().trim())) {
                     throw new RestApiException(StatusCode.PHONE_NUMBER_NOT_RIGHT_FORMAT);
                 }
                 if (!residentRequest.getPhone().equalsIgnoreCase(account.getPhone())) {
@@ -513,7 +508,7 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
                 account.setPhone(null);
             }
             if (!StringUtils.isEmpty(residentRequest.getEmail())) {
-                if (!isEmail(residentRequest.getEmail())) {
+                if (!isEmail(residentRequest.getEmail().trim())) {
                     throw new RestApiException(StatusCode.EMAIL_NOT_RIGHT_FORMAT);
                 }
                 if (!residentRequest.getEmail().equalsIgnoreCase(account.getEmail())) {
@@ -547,19 +542,6 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
             account.setPosition(null);
         }
         accountDao.save(account);
-    }
-
-    @Override
-    public AccountAppResponse detailAccountApp(Long id) {
-        if (Objects.isNull(id)) {
-            throw new RestApiException(StatusCode.DATA_EMPTY);
-        }
-        Account account = accountDao.getAccountById(id);
-        if (Objects.isNull(account)) {
-            throw new RestApiException(StatusCode.ACCOUNT_NOT_EXIST);
-        }
-        AccountAppResponse response = convertToAccountApp(account);
-        return response;
     }
 
     @Override
@@ -633,6 +615,10 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
         if (Objects.nonNull(currentAccountDuplicate)) {
             throw new RestApiException(StatusCode.IDENTIFY_CARD_DUPLICATE);
         }
+        List<String> phones = accountDao.getAccountByPhoneNumber(ownerRequest.getPhone());
+        if (phones.size() > 0) {
+            throw new RestApiException(StatusCode.PHONE_REGISTER_BEFORE);
+        }
     }
 
     @Override
@@ -643,6 +629,7 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
         // Get identifyCar, email to check
         List<String> emailList = new ArrayList<>();
         List<String> identifyCardList = new ArrayList<>();
+        List<String> phoneNumberList = new ArrayList<>();
 
         residentRequestList.forEach(request -> {
             // Validate request format
@@ -656,13 +643,13 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
                 throw new RestApiException(StatusCode.DOB_EMPTY);
             }
             if (!StringUtils.isEmpty(request.getIdentifyCard())) {
-                if (!isIdentifyCard(request.getIdentifyCard())) {
+                if (!isIdentifyCard(request.getIdentifyCard().trim())) {
                     throw new RestApiException(StatusCode.IDENTIFY_CARD_NOT_RIGHT);
                 }
             }
             if (!StringUtils.isEmpty(request.getPhone())) {
-                if (!isPhoneNumber(request.getPhone())) {
-                    throw new RestApiException(StatusCode.PHONE_EMPTY);
+                if (!isPhoneNumber(request.getPhone().trim())) {
+                    throw new RestApiException(StatusCode.PHONE_NUMBER_NOT_RIGHT_FORMAT);
                 }
             }
             if (!StringUtils.isEmpty(request.getEmail())) {
@@ -676,15 +663,20 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
             if (!StringUtils.isEmpty(request.getIdentifyCard())) {
                 identifyCardList.add(request.getIdentifyCard());
             }
+            if (!StringUtils.isEmpty(request.getPhone())) {
+                phoneNumberList.add(request.getPhone());
+            }
         });
 
         // add owner to list
         emailList.add(ownerRequest.getEmail());
         identifyCardList.add(ownerRequest.getIdentifyCard());
+        phoneNumberList.add(ownerRequest.getPhone());
 
         // remove element duplicate in list
         List<String> identifyCardListDistinct = identifyCardList.stream().distinct().collect(Collectors.toList());
         List<String> emailListDistinct = emailList.stream().distinct().collect(Collectors.toList());
+        List<String> phoneNumberListDistinct = phoneNumberList.stream().distinct().collect(Collectors.toList());
 
         // check duplicate email , identify card in list resident
         if (emailList.size() != emailListDistinct.size()) {
@@ -693,11 +685,16 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
         if (identifyCardList.size() != identifyCardListDistinct.size()) {
             throw new RestApiException(StatusCode.DUPLICATE_IDENTIFY_CARD_IN_LIST_RESIDENT);
         }
+        if (phoneNumberList.size() != phoneNumberListDistinct.size()) {
+            throw new RestApiException(StatusCode.DUPLICATE_PHONE_NUMBER_IN_LIST_RESIDENT);
+        }
         // Get Map list email, identify
         Map<String, Account> accountMapByEmail = accountDao.getAccountByListEmail(emailListDistinct).stream()
                 .collect(Collectors.toMap(Account::getEmail, account -> account));
         Map<String, Account> accountMapByIdentifyCard = accountDao.getAccountByListIdentifyCard(identifyCardListDistinct).stream()
                 .collect(Collectors.toMap(Account::getIdentifyCard, account -> account));
+        Map<String, Account> accountMapByPhoneNumber = accountDao.getAccountByPhoneNumberList(phoneNumberListDistinct).stream()
+                .collect(Collectors.toMap(Account::getPhone, account -> account));
 
         for (ResidentRequest request : residentRequestList) {
             // Validate duplicate email or identify in DB
@@ -708,6 +705,10 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
             Account accountByIdentifyCard = accountMapByIdentifyCard.get(request.getIdentifyCard());
             if (Objects.nonNull(accountByIdentifyCard)) {
                 throw new RestApiException(StatusCode.IDENTIFY_CARD_DUPLICATE);
+            }
+            Account accountByPhoneNumber = accountMapByPhoneNumber.get(request.getPhone());
+            if (Objects.nonNull(accountByPhoneNumber)) {
+                throw new RestApiException(StatusCode.PHONE_REGISTER_BEFORE);
             }
         }
     }
@@ -723,29 +724,6 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
         }
         Long roleId = account.getRole().getId();
         return roleId;
-    }
-
-    private AccountAppResponse convertToAccountApp(Account account) {
-        AccountAppResponse response = AccountAppResponse.builder().build();
-        Apartment apartment = apartmentDAO.getApartmentByAccountId(account.getId());
-        if (Objects.isNull(apartment)) {
-            throw new RestApiException(StatusCode.APARTMENT_NOT_EXIST);
-        }
-        RoomNumber roomNumber = apartment.getRoomNumber();
-        if (Objects.isNull(roomNumber)) {
-            throw new RestApiException(StatusCode.ROOM_NUMBER_NOT_EXIST);
-        }
-        response.setId(account.getId());
-        response.setName(account.getName());
-        response.setRoomNumber(roomNumber.getRoomName());
-        response.setDob(account.getDob());
-        response.setIdentifyCard(account.getIdentifyCard());
-        response.setEmail(account.getEmail());
-        response.setPhoneNumber(account.getPhone());
-        response.setCurrentAddress(account.getCurrentAddress());
-        response.setImageAvatar(account.getImage());
-        response.setPassword(PasswordGenerator.getHashString(account.getPassword()));
-        return response;
     }
 
     private Long addResident(ResidentRequest residentRequest) {

@@ -73,7 +73,8 @@ public enum StatusCode {
     LICENSE_PLATE_EMPTY(466, PropertiesReader.getProperty(PropertyKeys.LICENSE_PLATE_EMPTY)),
     VEHICLE_COLOR_EMPTY(467, PropertiesReader.getProperty(PropertyKeys.VEHICLE_COLOR_EMPTY)),
     VEHICLE_REGISTER_BEFORE(468, PropertiesReader.getProperty(PropertyKeys.VEHICLE_REGISTER_BEFORE)),
-    ACCOUNT_CAN_NOT_REMOVE(469, PropertiesReader.getProperty(PropertyKeys.ACCOUNT_CAN_NOT_REMOVE));
+    ACCOUNT_CAN_NOT_REMOVE(469, PropertiesReader.getProperty(PropertyKeys.ACCOUNT_CAN_NOT_REMOVE)),
+    DUPLICATE_PHONE_NUMBER_IN_LIST_RESIDENT(470, PropertiesReader.getProperty(PropertyKeys.DUPLICATE_PHONE_NUMBER_IN_LIST_RESIDENT));
 
     private Integer status;
 

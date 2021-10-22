@@ -8,6 +8,4 @@ public interface BillingApartmentService {
 
     ApiResponse searchBuildingApartmentByMonth(Integer page, Integer size, String month);
 
-    void downloadBillingApartmentByMonth(HttpServletResponse response, Integer page, Integer size, String month);
-
 }

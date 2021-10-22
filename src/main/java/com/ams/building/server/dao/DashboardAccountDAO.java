@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface DashboardAccountDao extends CrudRepository<Account, Long> {
+public interface DashboardAccountDAO extends CrudRepository<Account, Long> {
 
 
     @Query(value = "SELECT month (a.created_date) AS date ,count(a.id) AS total FROM account a WHERE a.enabled = 1  " +

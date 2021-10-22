@@ -75,5 +75,6 @@ public class PropertyKeys {
     public static final String VEHICLE_COLOR_EMPTY = "vehicle.color.branch";
     public static final String VEHICLE_REGISTER_BEFORE = "vehicle.register.before";
     public static final String ACCOUNT_CAN_NOT_REMOVE = "account.can.not.remove";
+    public static final String DUPLICATE_PHONE_NUMBER_IN_LIST_RESIDENT = "duplicate.phone.number.in.list";
 
 }

@@ -7,7 +7,7 @@ use
 CREATE TABLE `amsbuilding`.`role`
 (
     `id`        BIGINT      NOT NULL AUTO_INCREMENT,
-    `role_name` VARCHAR(45) NULL,
+    `name` VARCHAR(45) NULL,
     PRIMARY KEY (`id`)
 );
 
@@ -475,7 +475,7 @@ ALTER TABLE `amsbuilding`.`notification`
 ALTER TABLE `amsbuilding`.`notification`
     ADD CONSTRAINT `notification_ibfk_1`
         FOREIGN KEY (`account_id`)
-            REFERENCES `amsbuilding1`.`account` (`id`)
+            REFERENCES `amsbuilding`.`account` (`id`)
             ON DELETE NO ACTION
             ON UPDATE NO ACTION;
 

@@ -3,6 +3,7 @@
 ## 1. forEach and Map
 
 Cách thông thường khi duyệt `Map`.
+
 ```Java
 Map<String, Integer> items = new HashMap<>();
     items.put("A", 10);
@@ -17,7 +18,9 @@ Map<String, Integer> items = new HashMap<>();
     }
 ```
 
-Trong Java 8, bạn có thể duyệt `Map` với `forEach` + lambda expression. Trong trường hợp này, cú pháp Lambda tự suy luận kiểu dữ liệu.
+Trong Java 8, bạn có thể duyệt `Map` với `forEach` + lambda expression. Trong trường hợp này, cú pháp Lambda tự suy luận
+kiểu dữ liệu.
+
 ```Java
 Map<String, Integer> items = new HashMap<>();
     items.put("A", 10);
@@ -33,6 +36,7 @@ Map<String, Integer> items = new HashMap<>();
 ## 2. forEach and List
 
 Cách thông thường khi duyệt `List`.
+
 ```Java
 List<String> items = new ArrayList<>();
     items.add("A");
@@ -49,6 +53,7 @@ List<String> items = new ArrayList<>();
 Trong Java 8, bạn có thể duyệt `List` với `forEach` + lambda expression or method reference.
 
 ### 2.1. Sử dụng Lambda Expression
+
 ```Java
 List<String> items = new ArrayList<>();
     items.add("A");
@@ -73,11 +78,13 @@ List<String> items = new ArrayList<>();
 ```
 
 ### 2.2. Sử dụng tham chiếu - method reference
+
 ```java
 //method reference
 items.forEach(System.out::println);
 
 //Output : A,B,C,D,E
 ```
+
 References: [Method references](../../../../blob/master/Java%208/4.%20Method%20References.md)
 
